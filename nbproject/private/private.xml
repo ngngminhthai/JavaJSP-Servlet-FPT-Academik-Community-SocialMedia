@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/controller/createquestion.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/pages/forum.jsp</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/db/QuestionDBContext.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/pages/login.jsp</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/assets/footer.jsp</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/controller/thread.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/controller/forums.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/controller/home.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/pages/askform.jsp</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/model/Question.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/db/TagDBContext.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/model/User.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/pages/home.jsp</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/controller/question.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/controller/askformcontroller.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/db/MajorDBContext.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/pages/thread.jsp</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/assets/header.jsp</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/model/Question_Tag.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/db/AccountDBContext.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/model/Tag.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/db/DBContext.java</file>
+        </group>
+    </open-files>
+</project-private>
