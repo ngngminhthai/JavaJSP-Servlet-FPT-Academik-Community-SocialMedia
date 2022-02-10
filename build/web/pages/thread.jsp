@@ -48,7 +48,7 @@
                 font-weight: 400;
             }
             .p-body-header {
-                margin-top: 1.5rem !important;
+                /*                margin-top: 1.5rem !important;*/
                 width: 83%;
                 margin: 0 auto;
             }
@@ -70,6 +70,7 @@
                 border-radius: 6px;
                 border: 0.5px solid lightgrey;
                 margin-bottom: 20px;
+
             }
 
             .comment-section{
@@ -77,10 +78,11 @@
                 padding-top: 5px;
                 flex-direction: column;
                 margin-bottom: 20px;
+                padding-bottom: 0px;
             }
             .comment-section p{
                 width: 100%;
-                border-bottom: 1px solid black;
+                border-bottom: 1px solid #9e9e9e;
                 float: left;
             }
             .comment-content{
@@ -131,19 +133,58 @@
                 font-size:15px;
                 color:#000;
             }
-            
+            .alert{
+                position: absolute;
+                right: 0px;
+                top: 200px;
+            }
+            .inner-comment-action{
+                display: flex;
+                flex-direction: row-reverse;
+            }
+            .inner-comment-action li{
+                margin-right: 5px;  
+                font-size: 13px;
+            }
+            .inner-comment-action li{
+                cursor: pointer;
+                list-style-type: none;
+                text-decoration: underline;
+            }
+            .inner-comment-action li:hover{
+                color: blue;
+                font-weight: bold;
+            }
+
         </style>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     </head>
 
+
     <body class="d-flex flex-column min-vh-100">
+        <div class="alert alert-primary" role="alert">
+            This is a primary alert—check it out!
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
         <%@include file="../assets/header.jsp" %>
         <% Question clickedQuestion = (Question) request.getAttribute("clickedQues");
             User user = (User) request.getAttribute("userid");
             ArrayList<Question_Tag> tagList = (ArrayList<Question_Tag>) request.getAttribute("taglist");
             ArrayList<Comment> commentList = (ArrayList<Comment>) request.getAttribute("comlist");
         %>
+        <div class="breadcrumb-container">
+            <nav aria-label="breadcrumb ">
+                <ol class="breadcrumb arr-right bg-dark ">
+                    <li class="breadcrumb-item "><a href="#" class="text-light">Trang chủ</a></li>
+                    <li class="breadcrumb-item text-light active" aria-current="page"><a href="#" class="text-light"><%= clickedQuestion.getMajorID()%></a></li>
+
+                </ol>
+            </nav>
+        </div>
+
         <div class="p-body-header " style=" ">
             <div class="p-title ">
                 <h1 class="p-title-value"><%= clickedQuestion.getTitle()%></h1>
@@ -184,52 +225,83 @@
 
         <% for (Comment elem : commentList) {%>
 
-        <div class="comment-section">
-            <p> <i class="fa--xf far fa-user"></i> <%= elem.getUser().getUsername()%></p>
-
+        <div class="comment-section" id="<%= elem.getCommentID() %>">
+            <p><i class="fa--xf far fa-user"></i><%= elem.getUser().getUsername()%></p>
+            <p class="user-comment-id" style="display: none;"><%= elem.getUser().getUserID()%></p>
             <div class="comment-content">
                 <%= elem.getContent()%>
             </div>
-        </div>
 
+            <ul class="inner-comment-action">
+                <li class="dislike" value="<%= elem.getUser().getUserID()%>" onclick="dislike()">Dislike</li>
+                <li class="like" value="<%= elem.getUser().getUserID()%>" onclick="like()">Like</li>
+                <li class="reply" onclick="scrollingToComment(this.parentNode.parentNode)" value="<%= elem.getUser().getUserID()%>" at>Trả lời</li>
+            </ul>
+        </div>
         <% }
         %>
 
         <div class="login-warning btn btn-primary">
             <p>Bạn cần đăng nhập hoặc đăng kí để gửi bình luận</p>
         </div>
+        <form action="Comment" method="POST">
+            <div class="commnet-writer">
+                <div class="text-function" style="display: flex; border: 1px solid #9e9e9e; border-bottom: none; padding: 5px;">
 
-        <div class="commnet-writer">
-            <div class="text-function" style="display: flex; border: 1px solid #9e9e9e; border-bottom: none; padding: 5px;">
+                    <div title="bold" class="func"> <button class="pure-button boldText" type="button">
+                            <i class="fas fa-bold"></i>
+                        </button></div>
+                    <div title="italic" class="func"><button class="pure-button italicText" type="button">
+                            <i class="fas fa-italic"></i>
+                        </button></div>  
+                    <div title="underline" class="func"> <button class="pure-button underlineText" type="button">
+                            <i class="fa fa-underline"></i>
+                        </button></div>
+                </div>
+                <div class="reply-status" style="    
+                     display: none;
+                     background-color: white;
+                     border: 1px solid #9e9e9e;
+                     border-bottom: none;
+                     padding: 5px;
+                     padding-left: 18px;
+                     padding-right: 20px;">Đang trả lời <span style="font-style: italic; font-weight: bold;"></span><i class="fas fa-times close"></i></div>
 
-                <div title="bold" class="func"> <button class="pure-button boldText" type="button">
-                        <i class="fas fa-bold"></i>
-                    </button></div>
-                <div title="italic" class="func"><button class="pure-button italicText" type="button">
-                        <i class="fas fa-italic"></i>
-                    </button></div>  
-                <div title="underline" class="func"> <button class="pure-button underlineText" type="button">
-                        <i class="fa fa-underline"></i>
-                    </button></div>
+                <div contenteditable="true" id="a" oninput="convert()" onchange="convert()" style="width: 100%; outline: none; border: 1px solid #9e9e9e; padding: 10px; max-width: 100%; min-height: 150px; max-height: 80%; min-width: 100%;"></div>
+                <input value="<%= clickedQuestion.getQuestionID()%>" style="display: none;" name="questionid">
+                <input class="sourceType" value="" style="display: none;" name="sourceType">
+                <div>
+                    <p class="warning-empty-comment" style="color: #795548;">Bình luận không được để trống</p>
+                    <button class="post-comment comment-btn btn btn-primary" type="submit">Gửi bình luận</button>
+                </div>
+                <textarea style="display: none" id="my-text" name="comment-content"></textarea>
 
-
+                <div class="typeOfComment">
+                    <input type="radio" name="type" value="replyToQuestion"/> 
+                    <input type="radio" name="type" value="replyToComment"/> 
+                </div>
 
             </div>
-            <div contenteditable="true" id="a" oninput="convert()" onchange="convert()" style="width: 100%; outline: none; border: 1px solid #9e9e9e; padding: 10px; max-width: 100%; min-height: 150px; max-height: 80%; min-width: 100%;"></div>
+        </form>
 
-            <div>
-                <p class="warning-empty-comment" style="color: #795548;">Bình luận không được để trống</p>
-                <button class="post-comment comment-btn btn btn-primary" type="submit">Gửi bình luận</button>
-            </div>
-            <textarea style="display: none" id="my-text" name="question-content"></textarea>
-        </div>
 
 
 
         <%@include file="../assets/footer.jsp" %>
 
         <script>
-
+            function scrollingToComment(ele) {
+                var elem = document.querySelector(".commnet-writer");
+                var text = document.querySelector("#a");
+                var reply_status = document.querySelector(".reply-status span");
+                reply_status.innerHTML = "";
+                document.querySelector(".sourceType").value = ele.id;
+                text.focus();
+                reply_status.innerHTML += ele.childNodes[1].innerText;
+                console.log(reply_status);
+                reply_status.parentNode.style.display = "block";
+                elem.scrollIntoView();
+            }
             var textOfDiv = document.getElementById("a");
             var textArea = document.getElementById("my-text");
             function convert() {
@@ -258,7 +330,6 @@
                 document.querySelector(".commnet-writer").style.display = "block"
             }
             document.querySelector('#user-name').innerHTML = "${sessionScope.username}"
-
 
             $(document).ready(function () {
                 $('.boldText').click(function () {

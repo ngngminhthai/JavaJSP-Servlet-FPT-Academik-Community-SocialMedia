@@ -5,12 +5,14 @@
  */
 package controller;
 
+import db.CommentDBContext;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -35,7 +37,7 @@ public class CommentController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet CommentController</title>");            
+            out.println("<title>Servlet CommentController</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet CommentController at " + request.getContextPath() + "</h1>");
@@ -70,7 +72,36 @@ public class CommentController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String comment_content = request.getParameter("content");
+        request.setCharacterEncoding("UTF-8");
+
+        String raw_Type = request.getParameter("sourceType");
+
+        //if raw_type = null, it means we post comment on the post, if raw_type is not null, we reply to another comment
+        //raw_type = the id of comment that user replied
+        HttpSession session = request.getSession();
+        String comment_content = request.getParameter("comment-content");
+        int userID = (Integer) session.getAttribute("userID");
+        int sourceType = Integer.parseInt(request.getParameter("questionid"));
+
+        CommentDBContext comDb = new CommentDBContext();
+
+        if (raw_Type == null || raw_Type.isEmpty()) {
+            comDb.createComment(sourceType, userID, comment_content);
+            response.sendRedirect("thread?questionid=" + sourceType);
+        } else {
+            int Type = Integer.parseInt(raw_Type);
+            //type = the id of comment that user replied
+
+            //create new comment
+            comDb.createComment(sourceType, userID, comment_content);
+
+            //get new commentid just added
+            int new_CommentID = comDb.getLastCommentAdded();
+
+            //update reply_id of old comment with new comment
+            comDb.updateForReplies(Type, new_CommentID);
+        }
+
     }
 
     /**

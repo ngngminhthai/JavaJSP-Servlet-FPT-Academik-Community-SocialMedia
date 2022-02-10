@@ -78,4 +78,14 @@
         </nav>
     </div>
 </div>
+<script>
+    const event11 = window.addEventListener('scroll', function (e) {
+
+        if (this.scrollY > 49) {
+            document.querySelector(".breadcrumb-container").style.zIndex = "0";
+        } else {
+            document.querySelector(".breadcrumb-container").style.zIndex = "999";
+        }
+    });
+</script>
 

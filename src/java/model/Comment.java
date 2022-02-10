@@ -13,11 +13,31 @@ import java.sql.Date;
  */
 public class Comment {
 
+    int commentID;
     int questionID;
     int userID;
     String content;
     String createdAt;
     User user;
+
+    public Comment(int commentID, int questionID,User user, String content, String createdAt) {
+        this.commentID = commentID;
+        this.questionID = questionID;
+        this.content = content;
+        this.createdAt = createdAt;
+        this.user = user;
+    }
+
+  
+
+
+    public int getCommentID() {
+        return commentID;
+    }
+
+    public void setCommentID(int commentID) {
+        this.commentID = commentID;
+    }
 
     public Comment(int questionID, int userID, String content, String createdAt) {
         this.questionID = questionID;

@@ -66,13 +66,10 @@ footer{
     font-weight: 400;
     text-decoration: none;
     font-size: 21px;
-    color: #2577b1;
+    color: white;
     background: #edf6fd;
     border-bottom: 1px solid #dfdfdf;
-    background: linear-gradient(
-        0deg
-        , #edf6fd, #f6fafe);
-    height: 44px;
+    background: linear-gradient( 90deg , #009688, #f6fafe);
 }
 .content-container .content{
     display: flex;
@@ -100,4 +97,17 @@ footer{
 }
 .login:hover a{
     color: white !important;
+}
+.breadcrumb-container{
+    width: 100%;
+    position: relative;
+    z-index: 999;
+    /* margin: 0 auto; */
+    height: 48px !important;
+    max-height: fit-content !important;
+    background-color: #343a40!important;
+}
+.breadcrumb{
+    width: 83%;
+    margin: 0 auto;
 }
