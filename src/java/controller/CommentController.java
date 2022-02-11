@@ -6,6 +6,7 @@
 package controller;
 
 import db.CommentDBContext;
+import db.NotificationDBContext;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -82,16 +83,20 @@ public class CommentController extends HttpServlet {
         String comment_content = request.getParameter("comment-content");
         int userID = (Integer) session.getAttribute("userID");
         int sourceType = Integer.parseInt(request.getParameter("questionid"));
+        
+        int questionOwnerID = Integer.parseInt(request.getParameter("questionOwner"));
 
         CommentDBContext comDb = new CommentDBContext();
 
         if (raw_Type == null || raw_Type.isEmpty()) {
             comDb.createComment(sourceType, userID, comment_content);
+            //add notification
+            NotificationDBContext notiDb = new NotificationDBContext();
+            notiDb.addNotification(questionOwnerID, userID, sourceType);
             response.sendRedirect("thread?questionid=" + sourceType);
         } else {
             int Type = Integer.parseInt(raw_Type);
             //type = the id of comment that user replied
-
             //create new comment
             comDb.createComment(sourceType, userID, comment_content);
 
@@ -99,7 +104,12 @@ public class CommentController extends HttpServlet {
             int new_CommentID = comDb.getLastCommentAdded();
 
             //update reply_id of old comment with new comment
+            //type = the comment that user replied for, new_comment is the comment that just have created
             comDb.updateForReplies(Type, new_CommentID);
+            
+            //add notification
+            
+            response.sendRedirect("thread?questionid=" + sourceType);
         }
 
     }

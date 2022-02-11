@@ -70,7 +70,7 @@
                 border-radius: 6px;
                 border: 0.5px solid lightgrey;
                 margin-bottom: 20px;
-
+                position: relative;
             }
 
             .comment-section{
@@ -155,7 +155,29 @@
                 color: blue;
                 font-weight: bold;
             }
-
+            .replied-comment{
+                border-left: 3px solid #f2930d;
+                font-size: 15px;
+                padding: 5px; 
+                padding-left: 12px;
+            }
+            .replied-comment-user{
+                background-color: #fafafa;
+            }
+            .replied-comment-conent{
+                background-color: #f5f5f5
+            }
+            .replied-comment .fas{
+                cursor: pointer;
+            }
+            .replied-comment .fas:hover{
+                color: red;
+            }
+            .fa-ellipsis-h{
+                position: absolute;
+                right: 20px;
+                top: 7px;
+            }
         </style>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
@@ -222,11 +244,33 @@
                 <%= clickedQuestion.getContent()%>
             </div>
         </div>
+        <% Object useridComment = session.getAttribute("userID");
+            int isEdited = -1;
+            if (useridComment != null) {
+                isEdited = (Integer) useridComment;
+            }
+        %>
 
         <% for (Comment elem : commentList) {%>
 
-        <div class="comment-section" id="<%= elem.getCommentID() %>">
+        <div class="comment-section" id="<%= elem.getCommentID()%>">
+
             <p><i class="fa--xf far fa-user"></i><%= elem.getUser().getUsername()%></p>
+                <% if (isEdited == elem.getUser().getUserID()) { %> 
+            <i class="fas fa-ellipsis-h"></i>
+            <%}%>
+
+            <% if (elem.getReplyToComment().getContent() != null) {%>
+            <div class="replied-comment">
+                <div class="replied-comment-user">
+                    <%= elem.getReplyToComment().getUser().getUsername()%>
+                    <i class="fas fa-arrow-up"></i>
+                </div>
+                <div class="replied-comment-conent">
+                    <%= elem.getReplyToComment().getContent()%>
+                </div>
+            </div>
+            <% }%>
             <p class="user-comment-id" style="display: none;"><%= elem.getUser().getUserID()%></p>
             <div class="comment-content">
                 <%= elem.getContent()%>
@@ -275,12 +319,7 @@
                     <button class="post-comment comment-btn btn btn-primary" type="submit">Gửi bình luận</button>
                 </div>
                 <textarea style="display: none" id="my-text" name="comment-content"></textarea>
-
-                <div class="typeOfComment">
-                    <input type="radio" name="type" value="replyToQuestion"/> 
-                    <input type="radio" name="type" value="replyToComment"/> 
-                </div>
-
+                <input name="questionOwner" value="<%=user.getUserID()%>">
             </div>
         </form>
 
@@ -290,6 +329,8 @@
         <%@include file="../assets/footer.jsp" %>
 
         <script>
+//            var scrollUpToComment = document.querySelector(".replied-comment fas");
+//            scrollUpToComment
             function scrollingToComment(ele) {
                 var elem = document.querySelector(".commnet-writer");
                 var text = document.querySelector("#a");

@@ -65,7 +65,7 @@
                     <div class="account-message">
                         <i class="far fa-envelope"></i>
                     </div>
-                    <div class="account-notification">
+                    <div class="account-notification" onclick="notification()">
                         <i class="fas fa-bell"></i>
                     </div>
                 </div>
@@ -79,6 +79,10 @@
     </div>
 </div>
 <script>
+    function notification() {
+        window.location.href = "Notification?userID=${sessionScope.userID}";
+    }
+
     const event11 = window.addEventListener('scroll', function (e) {
 
         if (this.scrollY > 49) {

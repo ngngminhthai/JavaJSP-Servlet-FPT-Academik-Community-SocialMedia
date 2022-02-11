@@ -19,8 +19,11 @@ public class Comment {
     String content;
     String createdAt;
     User user;
+    Comment replyToComment;
+    int replyTo;
 
-    public Comment(int commentID, int questionID,User user, String content, String createdAt) {
+
+    public Comment(int commentID, int questionID, User user, String content, String createdAt) {
         this.commentID = commentID;
         this.questionID = questionID;
         this.content = content;
@@ -28,8 +31,47 @@ public class Comment {
         this.user = user;
     }
 
-  
+    
+    public int getReplyTo() {
+        return replyTo;
+    }
 
+    public void setReplyTo(int replyTo) {
+        this.replyTo = replyTo;
+    }
+
+    public Comment getReplyToComment() {
+        return replyToComment;
+    }
+
+    public void setReplyToComment(Comment replyToComment) {
+        this.replyToComment = replyToComment;
+    }
+
+
+   
+    public Comment(int commentID, int questionID, User user, String content, String createdAt, int replyTo) {
+        this.commentID = commentID;
+        this.questionID = questionID;
+        this.content = content;
+        this.createdAt = createdAt;
+        this.user = user;
+        this.replyTo = replyTo;
+    }
+    
+      public Comment(int commentID, int questionID, User user, String content, String createdAt, Comment replyTo) {
+        this.commentID = commentID;
+        this.questionID = questionID;
+        this.content = content;
+        this.createdAt = createdAt;
+        this.user = user;
+        this.replyToComment = replyTo;
+    }
+
+
+    public Comment(String content) {
+        this.content = content;
+    }
 
     public int getCommentID() {
         return commentID;

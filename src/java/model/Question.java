@@ -21,6 +21,13 @@ public class Question {
     String content;
     int majorID;
 
+    public Question(int questionid, String title, String summary) {
+        this.title = title;
+        this.summary = summary;
+        this.QuestionID = questionid;
+    }
+
+    
     public Question(int QuestionID, int userID, String title, String summary, String createdAt, String content, int majorID) {
         this.QuestionID = QuestionID;
         this.userID = userID;

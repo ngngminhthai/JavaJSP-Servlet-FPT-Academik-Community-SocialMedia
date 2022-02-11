@@ -28,6 +28,14 @@
         <servlet-name>CommentController</servlet-name>
         <servlet-class>controller.CommentController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>NotificationController</servlet-name>
+        <servlet-class>controller.NotificationController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Notificationn</servlet-name>
+        <servlet-class>controller.Notificationn</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>home</servlet-name>
         <url-pattern>/home</url-pattern>
@@ -55,6 +63,14 @@
     <servlet-mapping>
         <servlet-name>CommentController</servlet-name>
         <url-pattern>/Comment</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>NotificationController</servlet-name>
+        <url-pattern>/Notification</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Notificationn</servlet-name>
+        <url-pattern>/notificationn</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

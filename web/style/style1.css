@@ -111,3 +111,9 @@ footer{
     width: 83%;
     margin: 0 auto;
 }
+.account-notification i{
+    cursor: pointer;
+}
+.account-notification:hover i{
+    color: blue;
+}
