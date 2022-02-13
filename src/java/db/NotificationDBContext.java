@@ -8,7 +8,14 @@ package db;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Notification;
@@ -21,14 +28,102 @@ import model.User;
  */
 public class NotificationDBContext extends DBContext {
 
-    public void addNotification(int toUser, int fromUser, int questionID) {
-        String sql = "INSERT INTO dbo.Notification(toUser, fromUser, sourceID) VALUES(?, ?, ?)";
+    public String findDifference(String start_date, String end_date) {
+
+        // SimpleDateFormat converts the
+        // string format to date object
+        SimpleDateFormat sdf
+                = new SimpleDateFormat(
+                        "yyyy-MM-dd HH:mm:ss");
+
+        // Try Block
+        try {
+
+            // parse method is used to parse
+            // the text from a string to
+            // produce the date
+            Date d1 = sdf.parse(start_date);
+            Date d2 = sdf.parse(end_date);
+
+            // Calucalte time difference
+            // in milliseconds
+            long difference_In_Time
+                    = d2.getTime() - d1.getTime();
+
+            // Calucalte time difference in
+            // seconds, minutes, hours, years,
+            // and days
+            long difference_In_Seconds
+                    = (difference_In_Time
+                    / 1000)
+                    % 60;
+
+            long difference_In_Minutes
+                    = (difference_In_Time
+                    / (1000 * 60))
+                    % 60;
+
+            long difference_In_Hours
+                    = (difference_In_Time
+                    / (1000 * 60 * 60))
+                    % 24;
+
+            long difference_In_Years
+                    = (difference_In_Time
+                    / (1000l * 60 * 60 * 24 * 365));
+
+            long difference_In_Days
+                    = (difference_In_Time
+                    / (1000 * 60 * 60 * 24))
+                    % 365;
+
+            // Print the date difference in
+            // years, in days, in hours, in
+            // minutes, and in seconds
+//            System.out.print(
+//                    "Difference "
+//                    + "between two dates is: ");
+//
+//            System.out.println(
+//                    difference_In_Years
+//                    + " years, "
+//                    + difference_In_Days
+//                    + " days, "
+//                    + difference_In_Hours
+//                    + " hours, "
+//                    + difference_In_Minutes
+//                    + " minutes, "
+//                    + difference_In_Seconds
+//                    + " seconds");
+            String finalTime = "";
+            if (difference_In_Days >= 1) {
+                return difference_In_Days + " ngày trước";
+            } else {
+                if (difference_In_Hours >= 1) {
+                    return difference_In_Hours + " giờ trước";
+                } else {
+                    return difference_In_Minutes + " phút trước";
+                }
+
+            }
+
+        } // Catch the Exception
+        catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void addNotification(int toUser, int fromUser, int questionID, String typeOfComment, String createdAt) {
+        String sql = "INSERT INTO dbo.Notification(toUser, fromUser, sourceID, [type], createdAt) VALUES(?, ?, ?, ?, ?)";
         try {
             PreparedStatement stm = connection.prepareStatement(sql);
 
             stm.setInt(1, toUser);
             stm.setInt(2, fromUser);
             stm.setInt(3, questionID);
+            stm.setString(4, typeOfComment);
+            stm.setString(5, createdAt);
 
             stm.executeUpdate();
 
@@ -38,11 +133,13 @@ public class NotificationDBContext extends DBContext {
     }
 
     public ArrayList<Notification> getNotifications(int userid) {
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS");
+        String strDate = sdf.format(cal.getTime());
         ArrayList<Notification> notifitcations = new ArrayList<>();
         try {
-            String sql = "SELECT u.username,u.UserID,q.QuestionID, q.title, q.summary FROM dbo.Notification AS n JOIN dbo.[User] AS u ON u.UserID = n.fromUser JOIN dbo.Question AS q ON q.QuestionID = n.sourceID WHERE n.toUser = ?";
-            
-            
+            String sql = "SELECT u.username,u.UserID,q.QuestionID, q.title, q.summary, n.type, n.createdAt FROM dbo.Notification AS n JOIN dbo.[User] AS u ON u.UserID = n.fromUser JOIN dbo.Question AS q ON q.QuestionID = n.sourceID WHERE n.toUser = ? ORDER BY n.createdAt";
+
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, userid);
 
@@ -50,7 +147,8 @@ public class NotificationDBContext extends DBContext {
             while (rs.next()) {
                 User fromUser = new User(rs.getInt("UserID"), rs.getString("username"));
                 Question source = new Question(rs.getInt("QuestionID"), rs.getString("title"), rs.getString("summary"));
-                Notification notification = new Notification(fromUser, source);
+                String timeAgo = findDifference(rs.getString("createdAt"), strDate);
+                Notification notification = new Notification(fromUser, source, rs.getString("type"), timeAgo);
                 notifitcations.add(notification);
             }
 

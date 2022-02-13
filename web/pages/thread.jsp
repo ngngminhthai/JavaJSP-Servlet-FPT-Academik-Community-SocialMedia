@@ -256,7 +256,8 @@
         <div class="comment-section" id="<%= elem.getCommentID()%>">
 
             <p><i class="fa--xf far fa-user"></i><%= elem.getUser().getUsername()%></p>
-                <% if (isEdited == elem.getUser().getUserID()) { %> 
+            <p style="display: none;" class="comment-Owner"><%=elem.getUser().getUserID()%></p>
+            <% if (isEdited == elem.getUser().getUserID()) { %> 
             <i class="fas fa-ellipsis-h"></i>
             <%}%>
 
@@ -320,6 +321,7 @@
                 </div>
                 <textarea style="display: none" id="my-text" name="comment-content"></textarea>
                 <input name="questionOwner" value="<%=user.getUserID()%>">
+                <input name="commentOwner" value="" class="commentOwner"> 
             </div>
         </form>
 
@@ -335,11 +337,17 @@
                 var elem = document.querySelector(".commnet-writer");
                 var text = document.querySelector("#a");
                 var reply_status = document.querySelector(".reply-status span");
+                var commentOwner = document.querySelector(".commentOwner");
+
                 reply_status.innerHTML = "";
+                commentOwner.value = "";
+
                 document.querySelector(".sourceType").value = ele.id;
                 text.focus();
                 reply_status.innerHTML += ele.childNodes[1].innerText;
+                commentOwner.value = ele.childNodes[3].innerText;
                 console.log(reply_status);
+                console.log(commentOwner);
                 reply_status.parentNode.style.display = "block";
                 elem.scrollIntoView();
             }

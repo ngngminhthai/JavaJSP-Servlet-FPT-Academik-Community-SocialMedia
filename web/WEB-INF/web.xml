@@ -36,6 +36,14 @@
         <servlet-name>Notificationn</servlet-name>
         <servlet-class>controller.Notificationn</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>NotificationReadingChecking</servlet-name>
+        <servlet-class>controller.NotificationReadingChecking</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>MessageController</servlet-name>
+        <servlet-class>controller.MessageController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>home</servlet-name>
         <url-pattern>/home</url-pattern>
@@ -71,6 +79,14 @@
     <servlet-mapping>
         <servlet-name>Notificationn</servlet-name>
         <url-pattern>/notificationn</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>NotificationReadingChecking</servlet-name>
+        <url-pattern>/haveread</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>MessageController</servlet-name>
+        <url-pattern>/user/message</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

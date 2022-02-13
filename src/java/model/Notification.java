@@ -10,13 +10,47 @@ package model;
  * @author Admin
  */
 public class Notification {
+
     User reiceiver;
     User sender;
     Question source;
+    String type;
+    String createdAt;
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
 
     public Notification(User sender, Question source) {
         this.sender = sender;
         this.source = source;
+    }
+
+    public Notification(User sender, Question source, String type, String createdAt) {
+        this.sender = sender;
+        this.source = source;
+        this.type = type;
+        this.createdAt = createdAt;
+    }
+
+    public Notification(User reiceiver, User sender, Question source, String type, String createdAt) {
+        this.reiceiver = reiceiver;
+        this.sender = sender;
+        this.source = source;
+        this.type = type;
+        this.createdAt = createdAt;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public Notification(User reiceiver, User sender, Question source) {
@@ -48,6 +82,5 @@ public class Notification {
     public void setSource(Question source) {
         this.source = source;
     }
-    
-    
+
 }

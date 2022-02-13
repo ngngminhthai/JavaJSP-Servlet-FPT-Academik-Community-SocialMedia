@@ -5,23 +5,18 @@
  */
 package controller;
 
-import db.NotificationDBContext;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.Writer;
-import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import model.Notification;
 
 /**
  *
  * @author Admin
  */
-public class NotificationController extends HttpServlet {
+public class MessageController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,10 +35,10 @@ public class NotificationController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet NotificationController</title>");
+            out.println("<title>Servlet MessageController</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet NotificationController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet MessageController at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -61,19 +56,7 @@ public class NotificationController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        try {
-            int userID = (int) session.getAttribute("userID");
-            NotificationDBContext notiDB = new NotificationDBContext();
-            ArrayList<Notification> notis = notiDB.getNotifications(userID);
-
-            request.setAttribute("notis", notis);
-            request.getRequestDispatcher("pages/Notification.jsp").forward(request, response);
-        } catch (Exception e) {
-            PrintWriter out = response.getWriter();
-            out.println("Sesion end, please relogin");
-        }
-
+        processRequest(request, response);
     }
 
     /**

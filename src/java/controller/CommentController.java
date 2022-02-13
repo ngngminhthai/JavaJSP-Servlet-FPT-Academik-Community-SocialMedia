@@ -9,6 +9,8 @@ import db.CommentDBContext;
 import db.NotificationDBContext;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -83,18 +85,30 @@ public class CommentController extends HttpServlet {
         String comment_content = request.getParameter("comment-content");
         int userID = (Integer) session.getAttribute("userID");
         int sourceType = Integer.parseInt(request.getParameter("questionid"));
-        
+
+        String replyType = "reply";
+        String commentType = "comment";
         int questionOwnerID = Integer.parseInt(request.getParameter("questionOwner"));
 
         CommentDBContext comDb = new CommentDBContext();
+        NotificationDBContext notiDb = new NotificationDBContext();
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+        String createdAt = dtf.format(now);
 
         if (raw_Type == null || raw_Type.isEmpty()) {
             comDb.createComment(sourceType, userID, comment_content);
             //add notification
-            NotificationDBContext notiDb = new NotificationDBContext();
-            notiDb.addNotification(questionOwnerID, userID, sourceType);
+            if (userID == questionOwnerID) {
+            } else {
+                notiDb.addNotification(questionOwnerID, userID, sourceType, commentType, createdAt);
+            }
             response.sendRedirect("thread?questionid=" + sourceType);
         } else {
+            //get the id of user that was repied by another user
+            int commentOwnerID = Integer.parseInt(request.getParameter("commentOwner"));
+
             int Type = Integer.parseInt(raw_Type);
             //type = the id of comment that user replied
             //create new comment
@@ -106,9 +120,19 @@ public class CommentController extends HttpServlet {
             //update reply_id of old comment with new comment
             //type = the comment that user replied for, new_comment is the comment that just have created
             comDb.updateForReplies(Type, new_CommentID);
-            
-            //add notification
-            
+
+            if (userID == questionOwnerID) {
+
+            } else {
+                //add notification for question owner
+                notiDb.addNotification(questionOwnerID, userID, sourceType, commentType, createdAt);
+            }
+            if (userID == commentOwnerID) {
+            } //add notification for comment owner
+            else {
+                notiDb.addNotification(commentOwnerID, userID, sourceType, replyType, createdAt);
+            }
+
             response.sendRedirect("thread?questionid=" + sourceType);
         }
 
