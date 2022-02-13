@@ -12,7 +12,7 @@
         <div class="row">
             <!--Grid column-->
             <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
-                <h5 class="text-uppercase">Cộng đồng học tập của sinh viên FPT</h5>
+                <h5 class="text-uppercase">Cộng đồng học tập sinh viên FPTers</h5>
 
                 <p>
                     Trang web được xây dựng với mục đích giao lưu học hỏi giúp đỡ giữa các bạn sinh viên với nhau thông qua những câu hỏi, những chủ đề được tạo nên từ quá trình gặp khó khăn trong việc giải quyết các bài tập và những vấn đề trên giảng đường

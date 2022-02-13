@@ -115,7 +115,7 @@ public class NotificationDBContext extends DBContext {
     }
 
     public void addNotification(int toUser, int fromUser, int questionID, String typeOfComment, String createdAt) {
-        String sql = "INSERT INTO dbo.Notification(toUser, fromUser, sourceID, [type], createdAt) VALUES(?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO dbo.Notification(toUser, fromUser, sourceID, [type], createdAt, isRead) VALUES(?, ?, ?, ?, ?, 0)";
         try {
             PreparedStatement stm = connection.prepareStatement(sql);
 
@@ -132,13 +132,44 @@ public class NotificationDBContext extends DBContext {
         }
     }
 
+    public void updateisRead(int notificationID) {
+        String sql = "UPDATE [dbo].[Notification]\n"
+                + "   SET\n"
+                + "     [isRead] = 1\n"
+                + " WHERE [notificationID] = ?";
+        PreparedStatement stm = null;
+        try {
+            stm = connection.prepareStatement(sql);
+            stm.setInt(1, notificationID);
+            stm.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(NotificationDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (stm != null) {
+                try {
+                    stm.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(NotificationDBContext.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(NotificationDBContext.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
+
     public ArrayList<Notification> getNotifications(int userid) {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS");
         String strDate = sdf.format(cal.getTime());
         ArrayList<Notification> notifitcations = new ArrayList<>();
         try {
-            String sql = "SELECT u.username,u.UserID,q.QuestionID, q.title, q.summary, n.type, n.createdAt FROM dbo.Notification AS n JOIN dbo.[User] AS u ON u.UserID = n.fromUser JOIN dbo.Question AS q ON q.QuestionID = n.sourceID WHERE n.toUser = ? ORDER BY n.createdAt";
+            String sql = "SELECT u.username,u.UserID,q.QuestionID, q.title, q.summary, n.type, n.createdAt, n.isRead, n.notificationID FROM dbo.Notification AS n JOIN dbo.[User] AS u ON u.UserID = n.fromUser JOIN dbo.Question AS q ON q.QuestionID = n.sourceID WHERE n.toUser = ? ORDER BY n.createdAt";
 
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, userid);
@@ -148,7 +179,7 @@ public class NotificationDBContext extends DBContext {
                 User fromUser = new User(rs.getInt("UserID"), rs.getString("username"));
                 Question source = new Question(rs.getInt("QuestionID"), rs.getString("title"), rs.getString("summary"));
                 String timeAgo = findDifference(rs.getString("createdAt"), strDate);
-                Notification notification = new Notification(fromUser, source, rs.getString("type"), timeAgo);
+                Notification notification = new Notification(fromUser, source, rs.getString("type"), timeAgo, rs.getBoolean("isRead"), rs.getInt("notificationID"));
                 notifitcations.add(notification);
             }
 

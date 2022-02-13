@@ -38,7 +38,7 @@
     </servlet>
     <servlet>
         <servlet-name>NotificationReadingChecking</servlet-name>
-        <servlet-class>controller.NotificationReadingChecking</servlet-class>
+        <servlet-class>controller.NotificationReading</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>MessageController</servlet-name>

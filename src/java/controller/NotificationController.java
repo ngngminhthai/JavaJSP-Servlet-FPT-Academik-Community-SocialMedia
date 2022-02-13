@@ -71,7 +71,7 @@ public class NotificationController extends HttpServlet {
             request.getRequestDispatcher("pages/Notification.jsp").forward(request, response);
         } catch (Exception e) {
             PrintWriter out = response.getWriter();
-            out.println("Sesion end, please relogin");
+            response.sendRedirect("home");
         }
 
     }

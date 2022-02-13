@@ -16,7 +16,9 @@ public class Notification {
     Question source;
     String type;
     String createdAt;
-
+    boolean isRead;
+    int notificationID;
+    
     public String getCreatedAt() {
         return createdAt;
     }
@@ -30,11 +32,29 @@ public class Notification {
         this.source = source;
     }
 
-    public Notification(User sender, Question source, String type, String createdAt) {
+    public boolean isIsRead() {
+        return isRead;
+    }
+
+    public void setIsRead(boolean isRead) {
+        this.isRead = isRead;
+    }
+
+    public int getNotificationID() {
+        return notificationID;
+    }
+
+    public void setNotificationID(int notificationID) {
+        this.notificationID = notificationID;
+    }
+
+    public Notification(User sender, Question source, String type, String createdAt, boolean isRead, int notificationID) {
         this.sender = sender;
         this.source = source;
         this.type = type;
         this.createdAt = createdAt;
+        this.isRead = isRead;
+        this.notificationID = notificationID;
     }
 
     public Notification(User reiceiver, User sender, Question source, String type, String createdAt) {

@@ -146,7 +146,8 @@
 
                     <% for(int i = notifications.size()-1; i >= 0; i--)  {%>
 
-                    <div class="notification-list notification-list--unread">
+                    <div class="notification-list 
+                         <%if(!notifications.get(i).isIsRead()){%>notification-list--unread<%}%>">
                         <div class="notification-list_content">
                             <div class="notification-list_img">
                                 <img src="images/users/user1.jpg" alt="user">
@@ -157,7 +158,7 @@
                                     %>đã bình luận ở bài viết của bạn<%} else { %>đã trả lời bình luận của bạn<% }
                                     %>
                                 </p>
-                                <a href="thread?questionid=<%=notifications.get(i).getSource().getQuestionID()%>" class="text-muted"><%= notifications.get(i).getSource().getTitle()%></a>
+                                <a href="haveread?questionID=<%=notifications.get(i).getSource().getQuestionID()%>&notificationID=<%=notifications.get(i).getNotificationID()%>" class="text-muted"><%= notifications.get(i).getSource().getTitle()%></a>
                                 <p class="text-muted"><small><%=notifications.get(i).getCreatedAt()%></small></p>
                             </div>
                         </div>
