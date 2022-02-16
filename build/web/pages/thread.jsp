@@ -72,7 +72,10 @@
                 margin-bottom: 20px;
                 position: relative;
             }
-
+            .body-content{
+                padding-bottom: 0px;
+                flex-direction: column;
+            }
             .comment-section{
                 margin-bottom: 0px;
                 padding-top: 5px;
@@ -220,7 +223,7 @@
                     <li style="
                         ">
                         <i class="fa--xf far fa-user" aria-hidden="true" title="Tạo bởi"></i>
-                        <p><%= user.getUsername()%></p>
+                        <p><%=user.getUsername()%></p>
                     </li>
                     <li>
                         <i class="fa--xf far fa-clock" aria-hidden="true" title="Start date"></i>
@@ -243,6 +246,11 @@
             <div class="content-column">
                 <%= clickedQuestion.getContent()%>
             </div>
+            <ul class="inner-comment-action">
+                <li class="dislike">Dislike</li>
+                <li class="like" >Like</li><i class="far fa-heart"></i><i class="fas fa-heart"></i>
+                <li class="reply">Trả lời</li><i class="far fa-comment-alt"></i>
+            </ul>
         </div>
         <% Object useridComment = session.getAttribute("userID");
             int isEdited = -1;
@@ -252,36 +260,39 @@
         %>
 
         <% for (Comment elem : commentList) {%>
+        <div comment-container>
+<!--            <div class="user-comment-img"><img src="pages/gaixinh.jpg" class="img-responsive"></div>-->
 
-        <div class="comment-section" id="<%= elem.getCommentID()%>">
+            <div class="comment-section" id="<%= elem.getCommentID()%>">
 
-            <p><i class="fa--xf far fa-user"></i><%= elem.getUser().getUsername()%></p>
-            <p style="display: none;" class="comment-Owner"><%=elem.getUser().getUserID()%></p>
-            <% if (isEdited == elem.getUser().getUserID()) { %> 
-            <i class="fas fa-ellipsis-h"></i>
-            <%}%>
+                <p><i class="fa--xf far fa-user"></i><%= elem.getUser().getUsername()%></p>
+                <p style="display: none;" class="comment-Owner"><%=elem.getUser().getUserID()%></p>
+                <% if (isEdited == elem.getUser().getUserID()) { %> 
+                <i class="fas fa-ellipsis-h"></i>
+                <%}%>
 
-            <% if (elem.getReplyToComment().getContent() != null) {%>
-            <div class="replied-comment">
-                <div class="replied-comment-user">
-                    <%= elem.getReplyToComment().getUser().getUsername()%>
-                    <i class="fas fa-arrow-up"></i>
+                <% if (elem.getReplyToComment().getContent() != null) {%>
+                <div class="replied-comment">
+                    <div class="replied-comment-user">
+                        <%= elem.getReplyToComment().getUser().getUsername()%>
+                        <i class="fas fa-arrow-up"></i>
+                    </div>
+                    <div class="replied-comment-conent">
+                        <%= elem.getReplyToComment().getContent()%>
+                    </div>
                 </div>
-                <div class="replied-comment-conent">
-                    <%= elem.getReplyToComment().getContent()%>
+                <% }%>
+                <p class="user-comment-id" style="display: none;"><%= elem.getUser().getUserID()%></p>
+                <div class="comment-content">
+                    <%= elem.getContent()%>
                 </div>
-            </div>
-            <% }%>
-            <p class="user-comment-id" style="display: none;"><%= elem.getUser().getUserID()%></p>
-            <div class="comment-content">
-                <%= elem.getContent()%>
-            </div>
 
-            <ul class="inner-comment-action">
-                <li class="dislike" value="<%= elem.getUser().getUserID()%>" onclick="dislike()">Dislike</li>
-                <li class="like" value="<%= elem.getUser().getUserID()%>" onclick="like()">Like</li>
-                <li class="reply" onclick="scrollingToComment(this.parentNode.parentNode)" value="<%= elem.getUser().getUserID()%>" at>Trả lời</li>
-            </ul>
+                <ul class="inner-comment-action">
+                    <li class="dislike" value="<%= elem.getUser().getUserID()%>" onclick="dislike()">Dislike</li>
+                    <li class="like" value="<%= elem.getUser().getUserID()%>" onclick="like()">Like</li><i class="far fa-heart"></i><i class="fas fa-heart"></i>
+                    <li class="reply" onclick="scrollingToComment(this.parentNode.parentNode)" value="<%= elem.getUser().getUserID()%>" at>Trả lời</li><i class="far fa-comment-alt"></i>
+                </ul>
+            </div>
         </div>
         <% }
         %>
@@ -331,6 +342,60 @@
         <%@include file="../assets/footer.jsp" %>
 
         <script>
+            function loadAjax() {
+                var username = document.getElementById("username").value;
+                var email = document.getElementById("email").value;
+                var tel = document.getElementById("tel").value;
+                var division = document.getElementById("division").value;
+
+
+                var url = "test?username=" + username + "&email=" + email + "&division=" + division + "&tel=" + tel;
+                alert(url);
+
+                if (window.XMLHttpRequest) {
+
+                    request = new XMLHttpRequest();
+
+                } else if (window.ActiveXObject) {
+
+                    request = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+
+                try {
+                    request.onreadystatechange = sendInfo;
+                    request.open("POST", url, true);
+                    request.send();
+
+                } catch (e) {
+                    alert("Unable to connect server");
+                }
+
+            }
+
+            function sendInfo() {
+                var p = document.getElementById("print");
+
+                if (request.readyState == 1) {
+                    var text = request.responseText;
+                    p.innerHTML = "Please Wait.....";
+                    console.log("1");
+                }
+
+                if (request.readyState == 2) {
+                    var text = request.responseText;
+                    console.log("2");
+
+                }
+                if (request.readyState == 3) {
+                    var text = request.responseText;
+                    console.log("3");
+
+                }
+                if (request.readyState == 4) {
+                    var text = request.responseText;
+                    p.innerHTML = " Request Processed  " + text;
+                }
+            }
 //            var scrollUpToComment = document.querySelector(".replied-comment fas");
 //            scrollUpToComment
             function scrollingToComment(ele) {

@@ -1,0 +1,586 @@
+
+.listInline.listInline--bullet li {
+    display: flex;
+    margin-right: 10px;
+}
+.listInline.listInline--bullet i {
+    margin-top: 4px;
+    margin-right: 12px;
+}
+.p-title-value {
+    font-size: 32px;
+    font-weight: 400;
+}
+.p-body-header {
+    /*                margin-top: 1.5rem !important;*/
+    width: 83%;
+    margin: 0 auto;
+}
+.body-content, .comment-section{
+    -webkit-text-size-adjust: 100%;
+    font: 17px / 1.4 sans-serif;
+    font-family: 'Segoe UI','Helvetica Neue',Helvetica,Roboto,Oxygen,Ubuntu,Cantarell,'Fira Sans','Droid Sans',sans-serif;
+    font-weight: 400;
+    word-wrap: break-word;
+    list-style: none;
+    color: #141414;
+    box-sizing: border-box;
+    display: flex;
+    background-color: white;
+    width: 83%;
+    margin: 0 auto;
+    padding: 17px;
+    text-align: justify;
+    border-radius: 6px;
+    border: 0.5px solid lightgrey;
+    margin-bottom: 20px;
+    position: relative;
+}
+.body-content{
+    padding-bottom: 0px;
+    flex-direction: column;
+}
+.comment-section{
+    margin-bottom: 0px;
+    padding-top: 5px;
+    flex-direction: column;
+    margin-bottom: 20px;
+    padding-bottom: 0px;
+}
+.comment-section p{
+    width: 100%;
+    border-bottom: 1px solid #9e9e9e;
+    float: left;
+}
+.comment-content{
+    clear: left;
+}
+.tag-container p{
+    background-color: #9c27b0;
+    color: hsl(205deg 14% 97%);
+    padding: 0px;
+    font-size: 15px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 4px;
+    margin-left: 5px;
+}
+.login-warning, .comment-btn{
+    width: 100%;
+    margin: 0 auto;
+    margin-bottom: 29px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+.login-warning p{
+    margin-top: 0;
+
+    margin-bottom: 0px;
+    padding: 1px;
+}
+.commnet-writer{
+    width: 83%;
+    margin: 0 auto;
+    border: none;
+
+}
+.text-function, #a{
+    background-color: white;
+    resize: auto;
+}
+#a{
+    border: 1px solid gray;
+    min-height: 50px;  /* if you want Flexible textarea/div then give min-height instead of height */
+    overflow: auto; 
+    padding: 2px;
+    resize: both;
+    width: 400px;
+    font-size:15px;
+    color:#000;
+}
+.alert{
+    position: absolute;
+    right: 0px;
+    top: 200px;
+}
+.inner-comment-action{
+    display: flex;
+    flex-direction: row-reverse;
+}
+.inner-comment-action li{
+    margin-right: 5px;  
+    font-size: 13px;
+}
+.inner-comment-action li{
+    cursor: pointer;
+    list-style-type: none;
+    text-decoration: underline;
+}
+.inner-comment-action li:hover{
+    color: blue;
+    font-weight: bold;
+}
+.replied-comment{
+    border-left: 3px solid #f2930d;
+    font-size: 15px;
+    padding: 5px; 
+    padding-left: 12px;
+}
+.replied-comment-user{
+    background-color: #fafafa;
+}
+.replied-comment-conent{
+    background-color: #f5f5f5
+}
+.replied-comment .fas{
+    cursor: pointer;
+}
+.replied-comment .fas:hover{
+    color: red;
+}
+.fa-ellipsis-h{
+    position: absolute;
+    right: 20px;
+    top: 7px;
+}
+.card {
+    nullmargin: 0;
+    nullmargin: 0 auto;
+    width: 83%;
+    margin: 0 auto;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+}
+.mt-3.mb-4.pb-2 {
+}
+.d-flex.align-items-center.me-3 {
+    margin-left: 10px;
+    color: black;
+}
+p.mt-3:nth-child(2) {
+    font-weight: bold;
+}
+div.small {
+    float: right;
+}
+div.d-flex:nth-child(1) > div:nth-child(2) {
+    margin-left: 14px;
+}
+.ta-editor {
+    min-height: 300px;
+    height: auto;
+    overflow: auto;
+    font-family: inherit;
+    font-size: 100%;
+}
+
+.ta-hidden-input {
+    width: 1px;
+    height: 1px;
+    border: none;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    top: -10000px;
+    left: -10000px;
+    opacity: 0;
+    overflow: hidden;
+}
+
+/* add generic styling for the editor */
+.ta-root.focussed > .ta-scroll-window.form-control {
+    border-color: #555;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+}
+
+.ta-editor.ta-html, .ta-scroll-window.form-control {
+    min-height: 300px;
+    height: auto;
+    overflow: auto;
+    font-family: inherit;
+    font-size: 100%;
+}
+
+.ta-scroll-window.form-control {
+    position: relative;
+    padding: 0;
+}
+
+.ta-scroll-window > .ta-bind {
+    height: auto;
+    min-height: 300px;
+    padding: 6px 12px;
+}
+
+.ta-editor:focus {
+    user-select: text;
+}
+
+/* add the styling for the awesomness of the resizer */
+.ta-resizer-handle-overlay {
+    z-index: 100;
+    position: absolute;
+    display: none;
+}
+
+.ta-resizer-handle-overlay > .ta-resizer-handle-info {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    border: 1px solid black;
+    background-color: #555;
+    padding: 0 4px;
+    opacity: 0.7;
+}
+
+.ta-resizer-handle-overlay > .ta-resizer-handle-background {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    left: 5px;
+    top: 5px;
+    border: 1px solid black;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.ta-resizer-handle-overlay > .ta-resizer-handle-corner {
+    width: 10px;
+    height: 10px;
+    position: absolute;
+}
+
+.ta-resizer-handle-overlay > .ta-resizer-handle-corner-tl{
+    top: 0;
+    left: 0;
+    border-left: 1px solid black;
+    border-top: 1px solid black;
+}
+
+.ta-resizer-handle-overlay > .ta-resizer-handle-corner-tr{
+    top: 0;
+    right: 0;
+    border-right: 1px solid black;
+    border-top: 1px solid black;
+}
+
+.ta-resizer-handle-overlay > .ta-resizer-handle-corner-bl{
+    bottom: 0;
+    left: 0;
+    border-left: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
+.ta-resizer-handle-overlay > .ta-resizer-handle-corner-br{
+    bottom: 0;
+    right: 0;
+    border: 1px solid black;
+    cursor: se-resize;
+    background-color: #555;
+}
+
+/* copy the popover code from bootstrap so this will work even without it */
+.popover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1060;
+    display: none;
+    max-width: 276px;
+    padding: 1px;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1.42857143;
+    text-align: left;
+    white-space: normal;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0, 0, 0, .2);
+    border-radius: 6px;
+    -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+}
+.popover.top {
+    margin-top: -10px;
+}
+.popover.bottom {
+    margin-top: 10px;
+}
+.popover-title {
+    padding: 8px 14px;
+    margin: 0;
+    font-size: 14px;
+    background-color: #f7f7f7;
+    border-bottom: 1px solid #ebebeb;
+    border-radius: 5px 5px 0 0;
+}
+.popover-content {
+    padding: 9px 14px;
+}
+.popover > .arrow,
+.popover > .arrow:after {
+    position: absolute;
+    display: block;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+}
+.popover > .arrow {
+    border-width: 11px;
+}
+.popover > .arrow:after {
+    content: "";
+    border-width: 10px;
+}
+.popover.top > .arrow {
+    bottom: -11px;
+    left: 50%;
+    margin-left: -11px;
+    border-top-color: #999;
+    border-top-color: rgba(0, 0, 0, .25);
+    border-bottom-width: 0;
+}
+.popover.top > .arrow:after {
+    bottom: 1px;
+    margin-left: -10px;
+    content: " ";
+    border-top-color: #fff;
+    border-bottom-width: 0;
+}
+.popover.bottom > .arrow {
+    top: -11px;
+    left: 50%;
+    margin-left: -11px;
+    border-top-width: 0;
+    border-bottom-color: #999;
+    border-bottom-color: rgba(0, 0, 0, .25);
+}
+.popover.bottom > .arrow:after {
+    top: 1px;
+    margin-left: -10px;
+    content: " ";
+    border-top-width: 0;
+    border-bottom-color: #fff;
+}
+*{ margin: 0; padding: 0;}
+body{
+    font-family: 'Roboto', sans-serif;
+    font-style: normal;
+/*    font-weight: 300;*/
+    font-smoothing: antialiased;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 15px;
+    background: #eee;
+}
+.intro{
+    background: #fff;
+    padding: 60px 30px;
+    color: #333;
+    margin-bottom: 15px;
+    line-height: 1.5;
+    text-align: center;
+}
+.intro h1 {
+    font-size: 18pt;
+    padding-bottom: 15px;
+
+}
+.intro p{
+    font-size: 14px;
+}
+
+.action{
+    text-align: center;
+    display: block;
+    margin-top: 20px;
+}
+
+a.btn {
+    text-decoration: none;
+    color: #666;
+    border: 2px solid #666;
+    padding: 10px 15px;
+    display: inline-block;
+    margin-left: 5px;
+}
+a.btn:hover{
+    background: #666;
+    color: #fff;
+    transition: .3s;
+    -webkit-transition: .3s;
+}
+.btn:before{
+    font-family: FontAwesome;
+    font-weight: normal;
+    margin-right: 10px;
+}
+.github:before{content: "\f09b"}
+.down:before{content: "\f019"}
+.back:before{content:"\f112"}
+.credit{
+    background: #fff;
+    padding: 12px;
+    font-size: 9pt;
+    text-align: center;
+    color: #333;
+    margin-top: 40px;
+
+}
+.credit span:before{
+    font-family: FontAwesome;
+    color: #e41b17;
+    content: "\f004";
+
+
+}
+.credit a{
+    color: #333;
+    text-decoration: none;
+}
+.credit a:hover{
+    color: #1DBF73; 
+}
+.credit a:hover:after{
+    font-family: FontAwesome;
+    content: "\f08e";
+    font-size: 9pt;
+    position: absolute;
+    margin: 3px;
+}
+main{
+    background: #fff;
+    padding: 20px;
+
+}
+
+article li{
+    color: #444;
+    font-size: 15px;
+    margin-left: 33px;
+    line-height: 1.5;
+    padding: 5px;
+}
+article h1,
+article h2,
+article h3,
+article h4,
+article p{
+    padding: 14px;
+    color: #333;
+}
+article p{
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+@media only screen and (min-width: 1280px){
+    main{
+
+        margin-left: auto;
+        margin-right: auto; 
+        padding: 24px;
+    }
+
+
+}
+
+.set-overlayer,
+.set-glass,
+.set-sticky {
+    cursor: pointer;
+    height: 45px;
+    line-height: 45px;
+    padding: 0 15px;
+    color: #333;
+    font-size: 16px;
+}
+.set-overlayer:after,
+.set-glass:after,
+.to-active:after,
+.set-sticky:after {
+    font-family: FontAwesome;
+    font-size: 18pt;
+    position: relative;
+    float: right;
+}
+.set-overlayer:after,
+.set-glass:after,
+.set-sticky:after {
+    content: "\f204";
+    transition: .6s;
+}
+
+.to-active:after {
+    content: "\f205";
+    color: #008080;
+    transition: .6s;
+}
+.set-overlayer,
+.set-glass,
+.set-sticky,
+.source,
+.theme-tray {
+    margin: 10px;
+    background: #f2f2f2;
+    border-radius: 5px;
+    border: 2px solid #f1f1f1;
+    box-sizing: border-box;
+}
+/* Syntax Highlighter*/
+
+pre.prettyprint {
+    padding: 15px !important;
+    margin: 10px;
+    border: 0 !important;
+    background: #f2f2f2;
+    overflow: auto;
+}
+
+.source {
+    white-space: pre;
+    overflow: auto;
+    max-height: 400px;
+}
+code{
+    border:1px solid #ddd;
+    padding: 2px;
+    border-radius: 2px;
+}
+div.card:nth-child(5) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > p:nth-child(2) {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+div.card:nth-child(5) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) {
+    position: relative;
+}
+.react-bar{
+    -webkit-text-size-adjust: 100%;
+    font: 17px / 1.4 sans-serif;
+    font-weight: 400;
+    word-wrap: break-word;
+    list-style: none;
+    color: #141414;
+    box-sizing: border-box;
+    transition: all .25s ease, -xf-opacity .25s ease;
+    transition-property: all,-xf-height;
+    background: #f5f5f5;
+    border: 1px solid #dfdfdf;
+    border-left: 2px solid #47a7eb;
+    font-size: 13px;
+    display: block;
+    opacity: 1;
+    height: auto;
+    overflow-y: visible;
+    margin-top: 10px;
+    padding: 6px;
+    clear: both;
+}

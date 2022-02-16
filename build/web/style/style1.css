@@ -1,4 +1,4 @@
-.nav-above{
+/*.nav-above{
     height: 50px;
     background-color: #f8f9fa !important;
     width: 85%;
@@ -24,7 +24,7 @@
 .nav-account div {
     margin-right: 22px;
     font-size: 22px;
-    /* border: 1px solid black; */
+     border: 1px solid black; 
 }
 .nav-under-container{
     width: 100%;
@@ -36,11 +36,11 @@
 }
 nav.navbar.navbar-expand-lg.navbar-light.bg-light {
     padding-bottom: 0px;
-}
+}*/
 
 body{
     height: 100vh;
-    background-color: #dfdfdf;
+    background-color: #eee;
 }
 footer{
     background-color: #f44336 !important;

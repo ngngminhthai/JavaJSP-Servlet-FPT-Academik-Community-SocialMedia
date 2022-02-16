@@ -10,15 +10,15 @@
     </servlet>
     <servlet>
         <servlet-name>logincontroller</servlet-name>
-        <servlet-class>controller.LoginController</servlet-class>
+        <servlet-class>controller.UserController.LoginController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>logoutcontroller</servlet-name>
-        <servlet-class>controller.LogoutController</servlet-class>
+        <servlet-class>controller.UserController.LogoutController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>askformcontroller</servlet-name>
-        <servlet-class>controller.QuestionController</servlet-class>
+        <servlet-class>controller.QuestionController.QuestionController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>thread</servlet-name>
@@ -26,11 +26,11 @@
     </servlet>
     <servlet>
         <servlet-name>CommentController</servlet-name>
-        <servlet-class>controller.CommentController</servlet-class>
+        <servlet-class>controller.CommentController.CommentController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>NotificationController</servlet-name>
-        <servlet-class>controller.NotificationController</servlet-class>
+        <servlet-class>controller.UserController.NotificationController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>Notificationn</servlet-name>
@@ -38,11 +38,27 @@
     </servlet>
     <servlet>
         <servlet-name>NotificationReadingChecking</servlet-name>
-        <servlet-class>controller.NotificationReading</servlet-class>
+        <servlet-class>controller.UserController.NotificationReading</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>MessageController</servlet-name>
-        <servlet-class>controller.MessageController</servlet-class>
+        <servlet-class>controller.UserController.MessageController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>LikeController</servlet-name>
+        <servlet-class>controller.LikeController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Comment_Like_Controller</servlet-name>
+        <servlet-class>controller.CommentController.Comment_Like_Controller</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Post_Like_Controller</servlet-name>
+        <servlet-class>controller.QuestionController.Post_Like_Controller</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>loginAuto</servlet-name>
+        <servlet-class>controller.UserController.loginAuto</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>home</servlet-name>
@@ -88,9 +104,25 @@
         <servlet-name>MessageController</servlet-name>
         <url-pattern>/user/message</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LikeController</servlet-name>
+        <url-pattern>/Like</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Comment_Like_Controller</servlet-name>
+        <url-pattern>/Comment_Like</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Post_Like_Controller</servlet-name>
+        <url-pattern>/Post_Like</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>loginAuto</servlet-name>
+        <url-pattern>/auto</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
-            30
+            1
         </session-timeout>
     </session-config>
 </web-app>

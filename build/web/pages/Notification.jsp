@@ -14,9 +14,9 @@
         <meta charset="UTF-8">
         <title>Notification</title>
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" type="text/css" href="style/style1.css">
+        <%@include file="../components/Bootstrap.jsp" %>
+        <link rel="stylesheet" type="text/css" href="style/footer.css">
+        <link rel="stylesheet" type="text/css" href="style/header.css">
         <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css"
@@ -137,20 +137,20 @@
                         </div>
                     </nav>
                 </header>-->
-        <%@include file="../assets/header.jsp" %>
+        <%@include file="../assets/header2.jsp" %>
         <section class="section-50">
             <div class="container">
                 <h3 class="m-b-50 heading-line">Thông báo <i class="fa fa-bell text-muted"></i></h3>
                     <% ArrayList<Notification> notifications = (ArrayList<Notification>) request.getAttribute("notis");  %>
                 <div class="notification-ui_dd-content">
 
-                    <% for(int i = notifications.size()-1; i >= 0; i--)  {%>
+                    <% for (int i = notifications.size() - 1; i >= 0; i--) {%>
 
                     <div class="notification-list 
-                         <%if(!notifications.get(i).isIsRead()){%>notification-list--unread<%}%>">
+                         <%if (!notifications.get(i).isIsRead()) {%>notification-list--unread<%}%>">
                         <div class="notification-list_content">
                             <div class="notification-list_img">
-                                <img src="images/users/user1.jpg" alt="user">
+                                <img src="pages/thai.jpg" alt="user">
                             </div>
                             <div class="notification-list_detail">
                                 <p><b><%= notifications.get(i).getSender().getUsername()%></b> 
@@ -188,5 +188,6 @@
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+        <%@include file="../assets/footer.jsp" %>
     </body>
 </html>
