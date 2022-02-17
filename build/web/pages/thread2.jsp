@@ -34,8 +34,13 @@
                 margin: 0px 4px;
                 list-style-type: none;
                 color: #007bff! important;
+                user-select: none; /* supported by Chrome and Opera */
+                -webkit-user-select: none; /* Safari */
+                -khtml-user-select: none; /* Konqueror HTML */
+                -moz-user-select: none; /* Firefox */
+                -ms-user-select: none; /* Internet Explorer/Edge */
             }
-            ul li:first-child{
+            ul li:nth-child(3){
                 margin-left: 0px;
                 list-style-type: none;
             }
@@ -61,6 +66,25 @@
             .replied-comment{
                 padding-right: 0px;
 
+            }
+            .tag-detail{
+                text-align: center;
+                width: fit-content;
+                transition: 0.5s;
+                white-space: nowrap;
+                cursor: pointer;
+            }
+            .tag-detail .fa{
+                font-size: 0px;
+                transition: font-size 0.5s;
+                display: inline !important;
+            }
+            .tag-detail:hover{
+                /*                width: 74px;*/
+            }
+            .tag-detail:hover .fa{
+                /*                display: inline !important;*/
+                font-size: 13px !important;
             }
         </style>
     </head>
@@ -103,7 +127,8 @@
                     <div class="tag-container fw-bold text-primary mb-1" style="display: flex;">
                         <div class="icon-tag"><i class="fa fa-tags" aria-hidden="true"></i></div>
                         <div class="tags" style="display:flex;"><% for (Question_Tag tag : tagList) {%>
-                            <p><%= tag.getTagID()%></p>
+                            <p class="tag-detail"><%= tag.getTagID()%><i class="fa fa-plus" aria-hidden="true" style="display: none; margin-left: 3px;"></i>
+                            </p>
                             <%}%></div>
                     </div>
                 </div>
@@ -176,11 +201,20 @@
                                                                                         <a href="" class="link-grey">Translate</a>
                                                                                     </p>-->
                             <ul class="small mb-0" style="color: #aaa;" >
-                                <li class="<%=elem.getUser().getUsername()%>"></li>
-                                <li class="<%=elem.getUser().getUserID()%>"></li>
-                                <li class="link-grey" value="<%=elem.getUser().getUserID()%>">Thích</li> • 
-                                <li class="link-grey <%=elem.getUser().getUserID()%>" onclick="scrollingToComment(this)">Trả lời</li> • 
-                                <li class="link-grey" value="<%=elem.getUser().getUserID()%>">Translate</li>
+                                <li style="display: none;" class="<%=elem.getUser().getUsername()%>"></li>
+                                <li style="display: none;" class="<%=elem.getUser().getUserID()%>"></li>
+                                <li class="link-grey <%=elem.getUser().getUserID()%> <%=elem.getCommentID()%><%if (elem.isIsLike()) {%>
+                                    like-btn
+                                    <%}%>" value="<%=elem.getUser().getUserID()%>" onclick="like(this)">
+                                    <%if (elem.isIsLike()) {%>
+                                    Đã thích
+                                    <%} else {%>
+                                    Thích
+                                    <%}
+                                    %>
+                                </li> • 
+                                <li class="link-grey <%=elem.getUser().getUserID()%> <%=elem.getCommentID()%>" onclick="scrollingToComment(this)">Trả lời</li> • 
+                                <li class="link-grey <%=elem.getUser().getUserID()%> <%=elem.getCommentID()%>" value="<%=elem.getUser().getUserID()%>">Translate</li>
                             </ul>
                             <div class="d-flex flex-row">
                                 <i class="fas fa-star text-warning me-2"></i>
@@ -213,11 +247,12 @@
                              border-bottom: none;
                              padding: 5px;
                              padding-left: 18px;
-                             padding-right: 20px;">Đang trả lời <span style="font-style: italic; font-weight: bold;"></span><i class="fas fa-times close"></i></div>
+                             padding-right: 20px;">Đang trả lời <span style="font-style: italic; font-weight: bold;"></span><i class="fa fa-times" aria-hidden="true"></i>
+                        </div>
 
                         <div class="text" text-angular="text-angular" name="htmlcontent" ng-model="htmlcontent" ta-disabled='disabled'></div>
                         <p>Mã văn bản</p>
-                        <textarea ng-model="htmlcontent" style="width: 100%"></textarea>
+                        <textarea ng-model="htmlcontent" style="width: 100%" name="comment-content"></textarea>
                         <div ng-bind-html="htmlcontent"></div>
                         <div class="d-none" ta-bind="text" ng-model="htmlcontent" ta-readonly='disabled'></div>
                     </div>
@@ -253,6 +288,29 @@
         <%@include file="../assets/footer.jsp" %>
 
         <script>
+                            function like(elem) {
+
+                                elem.classList.toggle('like-btn')
+                                if (elem.classList[3] == "like-btn") {
+                                    elem.innerHTML = `Đã thích`
+                                } else
+                                    elem.innerHTML = `Thích`
+
+                                var commentID = elem.classList[2];
+                                $.ajax({
+                                    url: "/FUWePass/Comment_Like",
+                                    type: "get", //send it through get method
+                                    data: {
+                                        commentID: commentID
+                                    },
+                                    success: function (data) {
+                                        console.log(elem.classList)
+                                    },
+                                    error: function (xhr) {
+                                        //Do Something to handle error
+                                    }
+                                });
+                            }
                             angular.module("textAngularTest", ['textAngular']);
                             function wysiwygeditor($scope) {
                                 $scope.orightml = '';
@@ -264,9 +322,11 @@
                             function scrollingToComment(ele) {
                                 var text = document.querySelector(".first-comment");
                                 var comment = document.querySelector(".commentOwner");
-                                console.log(ele.classList[1]);
+                                var source = document.querySelector(".sourceType");
+                                console.log(ele.classList);
 
                                 comment.value = ele.classList[1];
+                                source.value = ele.classList[2];
 
                                 text.scrollIntoView();
                                 document.querySelector(".text").focus();

@@ -44,10 +44,16 @@ public class ThreadController extends HttpServlet {
         TagDBContext tagDB = new TagDBContext();
         CommentDBContext comDB = new CommentDBContext();
 
+        Object raw_userID = request.getSession().getAttribute("userID");
+        int userID = -1;
+        if (raw_userID != null) {
+            userID = (Integer) request.getSession().getAttribute("userID");
+        }
+
         Question clickedQuestion = quesDB.getQuestions().get(questionID - 1);
         User user = quesDB.getUserByQuestionID(clickedQuestion.getQuestionID());
         ArrayList<Question_Tag> tagList = tagDB.getTagsByQuesID(clickedQuestion.getQuestionID());
-        ArrayList<Comment> comLists = comDB.getCommentByQuestionID(questionID);
+        ArrayList<Comment> comLists = comDB.getCommentByQuestionID(questionID, userID);
 
         request.setAttribute("comlist", comLists);
         request.setAttribute("userid", user);

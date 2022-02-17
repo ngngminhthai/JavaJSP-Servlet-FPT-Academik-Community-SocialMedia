@@ -22,6 +22,7 @@ public class Comment {
     Comment replyToComment;
     int replyTo;
     int totalLike;
+    boolean isLike; //determine the user already like the comment or not
 
     public int getTotalLike() {
         return totalLike;
@@ -64,7 +65,24 @@ public class Comment {
         this.replyTo = replyTo;
     }
 
-    public Comment(int commentID, int questionID, User user, String content, String createdAt, Comment replyTo) {
+    public boolean isIsLike() {
+        return isLike;
+    }
+
+    public void setIsLike(boolean isLike) {
+        this.isLike = isLike;
+    }
+
+    public Comment(int commentID, int questionID, User user, String content, String createdAt, Comment replyTo, boolean isLiked) {
+        this.commentID = commentID;
+        this.questionID = questionID;
+        this.content = content;
+        this.createdAt = createdAt;
+        this.user = user;
+        this.replyToComment = replyTo;
+        this.isLike = isLiked;
+    }
+        public Comment(int commentID, int questionID, User user, String content, String createdAt, Comment replyTo) {
         this.commentID = commentID;
         this.questionID = questionID;
         this.content = content;

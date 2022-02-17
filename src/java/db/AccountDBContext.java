@@ -40,16 +40,16 @@ public class AccountDBContext extends DBContext {
         return null;
     }
 
-    public int getNumberOfRoles(String username, String url) {
+    public int getNumberOfRoles(int userid, String url) {
         try {
             String sql = "SELECT COUNT(*) as Total FROM \n"
-                    + "Account a INNER JOIN [Account_Group] ag ON a.username = ag.username\n"
-                    + "		  INNER JOIN [Group] g ON g.gid = ag.gid\n"
-                    + "		  INNER JOIN [Group_Feature] gf ON gf.gid = g.gid\n"
-                    + "		  INNER JOIN [Feature] f ON gf.fid = f.fid\n"
-                    + "WHERE a.username = ? AND f.url = ?";
+                    + "                    [User] a INNER JOIN [User_Group] ag ON a.UserID = ag.userID\n"
+                    + "                     INNER JOIN [Group] g ON g.groupID = ag.groupID\n"
+                    + "                      INNER JOIN [Group_Feature] gf ON gf.groupID = g.groupID\n"
+                    + "                      INNER JOIN [Feature] f ON gf.featureID = f.featureID\n"
+                    + "                  WHERE a.UserID = ? AND f.url = ?";
             PreparedStatement stm = connection.prepareStatement(sql);
-            stm.setString(1, username);
+            stm.setInt(1, userid);
             stm.setString(2, url);
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {

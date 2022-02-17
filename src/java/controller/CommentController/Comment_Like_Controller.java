@@ -5,6 +5,9 @@
  */
 package controller.CommentController;
 
+import controller.BaseAuthController;
+import db.CommentDBContext;
+import db.QuestionDBContext;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -16,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Admin
  */
-public class Comment_Like_Controller extends HttpServlet {
+public class Comment_Like_Controller extends BaseAuthController {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -35,7 +38,7 @@ public class Comment_Like_Controller extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet Comment_Like_Controller</title>");            
+            out.println("<title>Servlet Comment_Like_Controller</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet Comment_Like_Controller at " + request.getContextPath() + "</h1>");
@@ -54,9 +57,13 @@ public class Comment_Like_Controller extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void processGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        int commentID = Integer.parseInt(request.getParameter("commentID")); //comment id is liked
+        int userID = (Integer) request.getSession().getAttribute("userID"); //who liked the comment
+        CommentDBContext comDB = new CommentDBContext();
+        comDB.insertLikeToComment(commentID, userID);
+        
     }
 
     /**
@@ -68,7 +75,7 @@ public class Comment_Like_Controller extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void processPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 //        int commentID = request.getParameter("commentID");
 //        int userID = 

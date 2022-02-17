@@ -26,7 +26,7 @@ public class CommentDBContext extends DBContext {
     String sql = null;
     ArrayList<Comment> comments = new ArrayList<>();
 
-    public ArrayList<Comment> getCommentByQuestionID(int questionId) {
+    public ArrayList<Comment> getCommentByQuestionID(int questionId, int userid) {
 
         try {
             sql = "SELECT q1.CommentID,q1.QuestionID,q1.content,q1.createdAt,u.UserID,u.username,q2.CommentID AS commentid2,q2.QuestionID AS questionid2,q2.content AS content2,q2.createdAt AS createdat2, u2.UserID AS userid2, u2.username AS username2 FROM dbo.Question_comment AS q1 FULL OUTER JOIN dbo.[User] AS u ON u.UserID = q1.UserID FULL OUTER JOIN dbo.Question_comment AS q2 ON q2.CommentID = q1.replyTo FULL OUTER JOIN dbo.[User] AS u2 ON u2.UserID = q2.UserID WHERE q1.QuestionID = ?";
@@ -34,19 +34,33 @@ public class CommentDBContext extends DBContext {
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, questionId);
             ResultSet rs = stm.executeQuery();
-            ResultSetMetaData rsmd = rs.getMetaData();
 
-            while (rs.next()) {
-                String username2 = rsmd.getColumnName(11);
-                User user2 = new User(rs.getInt(11), rs.getString(12));
-                
-                Comment comment2 = new Comment(rs.getInt(7), rs.getInt(8), user2, rs.getString(9), rs.getString(10));
+            if (userid == -1) {
+                while (rs.next()) {
+                    User user2 = new User(rs.getInt(11), rs.getString(12));
 
-                
-                User user1 = new User(rs.getInt("userid"), rs.getString("username"));
-                Comment comment1 = new Comment(rs.getInt("CommentID"), rs.getInt("QuestionID"), user1, rs.getString("content"), rs.getString("createdAt"), comment2);
+                    Comment comment2 = new Comment(rs.getInt(7), rs.getInt(8), user2, rs.getString(9), rs.getString(10));
 
-                comments.add(comment1);
+                    User user1 = new User(rs.getInt("userid"), rs.getString("username"));
+
+                    Comment comment1 = new Comment(rs.getInt("CommentID"), rs.getInt("QuestionID"), user1, rs.getString("content"), rs.getString("createdAt"), comment2);
+
+                    comments.add(comment1);
+                }
+            } else {
+                while (rs.next()) {
+                    User user2 = new User(rs.getInt(11), rs.getString(12));
+
+                    Comment comment2 = new Comment(rs.getInt(7), rs.getInt(8), user2, rs.getString(9), rs.getString(10));
+
+                    User user1 = new User(rs.getInt("userid"), rs.getString("username"));
+
+                    boolean islike = checkIsLike(userid,rs.getInt("CommentID"));
+
+                    Comment comment1 = new Comment(rs.getInt("CommentID"), rs.getInt("QuestionID"), user1, rs.getString("content"), rs.getString("createdAt"), comment2, islike);
+
+                    comments.add(comment1);
+                }
             }
             return comments;
 
@@ -54,6 +68,26 @@ public class CommentDBContext extends DBContext {
             Logger.getLogger(CommentDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
         return comments;
+    }
+
+    public boolean checkIsLike(int userid, int commentid) {
+        String newsql = "select count(*) as total from Comment_like where userid = ? and commentid = ?";
+        try {
+            PreparedStatement stm = connection.prepareStatement(newsql);
+            stm.setInt(1, userid);
+            stm.setInt(2, commentid);
+
+            ResultSet rs = stm.executeQuery();
+
+            if (rs.next()) {
+                if(rs.getInt("total") > 0)
+                    return true;
+                else return false;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CommentDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
 //    public ArrayList<Comment> getCommentByQuestionID(int questionId) {
 //
@@ -130,4 +164,35 @@ public class CommentDBContext extends DBContext {
         return -1;
     }
 
+    public void insertLikeToComment(int commentID, int userID) {
+        sql = "insert into Comment_like (UserID,CommentID) values(?,?)";
+        try {
+            PreparedStatement stm = connection.prepareStatement(sql);
+
+            stm.setInt(1, userID);
+            stm.setInt(2, commentID);
+
+            stm.executeUpdate();
+
+        } catch (SQLException ex) {
+            deleteLikeOfComment(commentID,userID);
+            Logger.getLogger(CommentDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void deleteLikeOfComment(int commentID, int userID) {
+        sql = "delete comment_like where userid = ? and CommentID = ?";
+        try {
+            PreparedStatement stm = connection.prepareStatement(sql);
+
+            stm.setInt(1, userID);
+            stm.setInt(2, commentID);
+
+            stm.executeUpdate();
+
+        } catch (SQLException ex) {
+            deleteLikeOfComment(commentID,userID);
+            Logger.getLogger(CommentDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

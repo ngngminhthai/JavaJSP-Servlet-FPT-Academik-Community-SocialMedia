@@ -17,18 +17,16 @@ import model.User;
 
 public abstract class BaseAuthController extends HttpServlet {
 
-    private boolean isGood(HttpServletRequest request) {
-        return true;
-    }
-
     private boolean isAuth(HttpServletRequest request) {
-        User account = (User) request.getSession().getAttribute("account");
-        if (account == null) {
+        Object userid = request.getSession().getAttribute("userID");
+        int userID = -1;
+        if (userid == null) {
             return false;
         } else {
+            userID = (Integer) request.getSession().getAttribute("userID");
             String url = request.getServletPath();
             AccountDBContext db = new AccountDBContext();
-            int num = db.getNumberOfRoles(account.getUsername(), url);
+            int num = db.getNumberOfRoles(userID, url);
             return num >= 1;
         }
     }

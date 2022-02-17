@@ -188,4 +188,22 @@ public class NotificationDBContext extends DBContext {
         }
         return notifitcations;
     }
+
+    public int totalNotification(int userid) {
+        try {
+            String sql = "select count(*) as Total from [notification] where touser = ? and isRead = 0";
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, userid);
+
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("Total");
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(NotificationDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
+    }
 }

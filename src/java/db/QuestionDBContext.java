@@ -27,7 +27,7 @@ public class QuestionDBContext extends DBContext {
     public ArrayList<Question> getQuestions() {
 
         try {
-            sql = "select QuestionID,UserID,title,summary,createdAt,content,majorid from Question";
+            String sql = "select QuestionID,UserID,title,summary,createdAt,content,majorid from Question";
 
             PreparedStatement stm = connection.prepareStatement(sql);
 
@@ -45,7 +45,7 @@ public class QuestionDBContext extends DBContext {
 
     public User getUserByQuestionID(int questionID) {
         try {
-            sql = "SELECT u.UserID, u.username FROM dbo.[User] AS u JOIN dbo.Question AS q ON q.UserID = u.UserID WHERE q.QuestionID = ?";
+            String sql = "SELECT u.UserID, u.username FROM dbo.[User] AS u JOIN dbo.Question AS q ON q.UserID = u.UserID WHERE q.QuestionID = ?";
 
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, questionID);
@@ -66,7 +66,7 @@ public class QuestionDBContext extends DBContext {
         ArrayList<Question> questionsByForum = new ArrayList<>();
 
         try {
-            sql = "select QuestionID,UserID,title,summary,createdAt,content,majorid from Question where majorid = ?";
+            String sql = "select QuestionID,UserID,title,summary,createdAt,content,majorid from Question where majorid = ?";
 
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, majorID);
@@ -90,7 +90,7 @@ public class QuestionDBContext extends DBContext {
 
     public Question createQuestion(int userid, String title, String summary, String createdAt, String content, int majorID) {
 
-        sql = "insert into question VALUES(?,?,?,?,?,?)";
+        String sql = "insert into question VALUES(?,?,?,?,?,?)";
         try {
             PreparedStatement stm = connection.prepareStatement(sql);
 
@@ -109,4 +109,6 @@ public class QuestionDBContext extends DBContext {
         }
         return getQuestions().get(questions.size() - 1);
     }
+    
+    
 }

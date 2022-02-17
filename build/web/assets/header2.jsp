@@ -1,3 +1,4 @@
+<%@page import="db.NotificationDBContext"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 
@@ -15,10 +16,16 @@
                     pass = cooky.getValue();
                 }
                 if (cooky.getName().equals("remember")) {
-                     rem = cooky.getValue();
+                    rem = cooky.getValue();
                 }
             }
-        } %>
+        }
+        NotificationDBContext notiDB = new NotificationDBContext();
+        int totalNoti = -1;
+        if (session.getAttribute("userID") != null) {
+            totalNoti = notiDB.totalNotification((Integer) session.getAttribute("userID"));
+        }
+    %>
     <nav style="   position: sticky;
          top: 0px;
          z-index: 100;" class="navbar navbar-expand-xl navbar-light bg-light">
@@ -52,7 +59,7 @@
             </form>
             <% if (session.getAttribute("userID") != null) {%>
             <div class="navbar-nav ml-auto">
-                <a href="Notification" class="nav-item nav-link notifications"><i class="fa fa-bell-o"></i><span class="badge">1</span></a>
+                <a href="Notification" class="nav-item nav-link notifications"><i class="fa fa-bell-o"></i><span class="badge"><%= totalNoti%></span></a>
                 <a href="#" class="nav-item nav-link messages"><i class="fa fa-envelope-o"></i><span class="badge">10</span></a></a>
                 <div class="nav-item dropdown">
                     <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle user-action"><img src="pages/gaixinh.jpg" class="avatar" alt="Avatar">username<b class="caret"></b></a>
@@ -83,7 +90,7 @@
                             <div class="form-group">
                                 <input type="password" class="form-control" placeholder="Password" required="required" name="password" value="<%=pass%>">
                             </div>
-                                <div> <input type="checkbox" name="Remember" <%if(!rem.isEmpty()){%>checked<%}%> />Remember me</div>
+                            <div> <input type="checkbox" name="Remember" <%if (!rem.isEmpty()) {%>checked<%}%> />Remember me</div>
 
                             <input type="submit" class="btn btn-primary btn-block" value="Login">
                             <div class="text-center mt-2">

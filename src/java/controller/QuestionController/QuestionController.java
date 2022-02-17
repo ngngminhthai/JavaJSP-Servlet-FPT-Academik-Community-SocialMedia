@@ -5,6 +5,7 @@
  */
 package controller.QuestionController;
 
+import controller.BaseAuthController;
 import db.QuestionDBContext;
 import db.TagDBContext;
 import java.io.IOException;
@@ -22,7 +23,7 @@ import model.Question;
  *
  * @author Admin
  */
-public class QuestionController extends HttpServlet {
+public class QuestionController extends BaseAuthController {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -62,7 +63,7 @@ public class QuestionController extends HttpServlet {
     String forumID = null;
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void processGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         forumID = request.getParameter("forum");
         request.setAttribute("forumID", forumID);
@@ -78,7 +79,7 @@ public class QuestionController extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void processPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
 
