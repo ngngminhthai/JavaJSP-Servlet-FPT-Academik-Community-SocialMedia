@@ -188,18 +188,14 @@
                                 </div>
                                 <% }%>
 
-                                <p style="margin-top: 5px;" class="text-dark ms-2"><%= elem.getContent()%></p>
+                                <p style="margin-top: 5px;" class="text-dark ms-2 translate"><%= elem.getContent()%></p>
                             </h6>
                             <p style="   position: absolute;
                                top: 0px;
                                right: 0px;" class="mb-0">2 days ago</p>
                         </div>
                         <div class="d-flex justify-content-between align-items-center">
-                            <!--                                                        <p class="small mb-0" style="color: #aaa;">
-                                                                                        <a href="" class="link-grey">Thích</a> •
-                                                                                        <a href="" class="link-grey">Trả lời</a> •
-                                                                                        <a href="" class="link-grey">Translate</a>
-                                                                                    </p>-->
+
                             <ul class="small mb-0" style="color: #aaa;" >
                                 <li style="display: none;" class="<%=elem.getUser().getUsername()%>"></li>
                                 <li style="display: none;" class="<%=elem.getUser().getUserID()%>"></li>
@@ -215,6 +211,7 @@
                                 </li> • 
                                 <li class="link-grey <%=elem.getUser().getUserID()%> <%=elem.getCommentID()%>" onclick="scrollingToComment(this)">Trả lời</li> • 
                                 <li class="link-grey <%=elem.getUser().getUserID()%> <%=elem.getCommentID()%>" value="<%=elem.getUser().getUserID()%>">Translate</li>
+
                             </ul>
                             <div class="d-flex flex-row">
                                 <i class="fas fa-star text-warning me-2"></i>
@@ -223,7 +220,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="react-bar">Nam, và 3 người khác</div>
+                <div class="react-bar" id="bar<%=elem.getCommentID()%>"><span><%if (elem.isIsLike()) {%>Bạn và <%}%></span><%= elem.getTotalLike()%> người khác đã thích bình luận</div>
             </div>
         </div>
 
@@ -286,16 +283,18 @@
         <script src='https://cdnjs.cloudflare.com/ajax/libs/textAngular/1.1.2/textAngular.min.js'></script>
 
         <%@include file="../assets/footer.jsp" %>
-
         <script>
                             function like(elem) {
-
+                                var commentID = "#bar" + elem.classList[2];
+                                var commentClicked = document.querySelector(commentID).querySelector("span");
                                 elem.classList.toggle('like-btn')
                                 if (elem.classList[3] == "like-btn") {
                                     elem.innerHTML = `Đã thích`
-                                } else
+                                    commentClicked.innerHTML = "Bạn và "
+                                } else {
                                     elem.innerHTML = `Thích`
-
+                                    commentClicked.innerHTML = ""
+                                }
                                 var commentID = elem.classList[2];
                                 $.ajax({
                                     url: "/FUWePass/Comment_Like",
@@ -304,7 +303,7 @@
                                         commentID: commentID
                                     },
                                     success: function (data) {
-                                        console.log(elem.classList)
+                                        console.log(commentClicked)
                                     },
                                     error: function (xhr) {
                                         //Do Something to handle error

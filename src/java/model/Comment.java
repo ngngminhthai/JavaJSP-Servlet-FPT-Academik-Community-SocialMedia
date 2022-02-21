@@ -56,14 +56,14 @@ public class Comment {
         this.replyToComment = replyToComment;
     }
 
-    public Comment(int commentID, int questionID, User user, String content, String createdAt, int replyTo) {
-        this.commentID = commentID;
-        this.questionID = questionID;
-        this.content = content;
-        this.createdAt = createdAt;
-        this.user = user;
-        this.replyTo = replyTo;
-    }
+//    public Comment(int commentID, int questionID, User user, String content, String createdAt, int replyTo) {
+//        this.commentID = commentID;
+//        this.questionID = questionID;
+//        this.content = content;
+//        this.createdAt = createdAt;
+//        this.user = user;
+//        this.replyTo = replyTo;
+//    }
 
     public boolean isIsLike() {
         return isLike;
@@ -73,7 +73,17 @@ public class Comment {
         this.isLike = isLike;
     }
 
-    public Comment(int commentID, int questionID, User user, String content, String createdAt, Comment replyTo, boolean isLiked) {
+//    public Comment(int commentID, int questionID, User user, String content, String createdAt, Comment replyTo, boolean isLiked) {
+//        this.commentID = commentID;
+//        this.questionID = questionID;
+//        this.content = content;
+//        this.createdAt = createdAt;
+//        this.user = user;
+//        this.replyToComment = replyTo;
+//        this.isLike = isLiked;
+//    }
+
+    public Comment(int commentID, int questionID, User user, String content, String createdAt, Comment replyTo, boolean isLiked, int totalLike) {
         this.commentID = commentID;
         this.questionID = questionID;
         this.content = content;
@@ -81,15 +91,28 @@ public class Comment {
         this.user = user;
         this.replyToComment = replyTo;
         this.isLike = isLiked;
+        this.totalLike = totalLike;
+
     }
-        public Comment(int commentID, int questionID, User user, String content, String createdAt, Comment replyTo) {
+
+    public Comment(int commentID, int questionID, User user, String content, String createdAt, Comment replyTo, int totalLike) {
         this.commentID = commentID;
         this.questionID = questionID;
         this.content = content;
         this.createdAt = createdAt;
         this.user = user;
         this.replyToComment = replyTo;
+        this.totalLike = totalLike;
     }
+//
+//    public Comment(int commentID, int questionID, User user, String content, String createdAt, Comment replyTo) {
+//        this.commentID = commentID;
+//        this.questionID = questionID;
+//        this.content = content;
+//        this.createdAt = createdAt;
+//        this.user = user;
+//        this.replyToComment = replyTo;
+//    }
 
     public Comment(String content) {
         this.content = content;
@@ -103,19 +126,19 @@ public class Comment {
         this.commentID = commentID;
     }
 
-    public Comment(int questionID, int userID, String content, String createdAt) {
-        this.questionID = questionID;
-        this.userID = userID;
-        this.content = content;
-        this.createdAt = createdAt;
-    }
-
-    public Comment(int questionID, User user, String content, String createdAt) {
-        this.questionID = questionID;
-        this.content = content;
-        this.createdAt = createdAt;
-        this.user = user;
-    }
+//    public Comment(int questionID, int userID, String content, String createdAt) {
+//        this.questionID = questionID;
+//        this.userID = userID;
+//        this.content = content;
+//        this.createdAt = createdAt;
+//    }
+//
+//    public Comment(int questionID, User user, String content, String createdAt) {
+//        this.questionID = questionID;
+//        this.content = content;
+//        this.createdAt = createdAt;
+//        this.user = user;
+//    }
 
     public User getUser() {
         return user;

@@ -3,43 +3,49 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/style/thread.css</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/pages/Conversation.jsp</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/controller/HomeController.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/controller/QuestionController/QuestionController.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/model/Question.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/pages/thread2.jsp</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/pages/signin.jsp</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/db/CommentDBContext.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/style/style1.css</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/controller/BaseAuthController.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/db/MajorDBContext.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/pages/index.html</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/controller/CommentController/Comment_Like_Controller.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/index.html</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/WEB-INF/web.xml</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/assets/header.jsp</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/controller/LogoutController.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/controller/UserController/LoginController.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/controller/UserController/LogoutController.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/model/Tag.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/db/DBContext.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/controller/CommentController.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/components/Bootstrap.jsp</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/db/QuestionDBContext.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/controller/QuestionController/Post_Like_Controller.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/pages/login.jsp</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/assets/footer.jsp</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/pages/newjsp.jsp</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/db/ConversationDBContext.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/pages/askform.jsp</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/components/header_footer_template.js</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/model/Comment_Like.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/db/TagDBContext.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/NewClass.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/model/Comment.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/style/home.css</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/model/User.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/controller/LoginController.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/controller/ThreadController.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/controller/NotificationReadingChecking.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/pages/home.jsp</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/db/NotificationDBContext.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/controller/QuestionController.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/pages/Notification.jsp</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/model/Notification.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/controller/MessageController.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/controller/ForumsController.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/model/Conversation.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/pages/thread.jsp</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/model/Question_Tag.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/controller/NotificationController.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/db/AccountDBContext.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/controller/CommentController/CommentController.java</file>
         </group>
     </open-files>
 </project-private>

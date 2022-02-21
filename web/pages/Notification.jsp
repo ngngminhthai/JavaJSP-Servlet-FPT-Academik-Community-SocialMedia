@@ -17,10 +17,7 @@
         <%@include file="../components/Bootstrap.jsp" %>
         <link rel="stylesheet" type="text/css" href="style/footer.css">
         <link rel="stylesheet" type="text/css" href="style/header.css">
-        <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css"
-            />
+
         <style>
             @import url(https://fonts.googleapis.com/css?family=Roboto:300,400,700&display=swap);body {
                 font-family: "Roboto", sans-serif;

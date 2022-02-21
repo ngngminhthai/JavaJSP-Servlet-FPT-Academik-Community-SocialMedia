@@ -6,6 +6,7 @@ import javax.servlet.jsp.*;
 import model.Major;
 import java.util.ArrayList;
 import java.util.ArrayList;
+import db.NotificationDBContext;
 
 public final class home_jsp extends org.apache.jasper.runtime.HttpJspBase
     implements org.apache.jasper.runtime.JspSourceDependent {
@@ -79,10 +80,10 @@ public final class home_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("        <link rel=\"stylesheet\" type=\"text/css\" href=\"style/body.css\">\n");
       out.write("        <link rel=\"stylesheet\" type=\"text/css\" href=\"style/footer.css\">\n");
       out.write("        <link rel=\"stylesheet\" type=\"text/css\" href=\"style/header.css\">\n");
-      out.write("        <link\n");
+      out.write("<!--        <link\n");
       out.write("            rel=\"stylesheet\"\n");
       out.write("            href=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css\"\n");
-      out.write("            />\n");
+      out.write("            />-->\n");
       out.write("\n");
       out.write("    </head>\n");
       out.write("    ");
@@ -94,9 +95,35 @@ public final class home_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("        <!--    <my-header></my-header>-->\n");
       out.write("        ");
       out.write("\n");
+      out.write("\n");
       out.write("<!DOCTYPE html>\n");
       out.write("\n");
       out.write("<body>\n");
+      out.write("    ");
+      Cookie[] cookies = request.getCookies();
+        String username = "";
+        String pass = "";
+        String rem = "";
+        if (cookies != null) {
+            for (Cookie cooky : cookies) {
+                if (cooky.getName().equals("username")) {
+                    username = cooky.getValue();
+                }
+                if (cooky.getName().equals("password")) {
+                    pass = cooky.getValue();
+                }
+                if (cooky.getName().equals("remember")) {
+                    rem = cooky.getValue();
+                }
+            }
+        }
+        NotificationDBContext notiDB = new NotificationDBContext();
+        int totalNoti = -1;
+        if (session.getAttribute("userID") != null) {
+            totalNoti = notiDB.totalNotification((Integer) session.getAttribute("userID"));
+        }
+    
+      out.write("\n");
       out.write("    <nav style=\"   position: sticky;\n");
       out.write("         top: 0px;\n");
       out.write("         z-index: 100;\" class=\"navbar navbar-expand-xl navbar-light bg-light\">\n");
@@ -128,9 +155,14 @@ public final class home_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("                    <input type=\"text\" id=\"search\" class=\"form-control\" placeholder=\"Tìm kiếm\">\n");
       out.write("                </div>\n");
       out.write("            </form>\n");
+      out.write("            ");
+ if (session.getAttribute("userID") != null) {
+      out.write("\n");
       out.write("            <div class=\"navbar-nav ml-auto\">\n");
-      out.write("                <a href=\"Notification\" class=\"nav-item nav-link notifications\"><i class=\"fa fa-bell-o\"></i><span class=\"badge\">1</span></a>\n");
-      out.write("                <a href=\"#\" class=\"nav-item nav-link messages\"><i class=\"fa fa-envelope-o\"></i><span class=\"badge\">10</span></a></a>\n");
+      out.write("                <a href=\"Notification\" class=\"nav-item nav-link notifications\"><i class=\"fa fa-bell-o\"></i><span class=\"badge\">");
+      out.print( totalNoti);
+      out.write("</span></a>\n");
+      out.write("                <a href=\"message\" class=\"nav-item nav-link messages\"><i class=\"fa fa-envelope-o\"></i><span class=\"badge\">10</span></a></a>\n");
       out.write("                <div class=\"nav-item dropdown\">\n");
       out.write("                    <a href=\"#\" data-toggle=\"dropdown\" class=\"nav-link dropdown-toggle user-action\"><img src=\"pages/gaixinh.jpg\" class=\"avatar\" alt=\"Avatar\">username<b class=\"caret\"></b></a>\n");
       out.write("                    <div class=\"dropdown-menu\">\n");
@@ -138,10 +170,72 @@ public final class home_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("\n");
       out.write("                        <a href=\"#\" class=\"dropdown-item\"><i class=\"fa fa-sliders\"></i> Cài đặt</a></a>\n");
       out.write("                        <div class=\"dropdown-divider\"></div>\n");
-      out.write("                        <a href=\"#\" class=\"dropdown-item\"><i class=\"material-icons\">&#xE8AC;</i> Đăng xuất</a></a>\n");
+      out.write("                        <a href=\"logout\" class=\"dropdown-item\"><i class=\"material-icons\">&#xE8AC;</i> Đăng xuất</a></a>\n");
       out.write("                    </div>\n");
       out.write("                </div>\n");
       out.write("            </div>\n");
+      out.write("            ");
+} else {
+      out.write("\n");
+      out.write("            <div class=\"navbar-nav ml-auto action-buttons\">\n");
+      out.write("                <div class=\"nav-item dropdown\">\n");
+      out.write("                    <a href=\"#\" data-toggle=\"dropdown\" class=\"nav-link dropdown-toggle mr-4\">Login</a>\n");
+      out.write("                    <div class=\"dropdown-menu action-form\">\n");
+      out.write("                        <form action=\"login\" method=\"post\">\n");
+      out.write("                            <p class=\"hint-text\">Sign in with your social media account</p>\n");
+      out.write("                            <div class=\"form-group social-btn clearfix\">\n");
+      out.write("                                <a href=\"#\" class=\"btn btn-secondary facebook-btn float-left\"><i class=\"fa fa-facebook\"></i> Facebook</a>\n");
+      out.write("                                <a href=\"#\" class=\"btn btn-secondary twitter-btn float-right\"><i class=\"fa fa-twitter\"></i> Twitter</a>\n");
+      out.write("                            </div>\n");
+      out.write("                            <div class=\"or-seperator\"><b>or</b></div>\n");
+      out.write("                            <div class=\"form-group\">\n");
+      out.write("                                <input type=\"text\" class=\"form-control\" placeholder=\"Username\" required=\"required\" name=\"username\" value=\"");
+      out.print(username);
+      out.write("\">\n");
+      out.write("                            </div>\n");
+      out.write("                            <div class=\"form-group\">\n");
+      out.write("                                <input type=\"password\" class=\"form-control\" placeholder=\"Password\" required=\"required\" name=\"password\" value=\"");
+      out.print(pass);
+      out.write("\">\n");
+      out.write("                            </div>\n");
+      out.write("                            <div> <input type=\"checkbox\" name=\"Remember\" ");
+if (!rem.isEmpty()) {
+      out.write("checked");
+}
+      out.write(" />Remember me</div>\n");
+      out.write("\n");
+      out.write("                            <input type=\"submit\" class=\"btn btn-primary btn-block\" value=\"Login\">\n");
+      out.write("                            <div class=\"text-center mt-2\">\n");
+      out.write("                                <a href=\"#\">Forgot Your password?</a>\n");
+      out.write("                            </div>\n");
+      out.write("                        </form>\n");
+      out.write("                    </div>\n");
+      out.write("                </div>\n");
+      out.write("                <div class=\"nav-item dropdown\">\n");
+      out.write("                    <a href=\"#\" data-toggle=\"dropdown\" class=\"btn btn-primary dropdown-toggle sign-up-btn\">Sign up</a>\n");
+      out.write("                    <div class=\"dropdown-menu action-form\">\n");
+      out.write("                        <form action=\"/examples/actions/confirmation.php\" method=\"post\">\n");
+      out.write("                            <p class=\"hint-text\">Fill in this form to create your account!</p>\n");
+      out.write("                            <div class=\"form-group\">\n");
+      out.write("                                <input type=\"text\" class=\"form-control\" placeholder=\"Username\" required=\"required\">\n");
+      out.write("                            </div>\n");
+      out.write("                            <div class=\"form-group\">\n");
+      out.write("                                <input type=\"password\" class=\"form-control\" placeholder=\"Password\" required=\"required\">\n");
+      out.write("                            </div>\n");
+      out.write("                            <div class=\"form-group\">\n");
+      out.write("                                <input type=\"password\" class=\"form-control\" placeholder=\"Confirm Password\" required=\"required\">\n");
+      out.write("                            </div>\n");
+      out.write("                            <div class=\"form-group\">\n");
+      out.write("                                <label class=\"form-check-label\"><input type=\"checkbox\" required=\"required\"> I accept the <a href=\"#\">Terms &amp; Conditions</a></label>\n");
+      out.write("                            </div>\n");
+      out.write("                            <input type=\"submit\" class=\"btn btn-primary btn-block\" value=\"Sign up\">\n");
+      out.write("                        </form>\n");
+      out.write("                    </div>\n");
+      out.write("                </div>\n");
+      out.write("            </div>\n");
+      out.write("            ");
+ }
+      out.write("\n");
       out.write("        </div>\n");
       out.write("    </nav>\n");
       out.write("</body>\n");
@@ -158,7 +252,7 @@ public final class home_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("\n");
       out.write("            <div class=\"content\">\n");
       out.write("                <div class=\"major-icon\">\n");
-      out.write("                    <i class=\"fas fa-laptop-code\"></i>\n");
+      out.write("<!--                    <i class=\"fas fa-laptop-code\"></i>-->\n");
       out.write("                </div>\n");
       out.write("\n");
       out.write("                <div class=\"major-content\">\n");

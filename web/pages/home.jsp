@@ -20,10 +20,10 @@
         <link rel="stylesheet" type="text/css" href="style/body.css">
         <link rel="stylesheet" type="text/css" href="style/footer.css">
         <link rel="stylesheet" type="text/css" href="style/header.css">
-        <link
+<!--        <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css"
-            />
+            />-->
 
     </head>
     <% ArrayList<Major> majorList = (ArrayList<Major>) request.getAttribute("majorList");
@@ -40,7 +40,7 @@
             <% for (int i = 0; i < majorList.size(); i++) {%>
             <div class="content">
                 <div class="major-icon">
-                    <i class="fas fa-laptop-code"></i>
+<!--                    <i class="fas fa-laptop-code"></i>-->
                 </div>
 
                 <div class="major-content">

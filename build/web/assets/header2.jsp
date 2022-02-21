@@ -60,7 +60,7 @@
             <% if (session.getAttribute("userID") != null) {%>
             <div class="navbar-nav ml-auto">
                 <a href="Notification" class="nav-item nav-link notifications"><i class="fa fa-bell-o"></i><span class="badge"><%= totalNoti%></span></a>
-                <a href="#" class="nav-item nav-link messages"><i class="fa fa-envelope-o"></i><span class="badge">10</span></a></a>
+                <a href="message" class="nav-item nav-link messages"><i class="fa fa-envelope-o"></i><span class="badge">10</span></a></a>
                 <div class="nav-item dropdown">
                     <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle user-action"><img src="pages/gaixinh.jpg" class="avatar" alt="Avatar">username<b class="caret"></b></a>
                     <div class="dropdown-menu">

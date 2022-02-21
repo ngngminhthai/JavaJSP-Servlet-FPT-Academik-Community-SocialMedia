@@ -5,12 +5,15 @@
  */
 package controller.UserController;
 
+import db.ConversationDBContext;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import model.Conversation;
 
 /**
  *
@@ -30,17 +33,20 @@ public class MessageController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        String content = request.getParameter("content");
+        int replyid = (Integer) request.getSession().getAttribute("userID");
+        int cid = Integer.parseInt(request.getParameter("cid"));
+
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet MessageController</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet MessageController at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+
+            out.println(" <li class=\"clearfix\">\n" +
+"                            <div class=\"message-data text-right\">\n" +
+"                                <span class=\"message-data-time\">10:10 AM, Today</span>\n" +
+"                                <img src=\"pages/thai.jpg\" alt=\"avatar\">\n" +
+"                            </div>\n" +
+"                            <div class=\"message other-message float-right\">"+ content + "</div>\n" +
+"                        </li>");
+
         }
     }
 
@@ -56,7 +62,11 @@ public class MessageController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        int userID = (Integer) request.getSession().getAttribute("userID");
+        ConversationDBContext conDB = new ConversationDBContext();
+        ArrayList<Conversation> cons = conDB.getConversation(userID);
+        request.setAttribute("conversations", cons);
+        request.getRequestDispatcher("pages/Conversation.jsp").forward(request, response);
     }
 
     /**

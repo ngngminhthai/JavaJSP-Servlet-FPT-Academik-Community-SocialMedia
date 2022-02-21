@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Comment;
+import model.Comment_Like;
 import model.Major;
 import model.User;
 
@@ -35,29 +36,39 @@ public class CommentDBContext extends DBContext {
             stm.setInt(1, questionId);
             ResultSet rs = stm.executeQuery();
 
+            User user2 = null;
+            Comment comment2 = null;
+            User user1 = null;
+            int totalLike = -1;
+            Comment comment1 = null;
+
             if (userid == -1) {
                 while (rs.next()) {
-                    User user2 = new User(rs.getInt(11), rs.getString(12));
+                    user2 = new User(rs.getInt(11), rs.getString(12));
 
-                    Comment comment2 = new Comment(rs.getInt(7), rs.getInt(8), user2, rs.getString(9), rs.getString(10));
+                    comment2 = new Comment(rs.getInt(7), rs.getInt(8), user2, rs.getString(9), rs.getString(10));
 
-                    User user1 = new User(rs.getInt("userid"), rs.getString("username"));
+                    user1 = new User(rs.getInt("userid"), rs.getString("username"));
 
-                    Comment comment1 = new Comment(rs.getInt("CommentID"), rs.getInt("QuestionID"), user1, rs.getString("content"), rs.getString("createdAt"), comment2);
+                    totalLike = getLikeByCommentID2(rs.getInt("CommentID"));
+
+                    comment1 = new Comment(rs.getInt("CommentID"), rs.getInt("QuestionID"), user1, rs.getString("content"), rs.getString("createdAt"), comment2, totalLike);
 
                     comments.add(comment1);
                 }
             } else {
                 while (rs.next()) {
-                    User user2 = new User(rs.getInt(11), rs.getString(12));
+                    user2 = new User(rs.getInt(11), rs.getString(12));
 
-                    Comment comment2 = new Comment(rs.getInt(7), rs.getInt(8), user2, rs.getString(9), rs.getString(10));
+                    comment2 = new Comment(rs.getInt(7), rs.getInt(8), user2, rs.getString(9), rs.getString(10));
 
-                    User user1 = new User(rs.getInt("userid"), rs.getString("username"));
+                    user1 = new User(rs.getInt("userid"), rs.getString("username"));
 
-                    boolean islike = checkIsLike(userid,rs.getInt("CommentID"));
+                    boolean islike = checkIsLike(userid, rs.getInt("CommentID"));
 
-                    Comment comment1 = new Comment(rs.getInt("CommentID"), rs.getInt("QuestionID"), user1, rs.getString("content"), rs.getString("createdAt"), comment2, islike);
+                    totalLike = getLikeByCommentIDLogin(userid, rs.getInt("CommentID"));
+
+                    comment1 = new Comment(rs.getInt("CommentID"), rs.getInt("QuestionID"), user1, rs.getString("content"), rs.getString("createdAt"), comment2, islike, totalLike);
 
                     comments.add(comment1);
                 }
@@ -70,6 +81,51 @@ public class CommentDBContext extends DBContext {
         return comments;
     }
 
+    public int getLikeByCommentIDLogin(int userid, int commentid) {
+        //select * from comment_like where userid not like 1 and CommentID = 33
+        String newsql = "SELECT count(*)\n"
+                + "FROM comment_like\n"
+                + "where userid not like ? and CommentID = ?";
+        try {
+            PreparedStatement stm = connection.prepareStatement(newsql);
+            stm.setInt(1, userid);
+            stm.setInt(2, commentid);
+
+            ResultSet rs = stm.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            } else {
+                return 0;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CommentDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+
+    public int getLikeByCommentID2(int commentid) {
+        //select * from comment_like where userid not like 1 and CommentID = 33
+        String newsql = "SELECT count(*)\n"
+                + "FROM comment_like\n"
+                + "where CommentID = ?";
+        try {
+            PreparedStatement stm = connection.prepareStatement(newsql);
+            stm.setInt(1, commentid);
+
+            ResultSet rs = stm.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            } else {
+                return 0;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CommentDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+
     public boolean checkIsLike(int userid, int commentid) {
         String newsql = "select count(*) as total from Comment_like where userid = ? and commentid = ?";
         try {
@@ -80,9 +136,11 @@ public class CommentDBContext extends DBContext {
             ResultSet rs = stm.executeQuery();
 
             if (rs.next()) {
-                if(rs.getInt("total") > 0)
+                if (rs.getInt("total") > 0) {
                     return true;
-                else return false;
+                } else {
+                    return false;
+                }
             }
         } catch (SQLException ex) {
             Logger.getLogger(CommentDBContext.class.getName()).log(Level.SEVERE, null, ex);
@@ -175,7 +233,7 @@ public class CommentDBContext extends DBContext {
             stm.executeUpdate();
 
         } catch (SQLException ex) {
-            deleteLikeOfComment(commentID,userID);
+            deleteLikeOfComment(commentID, userID);
             Logger.getLogger(CommentDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -191,7 +249,7 @@ public class CommentDBContext extends DBContext {
             stm.executeUpdate();
 
         } catch (SQLException ex) {
-            deleteLikeOfComment(commentID,userID);
+            deleteLikeOfComment(commentID, userID);
             Logger.getLogger(CommentDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
