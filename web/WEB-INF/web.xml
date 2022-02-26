@@ -32,7 +32,6 @@
         <servlet-name>NotificationController</servlet-name>
         <servlet-class>controller.UserController.NotificationController</servlet-class>
     </servlet>
-
     <servlet>
         <servlet-name>NotificationReadingChecking</servlet-name>
         <servlet-class>controller.UserController.NotificationReading</servlet-class>
@@ -41,7 +40,6 @@
         <servlet-name>MessageController</servlet-name>
         <servlet-class>controller.UserController.MessageController</servlet-class>
     </servlet>
-
     <servlet>
         <servlet-name>Comment_Like_Controller</servlet-name>
         <servlet-class>controller.CommentController.Comment_Like_Controller</servlet-class>
@@ -50,7 +48,14 @@
         <servlet-name>Post_Like_Controller</servlet-name>
         <servlet-class>controller.QuestionController.Post_Like_Controller</servlet-class>
     </servlet>
-
+    <servlet>
+        <servlet-name>MessageController2</servlet-name>
+        <servlet-class>controller.UserController.MessageController2</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>OpenMessage</servlet-name>
+        <servlet-class>controller.UserController.OpenMessage</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>home</servlet-name>
         <url-pattern>/home</url-pattern>
@@ -83,7 +88,6 @@
         <servlet-name>NotificationController</servlet-name>
         <url-pattern>/Notification</url-pattern>
     </servlet-mapping>
-
     <servlet-mapping>
         <servlet-name>NotificationReadingChecking</servlet-name>
         <url-pattern>/haveread</url-pattern>
@@ -92,7 +96,6 @@
         <servlet-name>MessageController</servlet-name>
         <url-pattern>/message</url-pattern>
     </servlet-mapping>
-
     <servlet-mapping>
         <servlet-name>Comment_Like_Controller</servlet-name>
         <url-pattern>/Comment_Like</url-pattern>
@@ -101,7 +104,10 @@
         <servlet-name>Post_Like_Controller</servlet-name>
         <url-pattern>/Post_Like</url-pattern>
     </servlet-mapping>
-
+    <servlet-mapping>
+        <servlet-name>OpenMessage</servlet-name>
+        <url-pattern>/OpenMessage</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             60

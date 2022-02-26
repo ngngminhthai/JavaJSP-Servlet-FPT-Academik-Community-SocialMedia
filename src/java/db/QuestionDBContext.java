@@ -12,7 +12,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.Main_Tag;
 import model.Question;
+import model.Question_Tag;
 import model.User;
 
 /**
@@ -24,16 +26,40 @@ public class QuestionDBContext extends DBContext {
     String sql = null;
     ArrayList<Question> questions = new ArrayList<>();
 
+//    public ArrayList<Question> getQuestions() {
+//
+//        try {
+//            String sql = "select QuestionID,UserID,title,summary,createdAt,content,majorid from Question";
+//
+//            PreparedStatement stm = connection.prepareStatement(sql);
+//
+//            ResultSet rs = stm.executeQuery();
+//            while (rs.next()) {
+//                Question s = new Question(rs.getInt("QuestionID"), rs.getInt("UserID"), rs.getString("title"), rs.getString("summary"), rs.getString("createdAt"), rs.getString("content"), rs.getInt("majorid"));
+//                questions.add(s);
+//            }
+//
+//        } catch (SQLException ex) {
+//            Logger.getLogger(QuestionDBContext.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return questions;
+//    }
     public ArrayList<Question> getQuestions() {
 
         try {
-            String sql = "select QuestionID,UserID,title,summary,createdAt,content,majorid from Question";
+            TagDBContext tagDB = new TagDBContext();
+            MainTagDBContext mainDB = new MainTagDBContext();
+            ArrayList<Question_Tag> tags = null;
+            Main_Tag main = null;
+            String sql = "select QuestionID,UserID,title,summary,createdAt,content from Question";
 
             PreparedStatement stm = connection.prepareStatement(sql);
 
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
-                Question s = new Question(rs.getInt("QuestionID"), rs.getInt("UserID"), rs.getString("title"), rs.getString("summary"), rs.getString("createdAt"), rs.getString("content"), rs.getInt("majorid"));
+                tags = tagDB.getTagsByQuesID(rs.getInt("QuestionID"));
+                main = mainDB.getMainTagByQuesID(rs.getInt("QuestionID"));
+                Question s = new Question(rs.getInt("QuestionID"), rs.getInt("UserID"), rs.getString("title"), rs.getString("summary"), rs.getString("createdAt"), rs.getString("content"), tags, main);
                 questions.add(s);
             }
 
@@ -88,10 +114,12 @@ public class QuestionDBContext extends DBContext {
         return questions.size();
     }
 
-    public Question createQuestion(int userid, String title, String summary, String createdAt, String content, int majorID) {
+    public Question createQuestion(int userid, String title, String summary, String createdAt, String content, String maintag) {
 
-        String sql = "insert into question VALUES(?,?,?,?,?,?)";
+        String sql = "insert into question(UserID,title,summary,createdAt,content) VALUES(?,?,?,?,?)";
         try {
+            MainTagDBContext mainDB = new MainTagDBContext();
+            
             PreparedStatement stm = connection.prepareStatement(sql);
 
             stm.setInt(1, userid);
@@ -99,16 +127,19 @@ public class QuestionDBContext extends DBContext {
             stm.setString(3, summary);
             stm.setString(4, createdAt);
             stm.setString(5, content);
-            stm.setInt(6, majorID);
-
+            
+            
             stm.executeUpdate();
-            return getQuestions().get(questions.size() - 1);
+            
+            Question q = getQuestions().get(questions.size() - 1);
+            mainDB.LinkTagToQuestion(q.getQuestionID(), maintag);
+            
+            return q;
 
         } catch (SQLException ex) {
             Logger.getLogger(QuestionDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return getQuestions().get(questions.size() - 1);
+        return null;
     }
-    
-    
+
 }

@@ -65,8 +65,7 @@ public class TagDBContext extends DBContext {
     }
 
     public void createTag(String tagID, int questionID) {
-
-        sql = "insert into tag values (?)";
+        String sql = "insert into tag values (?)";
         try {
             PreparedStatement stm = connection.prepareStatement(sql);
 

@@ -284,13 +284,13 @@
             .chat-history ul{
                 min-height: 500px !important;
             }
-/*            .container{
-                max-width: 1600px !important;
-                margin-top: 3rem;
-            }*/
+            /*            .container{
+                            max-width: 1600px !important;
+                            margin-top: 3rem;
+                        }*/
         </style>
         <%@include file="../components/Bootstrap.jsp" %>
-        
+
         <link rel="stylesheet" href="style/style2.css">
     </head>
 
@@ -299,7 +299,7 @@
         <% ArrayList<Conversation> cons = (ArrayList<Conversation>) request.getAttribute("conversations");%>
 
         <div class="container" style="margin-top: 95px;
-    width: 100%;">
+             width: 100%;">
             <div class="row clearfix">
                 <div class="col-lg-12">
                     <div class="card chat-app">
@@ -308,7 +308,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fa fa-search"></i></span>
                                 </div>
-                                <input type="text" class="form-control" placeholder="Search...">
+                                <input type="text" class="form-control" placeholder="Tìm kiếm bạn bè...">
                             </div>
                             <ul class="list-unstyled chat-list mt-2 mb-0">
                                 <!--                                <li class="clearfix active">
@@ -319,7 +319,7 @@
                                                                     </div>
                                                                 </li>-->
                                 <% for (Conversation elem : cons) {%>
-                                <li class="clearfix <%= elem.getUsername()%> <%= elem.getC_id()%>">
+                                <li class="clearfix <%= elem.getUsername()%> <%=elem.getC_id()%> u<%=elem.getUserTwo()%>">
                                     <img src="pages/thai.jpg" alt="avatar">
                                     <div class="about">
                                         <div class="name userlist<%= elem.getC_id()%>"><%= elem.getUsername()%></div>
@@ -341,7 +341,7 @@
                                         </a>
                                         <div class="chat-about">
                                             <h6 class="m-b-0">tranducthuan</h6>
-                                            <small>Last seen: 2 hours ago</small>
+                                            <small>Hoạt động: 2 phút trước</small>
                                         </div>
                                     </div>
                                     <div class="col-lg-6 hidden-sm text-right">
@@ -374,6 +374,8 @@
                                                                             <div class="message my-message">Project has been already finished and I have results to show you.</div>
                                                                         </li>-->
 
+
+
                                 </ul>
                             </div>
                             <div class="chat-message clearfix">
@@ -383,7 +385,7 @@
                                     </div>
 
 
-                                    <input type="text" class="form-control content" placeholder="Enter text here..." name="content">                    
+                                    <input type="text" class="form-control content" placeholder="Nhập tin nhắn..." name="content">                    
 
 
                                 </div>
@@ -402,8 +404,6 @@
             this.c_id = c_id;
             this.content = content;
             this.replyid = replyid;
-
-
         }
         var messages = [];
         <% for (Conversation elem : cons) {
@@ -422,30 +422,105 @@
         var chatHistory = document.querySelector(".chat-history ul");
         var textmessgage = document.querySelector(".content");
 
-        textmessgage.addEventListener("keydown", (key) => {
-            console.log(key.keyCode)
-            if (key.keyCode == 13) {
-                var replyid = '<%=request.getSession().getAttribute("userID")%>';
-                var cid = currentActive.classList[2];
-                $.ajax({
-                    url: "/FUWePass/message",
-                    type: "post", //send it through get method
-                    data: {
-                        replyid: replyid,
-                        cid: cid,
-                        content: textmessgage.value
-                    },
-                    success: function (data) {
-                        textmessgage.value = ""
-                        chatHistory.innerHTML += data
-                        document.querySelector(".chat-history").scrollTo(0, document.querySelector(".chat-history").scrollHeight);
-                    },
-                    error: function (xhr) {
-                        //Do Something to handle error
+
+
+        function postMessage() {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("POST", "message3?t=" + new Date(), false);
+            xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            var userID = escape('<%=request.getSession().getAttribute("userID")%>');
+            var content = escape(textmessgage.value);
+            var content2 = textmessgage.value;
+            var usernameReplied = currentActive.classList[3].charAt(1);
+            var replyid = '<%= request.getSession().getAttribute("userID")%>'
+
+            var cid = escape(currentActive.classList[2]);
+
+            textmessgage.value = "";
+//               this.c_id = c_id;
+//            this.content = content;
+//            this.replyid = replyid;
+//            messages.push(new Message(cid,content,replyid);
+            messages.push(new Message(cid, content2, replyid));
+
+            xmlhttp.send("userID=" + userID + "&content=" + content + "&cid=" + cid + "&usernameReplied=" + usernameReplied);
+        }
+
+        var messagesWaiting = false;
+        function getMessages() {
+            if (!messagesWaiting) {
+                messagesWaiting = true;
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function () {
+                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                        messagesWaiting = false;
+                        var contentElement = document.querySelector("ul.m-b-0");
+                        var currentAc = '<%=request.getSession().getAttribute("userID")%>'
+                        var final = xmlhttp.responseText;
+                        let arr = final.split('-');
+                        var content = arr[1];
+                        var replier = arr[2];
+
+                        if (currentAc != replier) {
+                            contentElement.innerHTML = contentElement.innerHTML + `<li class="clearfix">
+                                        <div class="message-data">
+                                            <span class="message-data-time">10:10 Sáng nay</span>
+                                        </div>
+                                        <div class="message my-message">` + content + `</div>                                    
+                                    </li>               `
+                        } else {
+                            contentElement.innerHTML = contentElement.innerHTML + `<li class="clearfix">
+                            <div class="message-data text-right">
+                                <span class="message-data-time">10:10 Sáng nay</span>
+                                <img src="pages/thai.jpg" alt="avatar">
+                            </div>
+                            <div class="message other-message float-right">` + content + `</div>
+                        </li>`
+                        }
                     }
-                });
+                }
+                document.querySelector(".chat-history").scrollTo(0, document.querySelector(".chat-history").scrollHeight);
+
+                xmlhttp.open("GET", "message3?t=" + new Date(), true);
+                xmlhttp.send();
+            }
+        }
+        setInterval(getMessages, 1000);
+
+        textmessgage.addEventListener("keydown", (key) => {
+            if (key.keyCode == 13) {
+                postMessage();
             }
         })
+
+//        textmessgage.addEventListener("keydown", (key) => {
+//            console.log(key.keyCode)
+//            if (key.keyCode == 13) {
+//                var replyid = ''
+//                var cid = currentActive.classList[2];
+//                $.ajax({
+//                    url: "/FUWePass/message",
+//                    type: "post", //send it through get method
+//                    data: {
+//                        replyid: replyid,
+//                        cid: cid,
+//                        content: textmessgage.value
+//                    },
+//                    success: function (data) {
+//                        textmessgage.value = ""
+//                        chatHistory.innerHTML += data
+//                        document.querySelector(".chat-history").scrollTo(0, document.querySelector(".chat-history").scrollHeight);
+//                    },
+//                    error: function (xhr) {
+//                        //Do Something to handle error
+//                    }
+//                });
+//            }
+//        })
+
+
+
 
 
         for (var i = 0; i < messages.length; i++) {
@@ -476,6 +551,7 @@
                     elem.classList.add("active");
                     chatNameCurrent.innerHTML = elem.classList[1];
                     chatHistory.innerHTML = ``;
+                    console.log(currentActive.classList[3].charAt(1));
                     for (var i = 0; i < messages.length; i++) {
                         if (messages[i].c_id == elem.classList[2] && messages[i].replyid != '<%=request.getSession().getAttribute("userID")%>') {
                             chatHistory.innerHTML += ` 
@@ -496,6 +572,8 @@
                         }
                     }
                 }
+                document.querySelector(".chat-history").scrollTo(0, document.querySelector(".chat-history").scrollHeight);
+
             });
         });
 

@@ -6,6 +6,7 @@
 package model;
 
 import java.sql.Date;
+import java.util.ArrayList;
 
 /**
  *
@@ -20,7 +21,27 @@ public class Question {
     String createdAt;
     String content;
     int majorID;
+    ArrayList<Question_Tag> tags;
+    Main_Tag mainTag;
 
+    public ArrayList<Question_Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(ArrayList<Question_Tag> tags) {
+        this.tags = tags;
+    }
+
+    public Main_Tag getMainTag() {
+        return mainTag;
+    }
+
+    public void setMainTag(Main_Tag mainTag) {
+        this.mainTag = mainTag;
+    }
+
+    
+    
     public Question(int questionid, String title, String summary) {
         this.title = title;
         this.summary = summary;
@@ -28,14 +49,15 @@ public class Question {
     }
 
     
-    public Question(int QuestionID, int userID, String title, String summary, String createdAt, String content, int majorID) {
+    public Question(int QuestionID, int userID, String title, String summary, String createdAt, String content, ArrayList<Question_Tag> tags, Main_Tag maintag) {
         this.QuestionID = QuestionID;
         this.userID = userID;
         this.title = title;
         this.summary = summary;
         this.createdAt = createdAt;
         this.content = content;
-        this.majorID = majorID;
+        this.tags = tags;
+        this.mainTag = maintag;
     }
 
     public Question(int QuestionID, User User, String title, String summary, String createdAt, String content, int majorID) {

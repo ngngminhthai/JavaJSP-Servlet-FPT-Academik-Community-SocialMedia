@@ -87,6 +87,7 @@ public class CommentController extends HttpServlet {
         int sourceType = Integer.parseInt(request.getParameter("questionid"));
         int questionOwnerID = Integer.parseInt(request.getParameter("questionOwner"));
         
+        
         String replyType = "reply";
         String commentType = "comment";
        

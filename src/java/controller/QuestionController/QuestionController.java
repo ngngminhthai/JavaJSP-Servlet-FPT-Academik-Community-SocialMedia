@@ -6,17 +6,20 @@
 package controller.QuestionController;
 
 import controller.BaseAuthController;
+import db.MainTagDBContext;
 import db.QuestionDBContext;
 import db.TagDBContext;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import model.Main_Tag;
 import model.Question;
 
 /**
@@ -60,14 +63,16 @@ public class QuestionController extends BaseAuthController {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    String forumID = null;
 
     @Override
     protected void processGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        forumID = request.getParameter("forum");
-        request.setAttribute("forumID", forumID);
-        request.getRequestDispatcher("pages/askform.jsp").forward(request, response);
+//        forumID = request.getParameter("forum");
+//        request.setAttribute("forumID", forumID);
+        MainTagDBContext maindb = new MainTagDBContext();
+        ArrayList<Main_Tag> mains = maindb.getMainTags();
+        request.setAttribute("main", mains);
+        request.getRequestDispatcher("pages/askform2.jsp").forward(request, response);
     }
 
     /**
@@ -86,10 +91,11 @@ public class QuestionController extends BaseAuthController {
         HttpSession session = request.getSession();
         int userID = (int) session.getAttribute("userID");
 
-        int majorID = Integer.parseInt(request.getParameter("forumID"));
+       
         String content = request.getParameter("question-content");
         String title = request.getParameter("question-title");
         String tags = request.getParameter("tag-content");
+        String maintag = request.getParameter("maintag");
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
@@ -98,7 +104,8 @@ public class QuestionController extends BaseAuthController {
 
         QuestionDBContext quesDB = new QuestionDBContext();
 
-        Question newQuestion = quesDB.createQuestion(userID, title, summary, createdAt, content, majorID);
+        Question newQuestion = quesDB.createQuestion(userID, title, summary, createdAt, content, maintag);
+
 
         
         TagDBContext tagDB = new TagDBContext();

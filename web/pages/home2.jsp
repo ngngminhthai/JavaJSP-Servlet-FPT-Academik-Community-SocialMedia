@@ -1,19 +1,18 @@
 <%-- 
-    Document   : Conversation
-    Created on : Feb 11, 2022, 10:16:53 AM
+    Document   : home2
+    Created on : Feb 23, 2022, 6:18:07 PM
     Author     : Admin
 --%>
 
-<%@page import="model.Message"%>
-<%@page import="model.Conversation"%>
-<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.Random"%>
+<%@page import="model.Question"%>
 <%@page import="java.util.ArrayList"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
     <head>
-
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta charset="utf-8">
         <title>Forum - Responsive HTML5 Template</title>
         <meta name="keywords" content="HTML5 Template">
         <meta name="description" content="Forum - Responsive HTML5 Template">
@@ -23,489 +22,407 @@
 
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        <style>
-            body{
-                background-color: #eee !important;
-                margin-top:20px;
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Merienda+One">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
 
-            }
-            .card {
-                background: #fff;
-                transition: .5s;
-                border: 0;
-                margin-bottom: 30px;
-                border-radius: .55rem;
-                position: relative;
-                width: 100%;
-                box-shadow: 0 1px 2px 0 rgb(0 0 0 / 10%);
-            }
-            .chat-app .people-list {
-                width: 280px;
-                position: absolute;
-                left: 0;
-                top: 0;
-                padding: 20px;
-                z-index: 7
-            }
-
-            .chat-app .chat {
-                margin-left: 280px;
-                border-left: 1px solid #eaeaea
-            }
-
-            .people-list {
-                -moz-transition: .5s;
-                -o-transition: .5s;
-                -webkit-transition: .5s;
-                transition: .5s
-            }
-
-            .people-list .chat-list li {
-                padding: 10px 15px;
-                list-style: none;
-                border-radius: 3px
-            }
-
-            .people-list .chat-list li:hover {
-                background: #efefef;
-                cursor: pointer
-            }
-
-            .people-list .chat-list li.active {
-                background: #efefef
-            }
-
-            .people-list .chat-list li .name {
-                font-size: 15px
-            }
-
-            .people-list .chat-list img {
-                width: 45px;
-                border-radius: 50%
-            }
-
-            .people-list img {
-                float: left;
-                border-radius: 50%
-            }
-
-            .people-list .about {
-                float: left;
-                padding-left: 8px
-            }
-
-            .people-list .status {
-                color: #999;
-                font-size: 13px
-            }
-
-            .chat .chat-header {
-                padding: 15px 20px;
-                border-bottom: 2px solid #f4f7f6
-            }
-
-            .chat .chat-header img {
-                float: left;
-                border-radius: 40px;
-                width: 40px
-            }
-
-            .chat .chat-header .chat-about {
-                float: left;
-                padding-left: 10px
-            }
-
-            .chat .chat-history {
-                padding: 20px;
-                border-bottom: 2px solid #fff
-            }
-
-            .chat .chat-history ul {
-                padding: 0
-            }
-
-            .chat .chat-history ul li {
-                list-style: none;
-                margin-bottom: 30px
-            }
-
-            .chat .chat-history ul li:last-child {
-                margin-bottom: 0px
-            }
-
-            .chat .chat-history .message-data {
-                margin-bottom: 15px
-            }
-
-            .chat .chat-history .message-data img {
-                border-radius: 40px;
-                width: 40px
-            }
-
-            .chat .chat-history .message-data-time {
-                color: #434651;
-                padding-left: 6px
-            }
-
-            .chat .chat-history .message {
-                color: #444;
-                padding: 18px 20px;
-                line-height: 26px;
-                font-size: 16px;
-                border-radius: 7px;
-                display: inline-block;
-                position: relative
-            }
-
-            .chat .chat-history .message:after {
-                bottom: 100%;
-                left: 7%;
-                border: solid transparent;
-                content: " ";
-                height: 0;
-                width: 0;
-                position: absolute;
-                pointer-events: none;
-                border-bottom-color: #fff;
-                border-width: 10px;
-                margin-left: -10px
-            }
-
-            .chat .chat-history .my-message {
-                background: #efefef
-            }
-
-            .chat .chat-history .my-message:after {
-                bottom: 100%;
-                left: 30px;
-                border: solid transparent;
-                content: " ";
-                height: 0;
-                width: 0;
-                position: absolute;
-                pointer-events: none;
-                border-bottom-color: #efefef;
-                border-width: 10px;
-                margin-left: -10px
-            }
-
-            .chat .chat-history .other-message {
-                background: #e8f1f3;
-                text-align: right
-            }
-
-            .chat .chat-history .other-message:after {
-                border-bottom-color: #e8f1f3;
-                left: 93%
-            }
-
-            .chat .chat-message {
-                padding: 20px
-            }
-
-            .online,
-            .offline,
-            .me {
-                margin-right: 2px;
-                font-size: 8px;
-                vertical-align: middle
-            }
-
-            .online {
-                color: #86c541
-            }
-
-            .offline {
-                color: #e47297
-            }
-
-            .me {
-                color: #1d8ecd
-            }
-
-            .float-right {
-                float: right
-            }
-
-            .clearfix:after {
-                visibility: hidden;
-                display: block;
-                font-size: 0;
-                content: " ";
-                clear: both;
-                height: 0
-            }
-
-            @media only screen and (max-width: 767px) {
-                .chat-app .people-list {
-                    height: 465px;
-                    width: 100%;
-                    overflow-x: auto;
-                    background: #fff;
-                    left: -400px;
-                    display: none
-                }
-                .chat-app .people-list.open {
-                    left: 0
-                }
-                .chat-app .chat {
-                    margin: 0
-                }
-                .chat-app .chat .chat-header {
-                    border-radius: 0.55rem 0.55rem 0 0
-                }
-                .chat-app .chat-history {
-                    height: 300px;
-                    overflow-x: auto
-                }
-            }
-
-            @media only screen and (min-width: 768px) and (max-width: 992px) {
-                .chat-app .chat-list {
-                    height: 650px;
-                    overflow-x: auto
-                }
-                .chat-app .chat-history {
-                    height: 600px;
-                    overflow-x: auto
-                }
-            }
-
-            @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1) {
-                .chat-app .chat-list {
-                    height: 480px;
-                    overflow-x: auto
-                }
-                .chat-app .chat-history {
-                    height: calc(100vh - 350px);
-                    overflow-x: auto
-                }
-            }
-            .chat-history ul{
-                min-height: 500px !important;
-            }
-/*            .container{
-                max-width: 1600px !important;
-                margin-top: 3rem;
-            }*/
-        </style>
-        <%@include file="../components/Bootstrap.jsp" %>
-        
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="style/style2.css">
+        <style>
+            .tt-topic-list .tt-item:nth-child(3):not(.tt-itemselect):not(.tt-item-popup) {
+                background-color: #f9efe3;
+            }
+            .tt-topic-list .tt-item:nth-child(4):not(.tt-itemselect):not(.tt-item-popup) {
+                background-color: #f9efe3;
+            }
+            .tt-topic-list .tt-item:nth-child(5):not(.tt-itemselect):not(.tt-item-popup) {
+                background-color: #f9efe3;
+            }
+
+
+        </style>
     </head>
-
     <body>
+        <!-- tt-mobile menu -->
         <%@include file="../assets/header3.jsp" %>
-        <% ArrayList<Conversation> cons = (ArrayList<Conversation>) request.getAttribute("conversations");%>
+        <main id="tt-pageContent" class="tt-offset-small">
+            <div class="container">
+                <div class="tt-topic-list">
+                    <div class="tt-list-header">
+                        <div class="tt-col-topic">Câu hỏi</div>
+                        <div class="tt-col-category">Tag</div>
+                        <div class="tt-col-value hide-mobile">Thích</div>
+                        <div class="tt-col-value hide-mobile">Trả lời</div>
+                        <div class="tt-col-value hide-mobile">Lượt xem</div>
+                        <div class="tt-col-value">Lần cuối</div>
+                    </div>
+                    <div class="tt-topic-alert tt-alert-default" role="alert">
+                        <a href="#" target="_blank">3 Bài viết mới </a> đã được thêm, click vào để tải bài viết.
+                    </div>
 
-        <div class="container" style="margin-top: 95px;
-    width: 100%;">
-            <div class="row clearfix">
-                <div class="col-lg-12">
-                    <div class="card chat-app">
-                        <div id="plist" class="people-list">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fa fa-search"></i></span>
-                                </div>
-                                <input type="text" class="form-control" placeholder="Search...">
-                            </div>
-                            <ul class="list-unstyled chat-list mt-2 mb-0">
-                                <!--                                <li class="clearfix active">
-                                                                    <img src="pages/thai.jpg" alt="avatar">
-                                                                    <div class="about">
-                                                                        <div class="name">tranducthuan</div>
-                                                                        <div class="status"> <i class="fa fa-circle offline"></i> hoạt động 7 phút trước </div>                                            
-                                                                    </div>
-                                                                </li>-->
-                                <% for (Conversation elem : cons) {%>
-                                <li class="clearfix <%= elem.getUsername()%> <%= elem.getC_id()%>">
-                                    <img src="pages/thai.jpg" alt="avatar">
-                                    <div class="about">
-                                        <div class="name userlist<%= elem.getC_id()%>"><%= elem.getUsername()%></div>
-                                        <div class="status"> <i class="fa fa-circle online"></i> đang hoạt động </div>
-                                    </div>
-                                </li>
-                                <% }
-                                %>
-
-
-                            </ul>
+                    <% ArrayList<Question> questionList = (ArrayList<Question>) request.getAttribute("ques");%>
+                    <% Random random = new Random();
+                        int i;
+                        Question elem = null;
+                    %>
+                    <% for (i = 0; i < questionList.size() - 17; i++) {
+                            elem = questionList.get(i);
+                    %>
+                    <div class="tt-item">
+                        <div class="tt-col-avatar">
+                            <svg class="tt-icon">
+                            <use xlink:href="#icon-ava-<%=(char) (random.nextInt(26) + 'a')%>"></use>
+                            </svg>
                         </div>
-                        <div class="chat">
-                            <div class="chat-header clearfix">
+                        <div class="tt-col-description">
+                            <h6 class="tt-title"><a href="thread?questionid=<%=elem.getQuestionID()%>">
+                                    <%= elem.getTitle()%> 
+                                </a></h6>
+                            <div class="row align-items-center no-gutters">
+                                <div class="col-11">
+                                    <ul class="tt-list-badge">
+                                        <li class="show-mobile"><a href="#"><span class="tt-color<%=random.nextInt(21 - 1) + 1%> tt-badge"><% if (elem.getMainTag() != null) {
+                                                out.print(elem.getMainTag().getTagid());
+                                            } %></span></a></li>
+                                                    <% for (int j = 0; j < elem.getTags().size(); j++) {
+                                                    %>
+                                        <li><a href="#"><span class="tt-badge"><% if (elem.getTags().get(j) != null) {
+                                                out.print(elem.getTags().get(j).getTagID());
+                                            } %></span></a></li>
+                                                    <%
+                                                        }
+                                                    %>
+
+
+                                    </ul>
+                                </div>
+                                <div class="col-1 ml-auto show-mobile">
+                                    <div class="tt-value">1d</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tt-col-category"><span class="tt-color<%=random.nextInt(21 - 1) + 1%> tt-badge"><% if (elem.getMainTag() != null) {
+                                out.print(elem.getMainTag().getTagid());
+                            } %></span></div>
+                        <div class="tt-col-value  hide-mobile">308</div>
+                        <div class="tt-col-value tt-color-select  hide-mobile">660</div>
+                        <div class="tt-col-value  hide-mobile">8.3k</div>
+                        <div class="tt-col-value hide-mobile">1d</div>
+                    </div>
+                    <%  }
+                    %>
+
+
+
+
+
+
+
+                    <div class="tt-item tt-item-popup">
+                        <div class="tt-col-avatar">
+                            <svg class="tt-icon">
+                            <use xlink:href="#icon-ava-f"></use>
+                            </svg>
+                        </div>
+                        <div class="tt-col-message">
+                            Bạn cần đăng nhập để đăng bài viết
+                        </div>
+                        <div class="tt-col-btn">
+                            <button type="button" class="btn btn-primary">Đăng nhập</button>
+                            <button type="button" class="btn btn-secondary">Đăng kí</button>
+                            <button type="button" class="btn-icon">
+                                <svg class="tt-icon">
+                                <use xlink:href="#icon-cancel"></use>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <% for (; i < questionList.size(); i++) {
+                            elem = questionList.get(i);
+                    %>
+                    <div class="tt-item">
+                        <div class="tt-col-avatar">
+                            <svg class="tt-icon">
+                            <use xlink:href="#icon-ava-<%=(char) (random.nextInt(26) + 'a')%>"></use>
+                            </svg>
+                        </div>
+                        <div class="tt-col-description">
+                            <h6 class="tt-title"><a href="page-single-topic.html">
+                                    <%= elem.getTitle()%> 
+                                </a></h6>
+                            <div class="row align-items-center no-gutters">
+                                <div class="col-11">
+                                    <ul class="tt-list-badge">
+                                        <li class="show-mobile"><a href="#"><span class="tt-color<%=random.nextInt(21 - 1) + 1%> tt-badge"><% if (elem.getMainTag() != null) {
+                                                out.print(elem.getMainTag().getTagid());
+                                            } %></span></a></li>
+                                                    <% for (int j = 0; j < elem.getTags().size(); j++) {
+                                                    %>
+                                        <li><a href="#"><span class="tt-badge"><% if (elem.getTags().get(j) != null) {
+                                                out.print(elem.getTags().get(j).getTagID());
+                                            } %></span></a></li>
+                                                    <%
+                                                        }
+                                                    %>
+
+
+                                    </ul>
+                                </div>
+                                <div class="col-1 ml-auto show-mobile">
+                                    <div class="tt-value">1d</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tt-col-category"><span class="tt-color<%=random.nextInt(21 - 1) + 1%> tt-badge"><% if (elem.getMainTag() != null) {
+                                out.print(elem.getMainTag().getTagid());
+                            } %></span></div>
+                        <div class="tt-col-value  hide-mobile">308</div>
+                        <div class="tt-col-value tt-color-select  hide-mobile">660</div>
+                        <div class="tt-col-value  hide-mobile">8.3k</div>
+                        <div class="tt-col-value hide-mobile">1d</div>
+                    </div>
+                    <%  }
+                    %>
+
+
+
+
+
+
+
+
+                    <div class="tt-row-btn">
+                        <button type="button" class="btn-icon js-topiclist-showmore">
+                            <svg class="tt-icon">
+                            <use xlink:href="#icon-load_lore_icon"></use>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <div id="js-popup-settings" class="tt-popup-settings">
+            <div class="tt-btn-col-close">
+                <a href="#">
+                    <span class="tt-icon-title">
+                        <svg>
+                        <use xlink:href="#icon-settings_fill"></use>
+                        </svg>
+                    </span>
+                    <span class="tt-icon-text">
+                        Settings
+                    </span>
+                    <span class="tt-icon-close">
+                        <svg>
+                        <use xlink:href="#icon-cancel"></use>
+                        </svg>
+                    </span>
+                </a>
+            </div>
+            <form class="form-default">
+                <div class="tt-form-upload">
+                    <div class="row no-gutter">
+                        <div class="col-auto">
+                            <div class="tt-avatar">
+                                <svg>
+                                <use xlink:href="#icon-ava-d"></use>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="col-auto ml-auto">
+                            <a href="#" class="btn btn-primary">Upload Picture</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="settingsUserName">Username</label>
+                    <input type="text" name="name" class="form-control" id="settingsUserName" placeholder="azyrusmax">
+                </div>
+                <div class="form-group">
+                    <label for="settingsUserEmail">Email</label>
+                    <input type="text" name="name" class="form-control" id="settingsUserEmail" placeholder="Sample@sample.com">
+                </div>
+                <div class="form-group">
+                    <label for="settingsUserPassword">Password</label>
+                    <input type="password" name="name" class="form-control" id="settingsUserPassword" placeholder="************">
+                </div>
+                <div class="form-group">
+                    <label for="settingsUserLocation">Location</label>
+                    <input type="text" name="name" class="form-control" id="settingsUserLocation" placeholder="Slovakia">
+                </div>
+                <div class="form-group">
+                    <label for="settingsUserWebsite">Website</label>
+                    <input type="text" name="name" class="form-control" id="settingsUserWebsite" placeholder="Sample.com">
+                </div>
+                <div class="form-group">
+                    <label for="settingsUserAbout">About</label>
+                    <textarea name="" placeholder="Few words about you" class="form-control" id="settingsUserAbout"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="settingsUserAbout">Notify me via Email</label>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="settingsCheckBox01" name="checkbox">
+                        <label for="settingsCheckBox01">
+                            <span class="check"></span>
+                            <span class="box"></span>
+                            <span class="tt-text">When someone replies to my thread</span>
+                        </label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="settingsCheckBox02" name="checkbox">
+                        <label for="settingsCheckBox02">
+                            <span class="check"></span>
+                            <span class="box"></span>
+                            <span class="tt-text">When someone likes my thread or reply</span>
+                        </label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="settingsCheckBox03" name="checkbox">
+                        <label for="settingsCheckBox03">
+                            <span class="check"></span>
+                            <span class="box"></span>
+                            <span class="tt-text">When someone mentions me</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <a href="#" class="btn btn-secondary">Save</a>
+                </div>
+            </form>
+        </div>
+       
+
+        <div class="modal fade" id="modalAdvancedSearch" tabindex="-1" role="dialog" aria-label="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="tt-modal-advancedSearch">
+                        <div class="tt-modal-title">
+                            <i class="pt-icon">
+                                <svg>
+                                <use xlink:href="#icon-advanced_search"></use>
+                                </svg>
+                            </i>
+                            Advanced Search
+                            <a class="pt-close-modal" href="#" data-dismiss="modal">
+                                <svg class="icon">
+                                <use xlink:href="#icon-cancel"></use>
+                                </svg>
+                            </a>
+                        </div>
+                        <form class="form-default">
+                            <div class="form-group">
+                                <i class="pt-customInputIcon">
+                                    <svg class="tt-icon">
+                                    <use xlink:href="#icon-search"></use>
+                                    </svg>
+                                </i>
+                                <input type="text" name="name" class="form-control pt-customInputSearch" id="searchForum" placeholder="Search all forums">
+                            </div>
+                            <div class="form-group">
+                                <label for="searchName">Posted by</label>
+                                <input type="text" name="name" class="form-control" id="searchName" placeholder="Username">
+                            </div>
+                            <div class="form-group">
+                                <label for="searchCategory">In Category</label>
+                                <input type="text" name="name" class="form-control" id="searchCategory" placeholder="Add Category">
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="searcCheckBox01" name="checkbox">
+                                <label for="searcCheckBox01">
+                                    <span class="check"></span>
+                                    <span class="box"></span>
+                                    <span class="tt-text">Include all tags</span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>Only return topics/posts that...</label>
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="searcCheckBox02" name="checkbox">
+                                    <label for="searcCheckBox02">
+                                        <span class="check"></span>
+                                        <span class="box"></span>
+                                        <span class="tt-text">I liked</span>
+                                    </label>
+                                </div>
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="searcCheckBox03" name="checkbox">
+                                    <label for="searcCheckBox03">
+                                        <span class="check"></span>
+                                        <span class="box"></span>
+                                        <span class="tt-text">are in my messages</span>
+                                    </label>
+                                </div>
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="searcCheckBox04" name="checkbox">
+                                    <label for="searcCheckBox04">
+                                        <span class="check"></span>
+                                        <span class="box"></span>
+                                        <span class="tt-text">I’ve read</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <select class="form-control" id="searchTop">
+                                    <option>any</option>
+                                    <option>value 01</option>
+                                    <option>value 02</option>
+                                    <option>value 03</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="searchaTopics">Where topics</label>
+                                <select class="form-control" id="searchaTopics">
+                                    <option>any</option>
+                                    <option>value 01</option>
+                                    <option>value 02</option>
+                                    <option>value 03</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="searchAdvTime">Posted</label>
                                 <div class="row">
-                                    <div class="col-lg-6">
-                                        <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">
-                                            <img src="pages/thai.jpg" alt="avatar">
-                                        </a>
-                                        <div class="chat-about">
-                                            <h6 class="m-b-0">tranducthuan</h6>
-                                            <small>Last seen: 2 hours ago</small>
-                                        </div>
+                                    <div class="col-6">
+                                        <select class="form-control">
+                                            <option>any</option>
+                                            <option>value 01</option>
+                                            <option>value 02</option>
+                                            <option>value 03</option>
+                                        </select>
                                     </div>
-                                    <div class="col-lg-6 hidden-sm text-right">
-                                        <a href="javascript:void(0);" class="btn btn-outline-secondary"><i class="fa fa-camera"></i></a>
-                                        <a href="javascript:void(0);" class="btn btn-outline-primary"><i class="fa fa-image"></i></a>
-                                        <a href="javascript:void(0);" class="btn btn-outline-info"><i class="fa fa-cogs"></i></a>
-                                        <a href="javascript:void(0);" class="btn btn-outline-warning"><i class="fa fa-question"></i></a>
+                                    <div class="col-6">
+                                        <input type="text" name="name" class="form-control" id="searchAdvTime" placeholder="dd-mm-yyyy">
                                     </div>
                                 </div>
                             </div>
-                            <div class="chat-history" style="overflow-y: scroll; max-height: 400px;">
-                                <ul class="m-b-0">
-
-                                    <!--                                    <li class="clearfix">
-                                                                            <div class="message-data">
-                                                                                <span class="message-data-time">10:12 AM, Today</span>
-                                                                            </div>
-                                                                            <div class="message my-message">Are we meeting today?</div>                                    
-                                                                        </li>                               -->
-                                    <!--                                    <li class="clearfix">
-                                                                            <div class="message-data">
-                                                                                <span class="message-data-time">10:15 AM, Today</span>
-                                                                            </div>
-                                                                            <div class="message my-message">Project has been already finished and I have results to show you.</div>
-                                                                        </li>
-                                                                        <li class="clearfix">
-                                                                            <div class="message-data">
-                                                                                <span class="message-data-time">10:15 AM, Today</span>
-                                                                            </div>
-                                                                            <div class="message my-message">Project has been already finished and I have results to show you.</div>
-                                                                        </li>-->
-
-                                </ul>
+                            <div class="form-group">
+                                <label for="minPostCount">Minimum Post Count</label>
+                                <select class="form-control" id="minPostCount">
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                    <option>6</option>
+                                    <option>7</option>
+                                    <option>8</option>
+                                    <option>9</option>
+                                    <option selected>10</option>
+                                </select>
                             </div>
-                            <div class="chat-message clearfix">
-                                <div class="input-group mb-0">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fa fa-send"></i></span>
-                                    </div>
-
-
-                                    <input type="text" class="form-control content" placeholder="Enter text here..." name="content">                    
-
-
-                                </div>
+                            <div class="form-group">
+                                <a href="#" class="btn btn-secondary btn-block">Search</a>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
 
-
-    </body>
-    <script>
-
-        function Message(c_id, content, replyid) {
-            this.c_id = c_id;
-            this.content = content;
-            this.replyid = replyid;
-
-
-        }
-        var messages = [];
-        <% for (Conversation elem : cons) {
-                for (int i = 0; i < elem.getMessages().size(); i++) {
-        %>
-        messages.push(new Message(<%= elem.getC_id()%>, '<%= elem.getMessages().get(i).getContent()%>',<%=elem.getMessages().get(i).getUserID()%>));
-        <%    }
-            }
-        %>
-
-        var currentActive = document.querySelector("li.clearfix");
-        var userlist = document.querySelectorAll("ul.chat-list li.clearfix");
-        var chatNameCurrent = document.querySelector(".chat-about h6");
-        currentActive.classList.add("active");
-        chatNameCurrent.innerHTML = currentActive.classList[1];
-        var chatHistory = document.querySelector(".chat-history ul");
-        var textmessgage = document.querySelector(".content");
-
-        textmessgage.addEventListener("keydown", (key) => {
-            console.log(key.keyCode)
-            if (key.keyCode == 13) {
-                var replyid = '<%=request.getSession().getAttribute("userID")%>';
-                var cid = currentActive.classList[2];
-                $.ajax({
-                    url: "/FUWePass/message",
-                    type: "post", //send it through get method
-                    data: {
-                        replyid: replyid,
-                        cid: cid,
-                        content: textmessgage.value
-                    },
-                    success: function (data) {
-                        textmessgage.value = ""
-                        chatHistory.innerHTML += data
-                        document.querySelector(".chat-history").scrollTo(0, document.querySelector(".chat-history").scrollHeight);
-                    },
-                    error: function (xhr) {
-                        //Do Something to handle error
-                    }
-                });
-            }
-        })
-
-
-        for (var i = 0; i < messages.length; i++) {
-            if (messages[i].c_id == currentActive.classList[2] && messages[i].replyid != '<%=request.getSession().getAttribute("userID")%>') {
-                chatHistory.innerHTML += ` 
-                                    <li class="clearfix">
-                                        <div class="message-data">
-                                            <span class="message-data-time">10:12 AM, Today</span>
-                                        </div>
-                                        <div class="message my-message">` + messages[i].content + `</div>                                    
-                                    </li>                `
-            } else if (messages[i].c_id == currentActive.classList[2]) {
-                chatHistory.innerHTML += `  <li class="clearfix">
-                            <div class="message-data text-right">
-                                <span class="message-data-time">10:10 AM, Today</span>
-                                <img src="pages/thai.jpg" alt="avatar">
-                            </div>
-                            <div class="message other-message float-right">` + messages[i].content + `</div>
-                        </li>`
-            }
-        }
-
-        userlist.forEach((elem) => {
-            elem.addEventListener("click", () => {
-                if (!elem.classList.contains("active")) {
-                    currentActive.classList.remove("active");
-                    currentActive = elem;
-                    elem.classList.add("active");
-                    chatNameCurrent.innerHTML = elem.classList[1];
-                    chatHistory.innerHTML = ``;
-                    for (var i = 0; i < messages.length; i++) {
-                        if (messages[i].c_id == elem.classList[2] && messages[i].replyid != '<%=request.getSession().getAttribute("userID")%>') {
-                            chatHistory.innerHTML += ` 
-                                    <li class="clearfix">
-                                        <div class="message-data">
-                                            <span class="message-data-time">10:12 AM, Today</span>
-                                        </div>
-                                        <div class="message my-message">` + messages[i].content + `</div>                                    
-                                    </li>                `
-                        } else if (messages[i].c_id == elem.classList[2]) {
-                            chatHistory.innerHTML += `  <li class="clearfix">
-                            <div class="message-data text-right">
-                                <span class="message-data-time">10:10 AM, Today</span>
-                                <img src="pages/thai.jpg" alt="avatar">
-                            </div>
-                            <div class="message other-message float-right">` + messages[i].content + `</div>
-                        </li>`
-                        }
-                    }
-                }
-            });
-        });
-
-
-
-
-    </script>
-
-
-    <svg width="0" height="0" class="hidden">
+        <svg width="0" height="0" class="hidden">
     <symbol aria-hidden="true" data-prefix="fab" data-icon="facebook-f" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 264 512" id="facebook-f-brands">
         <path fill="currentColor" d="M215.8 85H264V3.6C255.7 2.5 227.1 0 193.8 0 124.3 0 76.7 42.4 76.7 120.3V192H0v91h76.7v229h94V283h73.6l11.7-91h-85.3v-62.7c0-26.3 7.3-44.3 45.1-44.3z"></path>
     </symbol>
@@ -613,4 +530,5 @@
               c1.17-1.17,3.07-1.17,4.24,0c1.17,1.17,1.17,3.07,0,4.24l-6.36,6.36C341.19,172.87,340.43,173.16,339.66,173.16z"/>
         </g>
     </symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 159 186" id="icon-exit"><path fill="#980b3e" d="M84 183V39l72-36v144z" opacity=".4"></path><path d="M156 150c-1.66 0-3-1.34-3-3V6H33v33c0 1.66-1.34 3-3 3s-3-1.34-3-3V3c0-1.66 1.34-3 3-3h126c1.66 0 3 1.34 3 3v144c0 1.66-1.34 3-3 3z"></path><path d="M84 186c-.55 0-1.1-.15-1.58-.45A3.008 3.008 0 0 1 81 183V39c0-1.14.64-2.17 1.66-2.68l72-36c1.48-.74 3.28-.14 4.02 1.34a3.01 3.01 0 0 1-1.34 4.03L87 40.85v137.29l67.66-33.83c1.48-.74 3.28-.14 4.02 1.34a3.01 3.01 0 0 1-1.34 4.03l-72 36c-.42.21-.88.32-1.34.32z"></path><path d="M84 150H30c-1.66 0-3-1.34-3-3v-36c0-1.66 1.34-3 3-3s3 1.34 3 3v33h51c1.66 0 3 1.34 3 3s-1.34 3-3 3zm18-27c-1.66 0-3-1.34-3-3v-18c0-1.66 1.34-3 3-3s3 1.34 3 3v18c0 1.66-1.34 3-3 3zM57 78H3c-1.66 0-3-1.34-3-3s1.34-3 3-3h54c1.66 0 3 1.34 3 3s-1.34 3-3 3z"></path><path d="M21 96c-.77 0-1.54-.29-2.12-.88l-18-18a3 3 0 0 1 0-4.24l18-18a3 3 0 0 1 4.24 0 3 3 0 0 1 0 4.24L7.24 75l15.88 15.88a3 3 0 0 1 0 4.24c-.58.59-1.35.88-2.12.88z"></path></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 117 103.5" id="icon-favorite"><path d="M58.5 103.5c-8.9 0-23.73-8.36-35.24-19.88C8.26 68.62 0 50.11 0 31.5 0 14.13 14.13 0 31.5 0c11.44 0 21.48 6.14 27 15.29C64.02 6.14 74.06 0 85.5 0 102.87 0 117 14.13 117 31.5c0 18.61-8.26 37.12-23.26 52.12C82.22 95.14 67.4 103.5 58.5 103.5z"></path></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 71.67" id="icon-filter"><path d="M9.5 40.67h-5c-2.49 0-4.5-2.01-4.5-4.5s2.01-4.5 4.5-4.5h5c2.49 0 4.5 2.01 4.5 4.5s-2.01 4.5-4.5 4.5zm58 0H46.17c-2.49 0-4.5-2.01-4.5-4.5s2.01-4.5 4.5-4.5H67.5c2.49 0 4.5 2.01 4.5 4.5s-2.01 4.5-4.5 4.5zM28.5 45c-4.87 0-8.83-3.96-8.83-8.83s3.96-8.83 8.83-8.83 8.83 3.96 8.83 8.83S33.37 45 28.5 45zm0-9c-.09 0-.17.07-.17.17 0 .18.33.18.33 0 .01-.1-.07-.17-.16-.17zm-1-22.67h-23c-2.49 0-4.5-2.01-4.5-4.5s2.01-4.5 4.5-4.5h23c2.49 0 4.5 2.01 4.5 4.5s-2.01 4.5-4.5 4.5zm40 0h-3.33c-2.49 0-4.5-2.01-4.5-4.5s2.01-4.5 4.5-4.5h3.33c2.49 0 4.5 2.01 4.5 4.5s-2.01 4.5-4.5 4.5zm-21 4.34c-4.87 0-8.83-3.96-8.83-8.83S41.63 0 46.5 0s8.83 3.96 8.83 8.83-3.96 8.84-8.83 8.84zm0-9c-.09 0-.17.07-.17.17 0 .18.33.18.33 0 .01-.1-.07-.17-.16-.17zm-19 58.66h-23c-2.49 0-4.5-2.01-4.5-4.5s2.01-4.5 4.5-4.5h23c2.49 0 4.5 2.01 4.5 4.5s-2.01 4.5-4.5 4.5zm40 0h-3.33c-2.49 0-4.5-2.01-4.5-4.5s2.01-4.5 4.5-4.5h3.33c2.49 0 4.5 2.01 4.5 4.5s-2.01 4.5-4.5 4.5zm-21 4.34c-4.87 0-8.83-3.96-8.83-8.83S41.63 54 46.5 54s8.83 3.96 8.83 8.83-3.96 8.84-8.83 8.84zm0-9c-.09 0-.17.08-.17.17 0 .18.33.18.33 0 .01-.1-.07-.17-.16-.17z"></path></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 81 117" id="icon-flag"><path d="M4.5 117c-2.49 0-4.5-2.01-4.5-4.5V4.5C0 2.94.81 1.49 2.13.67c1.33-.82 2.98-.89 4.38-.2l72 36c1.53.77 2.49 2.33 2.49 4.03s-.96 3.26-2.49 4.02L9 79.28v33.22c0 2.49-2.01 4.5-4.5 4.5z"></path></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 111 111" id="icon-gallery"><path d="M5.5 2C3.3 2 1 3.3 1 5.5v82C1 89.7 3.3 92 5.5 92H70c2.2 0 4.81 1.36 5.81 3.32l5.38 10.49c.99 1.96 2.62 1.9 3.62-.06l5.38-10.4C91.19 93.39 93.8 92 96 92h9.5c2.2 0 3.5-2.3 3.5-4.5v-82c0-2.2-1.3-3.5-3.5-3.5H5.5z" fill="#fff"></path><path d="M83 108.65c-1.26 0-2.41-.84-3.15-2.29l-5.38-10.61C73.73 94.28 71.64 93 70 93H5.5A5.51 5.51 0 0 1 0 87.5v-82C0 2.47 2.47 0 5.5 0h100c3.03 0 5.5 2.47 5.5 5.5v82c0 3.03-2.47 5.5-5.5 5.5H96c-1.64 0-3.73 1.28-4.47 2.75l-5.38 10.62c-.74 1.45-1.89 2.28-3.15 2.28zM5.5 3A2.5 2.5 0 0 0 3 5.5v82A2.5 2.5 0 0 0 5.5 90H70c2.76 0 5.9 1.93 7.15 4.39L82.53 105c.24.47.46.63.51.66-.03-.02.19-.19.43-.66l5.38-10.62C90.1 91.93 93.24 90 96 90h9.5a2.5 2.5 0 0 0 2.5-2.5v-82a2.5 2.5 0 0 0-2.5-2.5H5.5z"></path><path d="M101 111H56c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5h45c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5zm-54 0H29c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5h18c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5zM11 18h24.55v24.55H11zm32.73 0h24.55v24.55H43.73zm32.73 0H101v24.55H76.46zM11 50.46h24.55V75H11zm32.73 0h24.55V75H43.73z"></path></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 99 117" id="icon-heading"><path d="M22.5 9h-18a4.5 4.5 0 0 1 0-9h18a4.5 4.5 0 0 1 0 9z"></path><path d="M13.5 117a4.5 4.5 0 0 1-4.5-4.5V4.5C9 2.02 11.02 0 13.5 0S18 2.02 18 4.5v108a4.5 4.5 0 0 1-4.5 4.5z"></path><path d="M22.5 117h-18a4.5 4.5 0 0 1 0-9h18c2.49 0 4.5 2.01 4.5 4.5s-2.01 4.5-4.5 4.5zm72-108h-18C74.01 9 72 6.99 72 4.5S74.01 0 76.5 0h18a4.5 4.5 0 0 1 0 9z"></path><path d="M85.5 117c-2.49 0-4.5-2.01-4.5-4.5V4.5a4.5 4.5 0 0 1 9 0v108c0 2.49-2.01 4.5-4.5 4.5z"></path><path d="M94.5 117h-18c-2.49 0-4.5-2.01-4.5-4.5s2.01-4.5 4.5-4.5h18c2.49 0 4.5 2.01 4.5 4.5s-2.01 4.5-4.5 4.5zm-9-54h-72a4.5 4.5 0 0 1 0-9h72c2.49 0 4.5 2.01 4.5 4.5S87.99 63 85.5 63z"></path></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 117 9" id="icon-horizontal_line"><path d="M112.5 9H4.5a4.5 4.5 0 0 1 0-9h108a4.5 4.5 0 0 1 0 9z" fill="#666f74"></path></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 81 117" id="icon-italic"><path d="M76.5 9h-45C29.01 9 27 6.99 27 4.5S29.01 0 31.5 0h45a4.5 4.5 0 0 1 0 9zm-27 108h-45a4.5 4.5 0 0 1 0-9h45c2.49 0 4.5 2.01 4.5 4.5s-2.01 4.5-4.5 4.5z"></path><path d="M22.5 117a4.504 4.504 0 0 1-4.27-5.92l36-108A4.508 4.508 0 0 1 59.92.23c2.36.79 3.63 3.33 2.85 5.69l-36 108A4.496 4.496 0 0 1 22.5 117z"></path></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 98 79" id="icon-like"><path d="M86 79H30c-1.66 0-3-1.34-3-3V31c0-1.66 1.34-3 3-3h9.73L65.84.92C66.41.33 67.19 0 68 0h.01c.82 0 1.6.34 2.16.94l9 9.5a3 3 0 0 1 .52 3.38L72.8 28H95c.9 0 1.75.4 2.32 1.1.57.69.8 1.61.62 2.49l-9 45A2.999 2.999 0 0 1 86 79zm-74 0H3c-1.66 0-3-1.34-3-3V31c0-1.66 1.34-3 3-3h9c1.66 0 3 1.34 3 3v45c0 1.66-1.34 3-3 3z"></path></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 68 86" id="icon-load_lore_icon"><path d="M65 86H3c-1.66 0-3-1.34-3-3V21c0-1.66 1.34-3 3-3h62c1.66 0 3 1.34 3 3v62c0 1.66-1.34 3-3 3zM6 80h56V24H6v56z"></path><path d="M47 15c-1.66 0-3-1.34-3-3V6H24v6c0 1.66-1.34 3-3 3s-3-1.34-3-3V3c0-1.66 1.34-3 3-3h26c1.66 0 3 1.34 3 3v9c0 1.66-1.34 3-3 3z" opacity=".25"></path><path d="M34 69.33c-.77 0-1.54-.29-2.12-.88L21.21 57.79a3 3 0 0 1 0-4.24 3 3 0 0 1 4.24 0L34 62.09l8.54-8.54a3 3 0 0 1 4.24 0 3 3 0 0 1 0 4.24L36.12 68.45c-.58.59-1.35.88-2.12.88z"></path><path d="M34 66c-1.66 0-3-1.34-3-3V37c0-1.66 1.34-3 3-3s3 1.34 3 3v26c0 1.66-1.34 3-3 3z"></path><path d="M56 24c-1.66 0-3-1.34-3-3v-6H15v6c0 1.66-1.34 3-3 3s-3-1.34-3-3v-9c0-1.66 1.34-3 3-3h44c1.66 0 3 1.34 3 3v9c0 1.66-1.34 3-3 3z" opacity=".5"></path></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 99 130.16" id="icon-locked"><path d="M84.5 130.16h-70c-7.99 0-14.5-6.5-14.5-14.5v-52c0-7.99 6.51-14.5 14.5-14.5h70c8 0 14.5 6.51 14.5 14.5v52c0 7.99-6.5 14.5-14.5 14.5z"></path><path d="M75.49 64.32c-3.04 0-5.5-2.46-5.5-5.5V31.49C69.99 20.19 60.8 11 49.5 11s-20.49 9.19-20.49 20.49v27.33c0 3.04-2.46 5.5-5.5 5.5s-5.5-2.46-5.5-5.5V31.49C18.01 14.13 32.14 0 49.5 0s31.49 14.13 31.49 31.49v27.33c0 3.04-2.46 5.5-5.5 5.5z"></path></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 73 63" id="icon-menu_icon"><path d="M68.5 9h-64a4.5 4.5 0 0 1 0-9h64a4.5 4.5 0 0 1 0 9zm0 27h-64a4.5 4.5 0 0 1 0-9h64c2.49 0 4.5 2.01 4.5 4.5S70.99 36 68.5 36zm0 27h-64a4.5 4.5 0 0 1 0-9h64c2.49 0 4.5 2.01 4.5 4.5S70.99 63 68.5 63z"></path></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 108" id="icon-more_options"><circle cx="9" cy="9" r="9"></circle><circle cx="9" cy="54" r="9"></circle><circle cx="9" cy="99" r="9"></circle></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 117.97 144.98" id="icon-notification"><path d="M58.91 122.04c-29.78 0-50.46-7.89-51.75-8.4-.64-.25-1.23-.63-1.71-1.12-9.2-9.2-5.04-20.03 0-25.07 5.68-5.68 10.73-29.47 12.58-43.14.04-.31.11-.61.21-.91C25.37 22 37.99 15.65 44.98 13.77V8.98c0-1.33.53-2.6 1.46-3.54 5.04-5.04 15.88-9.2 25.07 0 .94.94 1.46 2.21 1.46 3.54v4.79c7 1.88 19.61 8.23 26.74 29.63.1.3.17.6.21.91 1.85 13.66 6.9 37.45 12.58 43.14 5.04 5.04 9.2 15.87 0 25.07-.55.55-1.22.96-1.95 1.21-18.67 6.23-36.36 8.31-51.64 8.31zm.57 22.94c-10.37 0-18.5-6.15-18.5-14 0-2.76 2.24-5 5-5h27c2.76 0 5 2.24 5 5 0 7.85-8.12 14-18.5 14z"></path></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 113.66 113.66" id="icon-pencil"><path d="M4.5 113.66c-1.18 0-2.33-.47-3.18-1.32a4.516 4.516 0 0 1-1.23-4.06l6.36-31.82a4.5 4.5 0 0 1 7.6-2.29L39.5 99.61c1.17 1.17 1.6 2.9 1.13 4.49a4.51 4.51 0 0 1-3.42 3.11l-31.82 6.36c-.3.06-.6.09-.89.09zm9.13-27.19l-3.39 16.96 16.96-3.39-13.57-13.57z"></path><path d="M36.32 107.29c-1.15 0-2.3-.44-3.18-1.32a4.49 4.49 0 0 1 0-6.36l54.09-54.09-19.09-19.09-54.09 54.09a4.49 4.49 0 0 1-6.36 0 4.49 4.49 0 0 1 0-6.36l57.28-57.28c.84-.84 1.99-1.32 3.18-1.32 1.19 0 2.34.47 3.18 1.32l25.46 25.46a4.49 4.49 0 0 1 0 6.36L39.5 105.97c-.88.88-2.03 1.32-3.18 1.32z"></path><path d="M93.6 50.02c-1.15 0-2.3-.44-3.18-1.32a4.49 4.49 0 0 1 0-6.36l12.73-12.73c1.39-1.47 2.56-3.8 0-6.36L90.41 10.52c-1.47-1.39-3.8-2.56-6.36 0L71.32 23.24a4.49 4.49 0 0 1-6.36 0 4.49 4.49 0 0 1 0-6.36L77.69 4.15C81.52.32 86.27-.92 91.05.68c3.23 1.08 5.35 3.08 5.74 3.47l12.73 12.73c3.83 3.83 5.07 8.58 3.47 13.35-1.08 3.23-3.08 5.35-3.47 5.74L96.78 48.7c-.88.88-2.03 1.32-3.18 1.32z"></path></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 153 117" id="icon-performatted"><path d="M112.5 99c-1.15 0-2.3-.44-3.18-1.32a4.49 4.49 0 0 1 0-6.36l32.82-32.82-32.82-32.82a4.49 4.49 0 0 1 0-6.36 4.49 4.49 0 0 1 6.36 0l36 36a4.49 4.49 0 0 1 0 6.36l-36 36c-.88.88-2.03 1.32-3.18 1.32zm-72 0c-1.15 0-2.3-.44-3.18-1.32l-36-36a4.49 4.49 0 0 1 0-6.36l36-36a4.49 4.49 0 0 1 6.36 0 4.49 4.49 0 0 1 0 6.36L10.86 58.5l32.82 32.82a4.49 4.49 0 0 1 0 6.36c-.88.88-2.03 1.32-3.18 1.32zm18 18a4.504 4.504 0 0 1-4.27-5.92l36-108A4.508 4.508 0 0 1 95.92.23c2.36.79 3.63 3.33 2.85 5.69l-36 108A4.505 4.505 0 0 1 58.5 117z"></path></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 81 123" id="icon-pinned"><path d="M76.5 61h-5.24l-7.38-41h3.62c2.48 0 4.5-2.02 4.5-4.5v-11C72 2.02 69.98 0 67.5 0h-54C11.02 0 9 2.02 9 4.5v11c0 2.48 2.02 4.5 4.5 4.5h3.62L9.74 61H4.5A4.5 4.5 0 0 0 0 65.5v11C0 78.98 2.02 81 4.5 81h72c2.48 0 4.5-2.02 4.5-4.5v-11c0-2.48-2.02-4.5-4.5-4.5zM36 54c0 2.48-2.02 4.5-4.5 4.5S27 56.48 27 54V27c0-2.48 2.02-4.5 4.5-4.5S36 24.51 36 27v27zm4.5 69c-3.04 0-5.5-2.46-5.5-5.5v-25c0-3.04 2.46-5.5 5.5-5.5s5.5 2.46 5.5 5.5v25c0 3.04-2.46 5.5-5.5 5.5z"></path></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 98 98" id="icon-quote"><path d="M94 98c-1.04 0-2.06-.41-2.83-1.17L74.34 80H4c-2.21 0-4-1.79-4-4V4c0-2.21 1.79-4 4-4h90c2.21 0 4 1.79 4 4v90c0 1.62-.97 3.08-2.47 3.69-.49.21-1.01.31-1.53.31zM8 72h68c1.06 0 2.08.42 2.83 1.17L90 84.34V8H8v64z"></path></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 117 101.57" id="icon-reply"><path d="M112.5 101.57c-1.91 0-3.65-1.22-4.27-3.08-5.81-17.44-16.92-27.46-33.01-29.75-8.34-1.19-15.9.02-19.94.93v27.4c0 1.82-1.1 3.46-2.78 4.16-1.68.7-3.62.31-4.9-.98L1.32 53.97C.47 53.13 0 51.98 0 50.79s.47-2.34 1.32-3.18L47.6 1.32a4.503 4.503 0 0 1 4.9-.98c1.68.7 2.78 2.34 2.78 4.16v26.61c6 .55 17.14 2.32 28.37 7.94C98.87 46.65 117 62.89 117 97.07c0 2.21-1.6 4.09-3.78 4.44-.24.04-.48.06-.72.06z"></path></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 117 117" id="icon-search"><path d="M54 108C24.22 108 0 83.78 0 54S24.22 0 54 0s54 24.22 54 54-24.22 54-54 54zm0-99C29.19 9 9 29.19 9 54s20.19 45 45 45 45-20.19 45-45S78.81 9 54 9z"></path><path d="M112.5 117c-1.15 0-2.3-.44-3.18-1.32l-23.5-23.5a4.49 4.49 0 0 1 0-6.36 4.49 4.49 0 0 1 6.36 0l23.5 23.5a4.49 4.49 0 0 1 0 6.36c-.88.88-2.03 1.32-3.18 1.32z"></path></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 111.53 117" id="icon-settings"><path d="M55.77 81c-12.41 0-22.5-10.09-22.5-22.5S43.36 36 55.77 36s22.5 10.09 22.5 22.5S68.17 81 55.77 81zm0-36c-7.44 0-13.5 6.06-13.5 13.5S48.32 72 55.77 72s13.5-6.06 13.5-13.5S63.21 45 55.77 45zm18-16.79c-1.69 0-3.31-.96-4.08-2.59L61.9 9H49.37l-9.7 16.94a4.5 4.5 0 0 1-6.14 1.67 4.503 4.503 0 0 1-1.67-6.14l11-19.21A4.49 4.49 0 0 1 46.76 0h18c1.75 0 3.33 1.01 4.07 2.59l9 19.21a4.5 4.5 0 0 1-2.17 5.98c-.6.29-1.25.43-1.89.43z"></path><path d="M17.02 63c-1.47 0-2.91-.72-3.77-2.04L.73 41.75a4.49 4.49 0 0 1-.13-4.71l9-15.59c.8-1.39 2.29-2.25 3.9-2.25h22.27c2.49 0 4.5 2.01 4.5 4.5s-2.01 4.5-4.5 4.5H16.1L9.78 39.15l11.01 16.89c1.36 2.08.77 4.87-1.31 6.23-.77.49-1.62.73-2.46.73z"></path><path d="M37.77 97.79H13.5c-1.61 0-3.09-.86-3.9-2.25l-9-15.59a4.49 4.49 0 0 1 .13-4.71l12.52-19.21a4.501 4.501 0 0 1 6.23-1.31 4.503 4.503 0 0 1 1.31 6.23L9.78 77.85 16.1 88.8h21.67c2.49 0 4.5 2.01 4.5 4.5s-2.02 4.49-4.5 4.49z"></path><path d="M64.77 117h-18c-1.75 0-3.33-1.01-4.08-2.59l-9-19.21a4.492 4.492 0 0 1 2.17-5.98 4.492 4.492 0 0 1 5.98 2.17L49.63 108H61.9l7.78-16.61c1.06-2.25 3.74-3.22 5.98-2.17a4.503 4.503 0 0 1 2.17 5.98l-9 19.21a4.474 4.474 0 0 1-4.06 2.59z"></path><path d="M98.03 97.79H73.76c-2.49 0-4.5-2.01-4.5-4.5s2.01-4.5 4.5-4.5h21.67l6.31-10.92-11.22-16.88c-1.38-2.07-.81-4.86 1.26-6.24 2.07-1.38 4.86-.81 6.24 1.26l12.77 19.21a4.5 4.5 0 0 1 .15 4.74l-9 15.59a4.521 4.521 0 0 1-3.91 2.24z"></path><path d="M94.26 63c-.86 0-1.72-.24-2.49-.75a4.508 4.508 0 0 1-1.26-6.24l11.22-16.88-6.31-10.92H73.77c-2.49 0-4.5-2.01-4.5-4.5s2.01-4.5 4.5-4.5h24.27c1.61 0 3.09.86 3.9 2.25l9 15.59a4.5 4.5 0 0 1-.15 4.74l-12.77 19.2A4.52 4.52 0 0 1 94.26 63z"></path></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 111.53 117" id="icon-settings_fill"><path d="M64.77 117h-18c-1.75 0-3.33-1.01-4.07-2.59l-7.8-16.62H13.5c-1.61 0-3.09-.86-3.9-2.25l-9-15.59a4.49 4.49 0 0 1 .13-4.71L11.64 58.5.73 41.75a4.511 4.511 0 0 1-.13-4.71l9-15.59c.8-1.39 2.29-2.25 3.9-2.25h19.66l9.7-16.94A4.49 4.49 0 0 1 46.76 0h18c1.75 0 3.33 1.01 4.08 2.59l7.79 16.62h21.41c1.61 0 3.09.86 3.9 2.25l9 15.59a4.5 4.5 0 0 1-.15 4.74L99.67 58.5l11.11 16.71a4.5 4.5 0 0 1 .15 4.74l-9 15.59a4.502 4.502 0 0 1-3.9 2.25h-21.4l-7.79 16.61a4.492 4.492 0 0 1-4.07 2.6zm-9-75.75c-9.51 0-17.25 7.74-17.25 17.25s7.74 17.25 17.25 17.25 17.25-7.74 17.25-17.25c-.01-9.51-7.74-17.25-17.25-17.25z"></path></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 117 117" id="icon-share"><path d="M22.5 81C10.09 81 0 70.91 0 58.5S10.09 36 22.5 36 45 46.09 45 58.5 34.91 81 22.5 81zm72-36C82.09 45 72 34.91 72 22.5S82.09 0 94.5 0 117 10.09 117 22.5 106.91 45 94.5 45zm0 72C82.09 117 72 106.91 72 94.5S82.09 72 94.5 72 117 82.09 117 94.5 106.91 117 94.5 117z"></path><path d="M76.61 96.98c-.8 0-1.61-.21-2.35-.67l-39.14-24c-2.12-1.3-2.78-4.07-1.48-6.19s4.07-2.78 6.19-1.48l39.14 24a4.499 4.499 0 0 1 1.48 6.19 4.492 4.492 0 0 1-3.84 2.15zM38.7 55.15a4.5 4.5 0 0 1-3.88-2.21 4.502 4.502 0 0 1 1.58-6.17L75 23.92c2.13-1.27 4.9-.56 6.17 1.58 1.27 2.14.56 4.9-1.58 6.17l-38.6 22.85c-.72.43-1.51.63-2.29.63z"></path></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 102.04 102.03" id="icon-share_topic"><path d="M75.6 102.03c-6.78 0-13.55-2.58-18.7-7.74L46.54 83.95a4.49 4.49 0 0 1 0-6.36 4.49 4.49 0 0 1 6.36 0l10.35 10.35c6.81 6.8 17.88 6.8 24.68 0 6.8-6.8 6.8-17.88 0-24.68L72.41 47.73c-3.3-3.3-7.68-5.11-12.34-5.11s-9.04 1.81-12.34 5.11a4.49 4.49 0 0 1-6.36 0 4.49 4.49 0 0 1 0-6.36c5-5 11.64-7.75 18.71-7.75s13.71 2.75 18.71 7.75L94.3 56.89c10.31 10.31 10.31 27.1 0 37.41-5.16 5.15-11.93 7.73-18.7 7.73z"></path><path d="M41.96 68.41c-7.07 0-13.71-2.75-18.7-7.75L7.73 45.14c-10.31-10.31-10.31-27.09 0-37.41 10.31-10.31 27.1-10.31 37.41 0l11.21 11.21a4.49 4.49 0 0 1 0 6.36 4.49 4.49 0 0 1-6.36 0L38.78 14.1c-6.81-6.8-17.88-6.8-24.68 0-6.8 6.81-6.8 17.88 0 24.68L29.62 54.3c3.3 3.3 7.68 5.11 12.34 5.11s9.05-1.81 12.34-5.11a4.49 4.49 0 0 1 6.36 0 4.49 4.49 0 0 1 0 6.36c-4.99 5-11.63 7.75-18.7 7.75z"></path><path d="M75.6 49.05c-1.15 0-2.3-.44-3.18-1.32-3.3-3.3-7.68-5.11-12.34-5.11s-9.04 1.81-12.34 5.11a4.49 4.49 0 0 1-6.36 0 4.49 4.49 0 0 1 0-6.36c5-5 11.64-7.75 18.71-7.75s13.71 2.75 18.71 7.75a4.49 4.49 0 0 1 0 6.36c-.9.88-2.05 1.32-3.2 1.32z"></path></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 126 126" id="icon-time"><path d="M63 0C28.21 0 0 28.21 0 63s28.21 63 63 63 63-28.21 63-63S97.79 0 63 0zm31.6 94.6a6.471 6.471 0 0 1-4.6 1.9c-1.66 0-3.33-.63-4.6-1.9l-27-27a6.507 6.507 0 0 1-1.55-6.72l10-29a6.499 6.499 0 1 1 12.29 4.23l-8.67 25.16L94.6 85.4a6.525 6.525 0 0 1 0 9.2z" fill="#666f75"></path></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 99 108" id="icon-upload_files"><path d="M85.5 45c-1.15 0-2.3-.44-3.18-1.32L49.5 10.86 16.68 43.68a4.49 4.49 0 0 1-6.36 0 4.49 4.49 0 0 1 0-6.36l36-36a4.49 4.49 0 0 1 6.36 0l36 36a4.49 4.49 0 0 1 0 6.36c-.88.88-2.03 1.32-3.18 1.32z"></path><path d="M49.5 81c-2.49 0-4.5-2.01-4.5-4.5v-72a4.5 4.5 0 0 1 9 0v72c0 2.49-2.01 4.5-4.5 4.5zm45 27h-90a4.5 4.5 0 0 1-4.5-4.5v-9a4.5 4.5 0 0 1 9 0V99h81v-4.5c0-2.49 2.01-4.5 4.5-4.5s4.5 2.01 4.5 4.5v9c0 2.49-2.01 4.5-4.5 4.5z"></path></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 102.04 117.01" id="icon-user"><path d="M50.69 58.22c-14.61 0-26.38-17.42-26.38-31.85C24.31 11.83 36.14 0 50.69 0c14.54 0 26.37 11.83 26.37 26.38 0 14.42-11.76 31.84-26.37 31.84zm.33 58.79c-.22 0-.44-.02-.66-.05-22.3-3.27-46.36-11.8-47.37-12.16a4.502 4.502 0 0 1-2.94-4.89c1.19-8.14 3.67-22.39 6.85-26.28.95-1.16 2.18-2.28 3.66-3.34 8.98-6.41 21.6-10.32 22.14-10.48 1.86-.57 3.88.12 5 1.72 1.75 2.46 7.67 8.85 13.95 8.85h.03c4.29-.01 8.55-2.99 12.67-8.85a4.51 4.51 0 0 1 5-1.72c.53.16 13.16 4.08 22.13 10.48 1.5 1.07 2.72 2.19 3.66 3.34 3.18 3.91 5.66 18.15 6.86 26.29.31 2.12-.92 4.17-2.94 4.89-1.01.36-25.08 8.89-47.38 12.17-.22.02-.44.03-.66.03z"></path></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" id="icon-verified"><path d="M54 0C24.18 0 0 24.18 0 54s24.18 54 54 54 54-24.18 54-54S83.82 0 54 0zm31.6 40.6l-36 36a6.471 6.471 0 0 1-4.6 1.9c-1.66 0-3.33-.63-4.6-1.9l-18-18a6.494 6.494 0 0 1 0-9.19 6.494 6.494 0 0 1 9.19 0L45 62.81l31.4-31.4a6.494 6.494 0 0 1 9.19 0c2.54 2.53 2.54 6.65.01 9.19z" fill="#666f75"></path></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144 90" id="icon-view"><path d="M72 0C32.24 0 0 36 0 45s32.24 45 72 45 72-36 72-45S111.76 0 72 0zm0 72c-14.91 0-27-12.09-27-27s12.09-27 27-27 27 12.09 27 27-12.09 27-27 27z"></path></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 132" id="Level_Up"><path d="M66 123H30c-1.66 0-3-1.34-3-3V60H3c-1.16 0-2.22-.67-2.72-1.73s-.33-2.3.41-3.19l45-54C46.27.4 47.11 0 48 0s1.73.4 2.3 1.08l45 54c.75.89.91 2.14.41 3.19S94.16 60 93 60H69v60c0 1.66-1.34 3-3 3zm-33-6h30V57c0-1.66 1.34-3 3-3h20.59L48 7.69 9.41 54H30c1.66 0 3 1.34 3 3v60z"></path><path d="M57 132H39c-.8 0-1.56-.32-2.12-.88l-9-9a3 3 0 0 1 0-4.24 3 3 0 0 1 4.24 0l8.12 8.12h15.52l8.12-8.12a3 3 0 0 1 4.24 0 3 3 0 0 1 0 4.24l-9 9c-.56.56-1.32.88-2.12.88zM30 69H12c-.8 0-1.56-.32-2.12-.88l-9-9a3 3 0 0 1 0-4.24 3 3 0 0 1 4.24 0L13.24 63H30c1.66 0 3 1.34 3 3s-1.34 3-3 3zm54 0H66c-1.66 0-3-1.34-3-3s1.34-3 3-3h16.76l8.12-8.12a3 3 0 0 1 4.24 0 3 3 0 0 1 0 4.24l-9 9c-.56.56-1.32.88-2.12.88z"></path></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 111 111" id="Others"><path d="M5.5 2C3.3 2 1 3.3 1 5.5v82C1 89.7 3.3 92 5.5 92H70c2.2 0 4.81 1.36 5.81 3.32l5.38 10.49c.99 1.96 2.62 1.9 3.62-.06l5.38-10.4C91.19 93.39 93.8 92 96 92h9.5c2.2 0 3.5-2.3 3.5-4.5v-82c0-2.2-1.3-3.5-3.5-3.5H5.5z" fill="#fff"></path><path d="M83 108.65c-1.26 0-2.41-.84-3.15-2.29l-5.38-10.61C73.73 94.28 71.64 93 70 93H5.5A5.51 5.51 0 0 1 0 87.5v-82C0 2.47 2.47 0 5.5 0h100c3.03 0 5.5 2.47 5.5 5.5v82c0 3.03-2.47 5.5-5.5 5.5H96c-1.64 0-3.73 1.28-4.47 2.75l-5.38 10.62c-.74 1.45-1.89 2.28-3.15 2.28zM5.5 3A2.5 2.5 0 0 0 3 5.5v82A2.5 2.5 0 0 0 5.5 90H70c2.76 0 5.9 1.93 7.15 4.39L82.53 105c.24.47.46.63.51.66-.03-.02.19-.19.43-.66l5.38-10.62C90.1 91.93 93.24 90 96 90h9.5a2.5 2.5 0 0 0 2.5-2.5v-82a2.5 2.5 0 0 0-2.5-2.5H5.5z"></path><path d="M101 111H56c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5h45c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5zm-54 0H29c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5h18c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5zM20 28h63m0 1.5H20c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5h63c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5zM20 46h45m0 1.5H20c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5h45c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5zM20 64h54m0 1.5H20c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5h54c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5z"></path></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 111 111" id="Poll"><path d="M5.5 2C3.3 2 1 3.3 1 5.5v82C1 89.7 3.3 92 5.5 92H70c2.2 0 4.81 1.36 5.81 3.32l5.38 10.49c.99 1.96 2.62 1.9 3.62-.06l5.38-10.4C91.19 93.39 93.8 92 96 92h9.5c2.2 0 3.5-2.3 3.5-4.5v-82c0-2.2-1.3-3.5-3.5-3.5H5.5z" fill="#fff"></path><path d="M83 108.65c-1.26 0-2.41-.84-3.15-2.29l-5.38-10.61C73.73 94.28 71.64 93 70 93H5.5A5.51 5.51 0 0 1 0 87.5v-82C0 2.47 2.47 0 5.5 0h100c3.03 0 5.5 2.47 5.5 5.5v82c0 3.03-2.47 5.5-5.5 5.5H96c-1.64 0-3.73 1.28-4.47 2.75l-5.38 10.62c-.74 1.45-1.89 2.28-3.15 2.28zM5.5 3A2.5 2.5 0 0 0 3 5.5v82A2.5 2.5 0 0 0 5.5 90H70c2.76 0 5.9 1.93 7.15 4.39L82.53 105c.24.47.46.63.51.66-.03-.02.19-.19.43-.66l5.38-10.62C90.1 91.93 93.24 90 96 90h9.5a2.5 2.5 0 0 0 2.5-2.5v-82a2.5 2.5 0 0 0-2.5-2.5H5.5z"></path><path d="M101 111H56c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5h45c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5zm-54 0H29c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5h18c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5zm21-59H20c-2.76 0-5-2.24-5-5s2.24-5 5-5h48"></path><path d="M68 42h27c2.76 0 5 2.24 5 5s-2.24 5-5 5H68" fill="#b9c2c6"></path></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 111 111" id="Question"><path d="M5.5 1.5c-2.2 0-4 1.8-4 4v82c0 2.2 1.8 4 4 4H70c2.2 0 4.81 1.61 5.81 3.57l5.38 10.61c.99 1.96 2.62 1.96 3.62 0l5.38-10.61c.99-1.96 3.61-3.57 5.81-3.57h9.5c2.2 0 4-1.8 4-4v-82c0-2.2-1.8-4-4-4H5.5z" fill="#fff"></path><path d="M83 108.65c-1.26 0-2.41-.84-3.15-2.29l-5.38-10.61C73.73 94.28 71.64 93 70 93H5.5A5.51 5.51 0 0 1 0 87.5v-82C0 2.47 2.47 0 5.5 0h100c3.03 0 5.5 2.47 5.5 5.5v82c0 3.03-2.47 5.5-5.5 5.5H96c-1.64 0-3.73 1.28-4.47 2.75l-5.38 10.62c-.74 1.45-1.89 2.28-3.15 2.28zM5.5 3A2.5 2.5 0 0 0 3 5.5v82A2.5 2.5 0 0 0 5.5 90H70c2.76 0 5.9 1.93 7.15 4.39L82.53 105c.24.47.46.63.51.66-.03-.02.19-.19.43-.66l5.38-10.62C90.1 91.93 93.24 90 96 90h9.5a2.5 2.5 0 0 0 2.5-2.5v-82a2.5 2.5 0 0 0-2.5-2.5H5.5z"></path><path d="M101 111H66c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5h35c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5zm-44 0H29c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5h28c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5z"></path><path d="M52.36 54.22c0-1.36.25-2.59.74-3.69s1.09-2.04 1.79-2.84c.7-.79 1.64-1.74 2.81-2.84 1.44-1.32 2.5-2.47 3.21-3.43.7-.96 1.05-2.09 1.05-3.38 0-3.52-1.83-5.28-5.5-5.28-1.82 0-3.18.53-4.09 1.59-.91 1.06-1.53 2.5-1.87 4.31l-6.01-1.65c.3-2.72 1.56-4.95 3.77-6.69 2.21-1.74 5.04-2.61 8.48-2.61 3.52 0 6.4.91 8.65 2.72s3.38 4.31 3.38 7.49c0 1.66-.27 3.08-.79 4.25-.53 1.17-1.16 2.14-1.9 2.89-.74.76-1.73 1.63-2.98 2.61-1.59 1.21-2.77 2.33-3.55 3.35-.78 1.02-1.16 2.35-1.16 3.97v1.08h-6.01v-1.85zm-1.02 10.16v-.74c0-2.53 1.27-3.8 3.8-3.8h.68c2.53 0 3.8 1.27 3.8 3.8v.74c0 2.53-1.27 3.8-3.8 3.8h-.68c-2.54 0-3.8-1.27-3.8-3.8z" fill="#b9c2c6"></path></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 111 111" id="Video"><path d="M5.5 1.5c-2.2 0-4 1.8-4 4v82c0 2.2 1.8 4 4 4H70c2.2 0 4.81 1.61 5.81 3.57l5.38 10.61c.99 1.96 2.62 1.96 3.62 0l5.38-10.61c.99-1.96 3.61-3.57 5.81-3.57h9.5c2.2 0 4-1.8 4-4v-82c0-2.2-1.8-4-4-4H5.5z" fill="#fff"></path><path d="M83 108.65c-1.26 0-2.41-.84-3.15-2.29l-5.38-10.61C73.73 94.28 71.64 93 70 93H5.5A5.51 5.51 0 0 1 0 87.5v-82C0 2.47 2.47 0 5.5 0h100c3.03 0 5.5 2.47 5.5 5.5v82c0 3.03-2.47 5.5-5.5 5.5H96c-1.64 0-3.73 1.28-4.47 2.75l-5.38 10.62c-.74 1.45-1.89 2.28-3.15 2.28zM5.5 3A2.5 2.5 0 0 0 3 5.5v82A2.5 2.5 0 0 0 5.5 90H70c2.76 0 5.9 1.93 7.15 4.39L82.53 105c.24.47.46.63.51.66-.03-.02.19-.19.43-.66l5.38-10.62C90.1 91.93 93.24 90 96 90h9.5a2.5 2.5 0 0 0 2.5-2.5v-82a2.5 2.5 0 0 0-2.5-2.5H5.5z"></path><path d="M101 111H56c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5h45c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5zm-54 0H29c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5h18c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5z"></path><path d="M56 24.33c-11.97 0-21.67 9.7-21.67 21.67S44.03 67.67 56 67.67c11.97 0 21.67-9.7 21.67-21.67S67.97 24.33 56 24.33zm-2.13 28.8c-1.94 1.03-3.54.07-3.54-2.13V41c0-2.2 1.59-3.16 3.54-2.13l9.93 5.26c1.94 1.03 1.94 2.71 0 3.74l-9.93 5.26z" fill="#b9c2c6"></path></symbol></svg>
+</body>
 </html>

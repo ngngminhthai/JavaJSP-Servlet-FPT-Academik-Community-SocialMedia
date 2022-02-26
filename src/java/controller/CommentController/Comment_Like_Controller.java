@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Admin
  */
-public class Comment_Like_Controller extends BaseAuthController {
+public class Comment_Like_Controller extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -57,7 +57,7 @@ public class Comment_Like_Controller extends BaseAuthController {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void processGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         int commentID = Integer.parseInt(request.getParameter("commentID")); //comment id is liked
         int userID = (Integer) request.getSession().getAttribute("userID"); //who liked the comment
@@ -75,7 +75,7 @@ public class Comment_Like_Controller extends BaseAuthController {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void processPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 //        int commentID = request.getParameter("commentID");
 //        int userID = 

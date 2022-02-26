@@ -66,7 +66,7 @@ public class CommentDBContext extends DBContext {
 
                     boolean islike = checkIsLike(userid, rs.getInt("CommentID"));
 
-                    totalLike = getLikeByCommentIDLogin(userid, rs.getInt("CommentID"));
+                    totalLike = getLikeByCommentID2(rs.getInt("CommentID"));
 
                     comment1 = new Comment(rs.getInt("CommentID"), rs.getInt("QuestionID"), user1, rs.getString("content"), rs.getString("createdAt"), comment2, islike, totalLike);
 

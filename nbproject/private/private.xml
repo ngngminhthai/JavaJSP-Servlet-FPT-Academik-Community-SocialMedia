@@ -9,6 +9,7 @@
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/controller/QuestionController/QuestionController.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/model/Question.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/pages/thread2.jsp</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/controller/UserController/NotificationController.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/pages/signin.jsp</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/db/CommentDBContext.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/style/style1.css</file>
@@ -23,11 +24,13 @@
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/model/Tag.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/db/DBContext.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/components/Bootstrap.jsp</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/pages/forum.jsp</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/db/QuestionDBContext.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/controller/QuestionController/Post_Like_Controller.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/pages/login.jsp</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/assets/footer.jsp</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/pages/newjsp.jsp</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/controller/UserController/MessageController.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/db/ConversationDBContext.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/pages/askform.jsp</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/model/Comment_Like.java</file>

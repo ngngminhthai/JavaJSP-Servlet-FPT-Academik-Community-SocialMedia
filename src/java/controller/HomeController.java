@@ -47,12 +47,17 @@ public class HomeController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        MajorDBContext majordb = new MajorDBContext();
-        ArrayList<Major> majorList = majordb.getMajor();
+//        MajorDBContext majordb = new MajorDBContext();
+//        ArrayList<Major> majorList = majordb.getMajor();
+//
+//        request.setAttribute("majorList", majorList);
 
-        request.setAttribute("majorList", majorList);
-        
-        request.getRequestDispatcher("pages/home.jsp").forward(request, response);
+        QuestionDBContext quesDB = new QuestionDBContext();
+        ArrayList<Question> questions = quesDB.getQuestions();
+ 
+        request.setAttribute("ques", questions);
+
+        request.getRequestDispatcher("pages/home2.jsp").forward(request, response);
 
     }
 

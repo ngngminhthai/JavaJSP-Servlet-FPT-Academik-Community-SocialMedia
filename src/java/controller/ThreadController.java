@@ -59,7 +59,7 @@ public class ThreadController extends HttpServlet {
         request.setAttribute("userid", user);
         request.setAttribute("clickedQues", clickedQuestion);
         request.setAttribute("taglist", tagList);
-        request.getRequestDispatcher("pages/thread2.jsp").forward(request, response);
+        request.getRequestDispatcher("pages/thread3.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

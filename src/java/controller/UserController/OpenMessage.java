@@ -19,7 +19,7 @@ import model.Conversation;
  *
  * @author Admin
  */
-public class MessageController extends HttpServlet {
+public class OpenMessage extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -33,22 +33,18 @@ public class MessageController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String content = request.getParameter("content");
-        int replyid = (Integer) request.getSession().getAttribute("userID");
-        int cid = Integer.parseInt(request.getParameter("cid"));
-
         try (PrintWriter out = response.getWriter()) {
-
-            out.println(" <li class=\"clearfix\">\n" +
-"                            <div class=\"message-data text-right\">\n" +
-"                                <span class=\"message-data-time\">10:10 AM, Today</span>\n" +
-"                                <img src=\"pages/thai.jpg\" alt=\"avatar\">\n" +
-"                            </div>\n" +
-"                            <div class=\"message other-message float-right\">"+ content + "</div>\n" +
-"                        </li>");
-
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet OpenMessage</title>");
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet OpenMessage at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
         }
-        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -67,7 +63,7 @@ public class MessageController extends HttpServlet {
         ConversationDBContext conDB = new ConversationDBContext();
         ArrayList<Conversation> cons = conDB.getConversation(userID);
         request.setAttribute("conversations", cons);
-        request.getRequestDispatcher("pages/Conversation.jsp").forward(request, response);
+        request.getRequestDispatcher("pages/Conversation_1.jsp").forward(request, response);
     }
 
     /**

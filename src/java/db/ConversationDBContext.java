@@ -63,4 +63,70 @@ public class ConversationDBContext extends DBContext {
         return messages;
     }
 
+    public int createConversation(int usersend, int userreceive) {
+        try {
+            String sql = "INSERT INTO dbo.Conversation(user_send, user_receive)\n"
+                    + "VALUES(?,?)";
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, usersend);
+            stm.setInt(2, userreceive);
+            stm.executeUpdate();
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(QuestionDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
+    }
+
+    public boolean findConversation(int usersend, int userreceive) {
+        try {
+            String sql = "SELECT COUNT(*) FROM dbo.Conversation WHERE (user_send = ? and user_receive = ?) OR (user_receive = ? AND user_send = ?)";
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, usersend); //1
+            stm.setInt(2, userreceive); //2
+
+            stm.setInt(3, usersend); //1
+            stm.setInt(4, userreceive); //2
+
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return true;
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(QuestionDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public void createMessage(int userone, int replyid, int cid, String content) {
+        try {
+            String sql = "INSERT INTO dbo.Message(message_content, createdAt, userID, c_id)\n"
+                    + "VALUES(?,GETDATE(),?,?)";
+
+            if (findConversation(userone, userone)) {
+                PreparedStatement stm = connection.prepareStatement(sql);
+                stm.setString(1, content);
+                stm.setInt(2, replyid);
+                stm.setInt(3, cid);
+                stm.executeUpdate();
+            } else {
+                PreparedStatement stm = connection.prepareStatement(sql);
+                int cid2 = createConversation(userone, replyid);
+                stm.setString(1, content);
+                stm.setInt(2, replyid);
+                stm.setInt(3, cid2);
+                stm.executeUpdate();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(QuestionDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
 }
