@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import model.Conversation;
+import model.Message;
 
 /**
  *
@@ -77,7 +78,17 @@ public class OpenMessage extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+         ConversationDBContext conDB = new ConversationDBContext();
+         int numberItems = Integer.parseInt(request.getParameter("total"));
+         int cid = Integer.parseInt(request.getParameter("cid"));
+         response.setContentType("text/html;charset=UTF-8");
+         ArrayList<Message> mesages = conDB.getMessages(cid, numberItems);
+         PrintWriter out = response.getWriter();
+         
+         for (Message mesage : mesages) {
+            out.print(mesage.getContent()+"/"+mesage.getUserID()+"/"+cid+"-");
+        }
+         
     }
 
     /**

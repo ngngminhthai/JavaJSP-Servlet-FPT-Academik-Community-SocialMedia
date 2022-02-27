@@ -33,16 +33,14 @@
                 <!-- /toggle mobile menu -->
                 <!-- logo -->
                 <div class="tt-logo">
-                    <i class="fa fa-graduation-cap" aria-hidden="true" style="
-                       font-size: 25px;
-                       "></i>
+                    <a href="home"><img src="assets/logo.png" alt=""></a>
                 </div>
                 <!-- /logo -->
                 <!-- desctop menu -->
                 <div class="tt-desktop-menu">
                     <nav>
                         <ul>
-                            <li><a href="page-categories.html"><span style="color: blue; font-weight: bold;">FPTCommunity</span></a></li>
+                            <li><a href="page-categories.html"><span style="color: blue; font-weight: bold;">Môn học</span></a></li>
                             <li><a href="page-tabs.html"><span>Trending</span></a></li>
                             <li><a href="page-create-topic.html"><span>Mới nhất</span></a></li>
                             <li>

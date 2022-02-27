@@ -399,6 +399,17 @@
 
     </body>
     <script>
+        $(document).ready(function ()
+        {
+            $(".chat-history").scroll(function ()
+            {
+                var div = $(this);
+                if (div.scrollTop() == 0)
+                {
+                    loadMore();
+                }
+            });
+        });
 
         function Message(c_id, content, replyid) {
             this.c_id = c_id;
@@ -442,10 +453,11 @@
 //            this.content = content;
 //            this.replyid = replyid;
 //            messages.push(new Message(cid,content,replyid);
-            messages.push(new Message(cid, content2, replyid));
+
 
             xmlhttp.send("userID=" + userID + "&content=" + content + "&cid=" + cid + "&usernameReplied=" + usernameReplied);
         }
+
 
         var messagesWaiting = false;
         function getMessages() {
@@ -461,6 +473,8 @@
                         let arr = final.split('-');
                         var content = arr[1];
                         var replier = arr[2];
+
+                        messages.unshift(new Message(currentActive.classList[2], content, replier));
 
                         if (currentAc != replier) {
                             contentElement.innerHTML = contentElement.innerHTML + `<li class="clearfix">
@@ -519,11 +533,63 @@
 //            }
 //        })
 
+        function loadMore() {
+            var numberOfBubbles = document.querySelectorAll(".chat-history li.clearfix").length;
+            var cid = currentActive.classList[2];
+            var replyid = '<%=request.getSession().getAttribute("userID")%>'
+            $.ajax({
+                url: "/FUWePass/OpenMessage",
+                type: "post", //send it through get method
+                data: {
+                    replyid: replyid,
+                    cid: cid,
+                    total: numberOfBubbles
+                },
+                success: function (data) {
+                    var contentElement = document.querySelector("ul.m-b-0");
+                    var currentAc = '<%=request.getSession().getAttribute("userID")%>'
+
+                    var final = data;
+                    let arr = final.split('-');
+                    var content = "";
+                    var replier = -1;
+                    var cid = -1;
+
+                    for (var i = 0; i < arr.length - 1; i++) {
+                        let arr2 = arr[i].split('/');
+                        content = arr2[0];
+                        replier = arr2[1];
+                        cid = arr2[2];
+                        messages.push(new Message(cid, content, replier));
+                        if (currentAc != replier) {
+                            contentElement.innerHTML = `<li class="clearfix">
+                                        <div class="message-data">
+                                            <span class="message-data-time">10:10 Sáng nay</span>
+                                        </div>
+                                        <div class="message my-message">` + content + `</div>                                    
+                                    </li>               ` + contentElement.innerHTML;
+                        } else {
+                            contentElement.innerHTML = `<li class="clearfix">
+                            <div class="message-data text-right">
+                                <span class="message-data-time">10:10 Sáng nay</span>
+                                <img src="pages/thai.jpg" alt="avatar">
+                            </div>
+                            <div class="message other-message float-right">` + content + `</div>
+                        </li>` + contentElement.innerHTML
+                        }
+                        document.querySelector(".chat-history").scrollTo(0, 100);
+                    }
+
+                },
+                error: function (xhr) {
+                    //Do Something to handle error
+                }
+            });
+        }
 
 
 
-
-        for (var i = 0; i < messages.length; i++) {
+        for (var i = messages.length - 1; i >= 0; i--) {
             if (messages[i].c_id == currentActive.classList[2] && messages[i].replyid != '<%=request.getSession().getAttribute("userID")%>') {
                 chatHistory.innerHTML += ` 
                                     <li class="clearfix">
@@ -552,7 +618,7 @@
                     chatNameCurrent.innerHTML = elem.classList[1];
                     chatHistory.innerHTML = ``;
                     console.log(currentActive.classList[3].charAt(1));
-                    for (var i = 0; i < messages.length; i++) {
+                    for (var i = messages.length - 1; i >= 0; i--) {
                         if (messages[i].c_id == elem.classList[2] && messages[i].replyid != '<%=request.getSession().getAttribute("userID")%>') {
                             chatHistory.innerHTML += ` 
                                     <li class="clearfix">
@@ -573,7 +639,6 @@
                     }
                 }
                 document.querySelector(".chat-history").scrollTo(0, document.querySelector(".chat-history").scrollHeight);
-
             });
         });
 

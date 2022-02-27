@@ -30,7 +30,7 @@ public class ConversationDBContext extends DBContext {
 
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
-                ArrayList<Message> messages = getMessages(rs.getInt("c_id"));
+                ArrayList<Message> messages = getMessages(rs.getInt("c_id"), 0);
                 String name = rs.getString(2);
                 int userid = rs.getInt(3);
                 int cid = rs.getInt("c_id");
@@ -44,19 +44,21 @@ public class ConversationDBContext extends DBContext {
         return conversations;
     }
 
-    public ArrayList<Message> getMessages(int userID) {
+    public ArrayList<Message> getMessages(int cid, int currentNumberItems) {
         ArrayList<Message> messages = new ArrayList<>();
         try {
-            String sql = "SELECT message_content, userID FROM dbo.Message WHERE c_id = ?";
+            String sql = "SELECT message_content, userID FROM dbo.Message WHERE c_id = ? ORDER BY createdAt DESC OFFSET ? ROWS FETCH NEXT 3 ROWS ONLY";
 
             PreparedStatement stm = connection.prepareStatement(sql);
-            stm.setInt(1, userID);
+            stm.setInt(1, cid);
+            stm.setInt(2, currentNumberItems);
 
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                 messages.add(new Message(rs.getString("message_content"), rs.getInt("userID")));
             }
 
+            return messages;
         } catch (SQLException ex) {
             Logger.getLogger(QuestionDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }

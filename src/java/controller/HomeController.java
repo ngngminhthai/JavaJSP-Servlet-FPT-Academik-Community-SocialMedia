@@ -51,11 +51,22 @@ public class HomeController extends HttpServlet {
 //        ArrayList<Major> majorList = majordb.getMajor();
 //
 //        request.setAttribute("majorList", majorList);
-
         QuestionDBContext quesDB = new QuestionDBContext();
-        ArrayList<Question> questions = quesDB.getQuestions();
- 
+        int pagesize = 10;
+        String page = request.getParameter("page");
+        if (page == null || page.trim().length() == 0) {
+            page = "1";
+        }
+
+        int pageindex = Integer.parseInt(page);
+
+        ArrayList<Question> questions = quesDB.getQuestions(pageindex, pagesize);
+
         request.setAttribute("ques", questions);
+        int count = quesDB.count();
+        int totalpage = (count % pagesize == 0) ? (count / pagesize) : (count / pagesize) + 1;
+        request.setAttribute("totalpage", totalpage);
+        request.setAttribute("pageindex", pageindex);
 
         request.getRequestDispatcher("pages/home2.jsp").forward(request, response);
 

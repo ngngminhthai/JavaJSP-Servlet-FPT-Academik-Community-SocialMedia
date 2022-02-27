@@ -816,7 +816,7 @@ html {
 
 @media (min-width:1230px) {
     .container {
-        max-width: 1500px;
+        max-width: 1200px;
     }
 }
 
@@ -7123,11 +7123,11 @@ hr {
 }
 
 .tt-topic-list .tt-item:nth-child(even):not(.tt-itemselect):not(.tt-item-popup) {
-    background-color: #f2f4f6
+    background-color: #fff
 }
 
 .tt-topic-list .tt-item:nth-child(odd):not(.tt-itemselect):not(.tt-item-popup) {
-    background-color: #fff
+    background-color: #f2f4f6
 }
 
 .tt-topic-list .tt-item .tt-col-avatar .tt-icon {
