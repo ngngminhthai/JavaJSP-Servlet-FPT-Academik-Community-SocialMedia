@@ -56,6 +56,10 @@
         <servlet-name>OpenMessage</servlet-name>
         <servlet-class>controller.UserController.OpenMessage</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>TagController</servlet-name>
+        <servlet-class>controller.TagController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>home</servlet-name>
         <url-pattern>/home</url-pattern>
@@ -107,6 +111,10 @@
     <servlet-mapping>
         <servlet-name>OpenMessage</servlet-name>
         <url-pattern>/OpenMessage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TagController</servlet-name>
+        <url-pattern>/tag</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -4,6 +4,8 @@
     Author     : Admin
 --%>
 
+<%@page import="model.Main_Tag"%>
+<%@page import="model.Tag"%>
 <%@page import="model.Comment"%>
 <%@page import="model.Question_Tag"%>
 <%@page import="java.util.ArrayList"%>
@@ -449,6 +451,25 @@
             li:hover{
                 cursor: pointer;
             }
+             span.tt-badge{
+                text-align: center;
+                width: fit-content;
+                transition: 0.5s;
+                white-space: nowrap;
+                cursor: pointer;
+            }
+            span.tt-badge .fa{
+                font-size: 0px;
+                transition: font-size 0.5s;
+                display: inline !important;
+            }
+            span.tt-badge:hover{
+                /*                width: 74px;*/
+            }
+            span.tt-badge:hover .fa{
+                /*                display: inline !important;*/
+                font-size: 13px !important;
+            }
         </style>
     </head>
     <body>
@@ -459,6 +480,8 @@
             User user = (User) request.getAttribute("userid");
             ArrayList<Question_Tag> tagList = (ArrayList<Question_Tag>) request.getAttribute("taglist");
             ArrayList<Comment> commentList = (ArrayList<Comment>) request.getAttribute("comlist");
+            Main_Tag main = (Main_Tag) request.getAttribute("main");
+
         %>
         <main id="tt-pageContent">
             <div class="container">
@@ -471,46 +494,47 @@
                                         <i class="tt-icon"><svg><use xlink:href="#icon-ava-d"></use></svg></i>
                                     </div>
                                     <div class="tt-avatar-title">
-                                        <a href="#">nguyenminhthai</a>
+                                        <a href="#"><%=user.getUsername()%></a>
                                     </div>
                                     <a href="#" class="tt-info-time">
-                                        <i class="tt-icon"><svg><use xlink:href="#icon-time"></use></svg></i>6 Jan,2019
+                                        <i class="tt-icon"><svg><use xlink:href="#icon-time"></use></svg></i><%=clickedQuestion.getCreatedAt()%>
                                     </a>
                                 </div>
                                 <h3 class="tt-item-title">
-                                    <a href="#">Hướng dẫn cách chèn thêm dòng trong Excel cực nhanh, đơn giản</a>
+                                    <a href="#"><%= clickedQuestion.getTitle()%></a>
                                 </h3>
                                 <div class="tt-item-tag">
                                     <ul class="tt-list-badge">
-                                        <li><a href="#"><span class="tt-color3 tt-badge">exchange</span></a></li>
+                                        <li><a href="#"><span class="tt-color3 tt-badge"><%= main.getTagid()%><i class="fa fa-plus" aria-hidden="true" style="display: block; margin-left: 3px; margin-top: 3px;"></i></span></a></li>
 
-                                        <li><a href="#"><span class="tt-badge">themeforest</span></a></li>
-                                        <li><a href="#"><span class="tt-badge">elements</span></a></li>
+
+                                        <% for (Question_Tag elem : tagList) {%>
+                                        <li><a href="#"><span class="tt-badge"><%= elem.getTagID()%><i class="fa fa-plus" aria-hidden="true" style="display: block; margin-left: 3px; margin-top: 3px;"></i></span></a></li>
+                                                <%}
+                                                %>
+
+
+
                                     </ul>
                                 </div>
                             </div>
                             <div class="tt-item-description">
-                                <h6 class="tt-title">Get ready for Movember!</h6>
+                                <h6 class="tt-title"><%= clickedQuestion.getTitle()%></h6>
                                 <p>
-                                    Trong bài viết này, Học Excel cơ bản sẽ hướng dẫn một số cách nhanh nhất để thêm dòng mới trong Excel, các phím tắt chèn dòng trong excel. Bạn sẽ biết cách thêm dòng bằng thanh công cụ chuẩn hoặc phím tắt và thêm dòng giữa các dòng có dữ liệu.
+                                    <%= clickedQuestion.getContent()%>
                                 </p>
-                                <p>
-                                    Throughout November we will be inviting all community members to help raise awareness and funds for the lives of men affected
-                                    by cancer and mental health problems via the Movember Foundation 10.
-                                </p>
-                                <h6 class="tt-title">How Does it Work?</h6>
-                                <p>
-                                    Authors and customers with facial hair unite! Simply grow, groom, and share your facial hair during November! Even females can enter if they desire (be creative, ladies!). Be inspired by checking out last year’s highlights 28.
-                                </p>
+
                             </div>
                             <div class="tt-item-info info-bottom">
-                                <li class="tt-icon-btn">
-                                    <i class="tt-icon"><svg><use xlink:href="#icon-like"></use></svg></i>
-                                    <span class="tt-text likenumber">671</span>
+                                <li onclick="likepost(this)" class="tt-icon-btn u<%=clickedQuestion.getQuestionID()%> <%=clickedQuestion.getQuestionID()%>">
+                                    <i class="tt-icon"><svg class="<%if (clickedQuestion.isIsLike()) {
+                                            out.print("pressed");
+                                        }%>"><use xlink:href="#icon-like"></use></svg></i>
+                                    <span class="tt-text likenumber"><%= clickedQuestion.getTotalLike()%></span>
                                 </li>
                                 <a href="#" class="tt-icon-btn">
                                     <i class="tt-icon"><svg><use xlink:href="#icon-dislike"></use></svg></i>
-                                    <span class="tt-text">39</span>
+                                    <span class="tt-text">1</span>
                                 </a>
                                 <a href="#" class="tt-icon-btn">
                                     <i class="tt-icon"><svg><use xlink:href="#icon-favorite"></use></svg></i>
@@ -1437,7 +1461,35 @@
                                                 }
                                             });
                                         }
+                                        function likepost(elem) {
+                                            var quesID = "." + elem.classList[1];
+                                            var iconlike = document.querySelector(quesID).querySelector("svg");
+                                            var raw_numberLike = document.querySelector(quesID).querySelector("span");
 
+                                            var numberLike = parseInt(raw_numberLike.innerHTML);
+                                            if (iconlike.classList.contains('pressed')) {
+                                                numberLike = numberLike - 1;
+                                                raw_numberLike.innerHTML = numberLike;
+                                            } else {
+                                                numberLike = numberLike + 1;
+                                                raw_numberLike.innerHTML = numberLike;
+                                            }
+                                            iconlike.classList.toggle('pressed')
+                                            var quesID = elem.classList[2];
+                                            $.ajax({
+                                                url: "/FUWePass/Post_Like",
+                                                type: "post", //send it through get method
+                                                data: {
+                                                    postID: quesID
+                                                },
+                                                success: function (data) {
+                                                    console.log("ok")
+                                                },
+                                                error: function (xhr) {
+                                                    //Do Something to handle error
+                                                }
+                                            });
+                                        }
                                         angular.module("textAngularTest", ['textAngular']);
                                         function wysiwygeditor($scope) {
                                             $scope.orightml = '';

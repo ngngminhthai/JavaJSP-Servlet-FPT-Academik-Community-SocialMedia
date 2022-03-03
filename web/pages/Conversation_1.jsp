@@ -449,12 +449,6 @@
             var cid = escape(currentActive.classList[2]);
 
             textmessgage.value = "";
-//               this.c_id = c_id;
-//            this.content = content;
-//            this.replyid = replyid;
-//            messages.push(new Message(cid,content,replyid);
-
-
             xmlhttp.send("userID=" + userID + "&content=" + content + "&cid=" + cid + "&usernameReplied=" + usernameReplied);
         }
 
@@ -507,31 +501,6 @@
                 postMessage();
             }
         })
-
-//        textmessgage.addEventListener("keydown", (key) => {
-//            console.log(key.keyCode)
-//            if (key.keyCode == 13) {
-//                var replyid = ''
-//                var cid = currentActive.classList[2];
-//                $.ajax({
-//                    url: "/FUWePass/message",
-//                    type: "post", //send it through get method
-//                    data: {
-//                        replyid: replyid,
-//                        cid: cid,
-//                        content: textmessgage.value
-//                    },
-//                    success: function (data) {
-//                        textmessgage.value = ""
-//                        chatHistory.innerHTML += data
-//                        document.querySelector(".chat-history").scrollTo(0, document.querySelector(".chat-history").scrollHeight);
-//                    },
-//                    error: function (xhr) {
-//                        //Do Something to handle error
-//                    }
-//                });
-//            }
-//        })
 
         function loadMore() {
             var numberOfBubbles = document.querySelectorAll(".chat-history li.clearfix").length;
@@ -641,9 +610,6 @@
                 document.querySelector(".chat-history").scrollTo(0, document.querySelector(".chat-history").scrollHeight);
             });
         });
-
-
-
 
     </script>
 

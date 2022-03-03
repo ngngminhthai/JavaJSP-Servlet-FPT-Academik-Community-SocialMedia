@@ -31,6 +31,7 @@
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="style/style2.css">
+
         <link rel="stylesheet" href="style/Paginition.css">
 
         <link rel="apple-touch-icon" type="image/png" href="assets/logo.png" />
@@ -54,9 +55,31 @@
             .tt-topic-list .tt-item:nth-child(5):not(.tt-itemselect):not(.tt-item-popup) {
                 background-color: #f9efe3;
             }
-
+            span.tt-badge{
+                text-align: center;
+                width: fit-content;
+                transition: 0.5s;
+                white-space: nowrap;
+                cursor: pointer;
+            }
+            span.tt-badge .fa{
+                font-size: 0px;
+                transition: font-size 0.5s;
+                display: inline !important;
+                display: block; 
+                margin-left: 3px; 
+                margin-top: 3px;
+            }
+            span.tt-badge:hover{
+                /*                width: 74px;*/
+            }
+            span.tt-badge:hover .fa{
+                /*                display: inline !important;*/
+                font-size: 13px !important;
+            }
 
         </style>
+        <script src="js/follow.js"></script>
     </head>
     <body>
         <!-- tt-mobile menu -->
@@ -66,7 +89,7 @@
                 <div class="tt-topic-list">
                     <div class="tt-list-header">
                         <div class="tt-col-topic">Câu hỏi</div>
-                        <div class="tt-col-category">Tag</div>
+                        <div class="tt-col-category">Môn học</div>
                         <div class="tt-col-value hide-mobile">Thích</div>
                         <div class="tt-col-value hide-mobile">Trả lời</div>
                         <div class="tt-col-value hide-mobile">Lượt xem</div>
@@ -97,14 +120,14 @@
                             <div class="row align-items-center no-gutters">
                                 <div class="col-11">
                                     <ul class="tt-list-badge">
-                                        <li class="show-mobile"><a href="#"><span class="tt-color<%=random.nextInt(21 - 1) + 1%> tt-badge"><% if (elem.getMainTag() != null) {
+                                        <li class="show-mobile"><a href="#"><span onclick="follow(this, ${sessionScope.userID})" class="tt-color<%=random.nextInt(21 - 1) + 1%> tt-badge main"><% if (elem.getMainTag() != null) {
                                                 out.print(elem.getMainTag().getTagid());
-                                            } %></span></a></li>
+                                    } %><i class="fa fa-plus" aria-hidden="true"></i></span></a></li>
                                                     <% for (int j = 0; j < elem.getTags().size(); j++) {
                                                     %>
                                         <li><a href="#"><span class="tt-badge"><% if (elem.getTags().get(j) != null) {
                                                 out.print(elem.getTags().get(j).getTagID());
-                                            } %></span></a></li>
+                                            } %><i class="fa fa-plus" aria-hidden="true" style="display: block; margin-left: 3px;"></i></span></a></li>
                                                     <%
                                                         }
                                                     %>
@@ -117,9 +140,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="tt-col-category"><span class="tt-color<%=random.nextInt(21 - 1) + 1%> tt-badge"><% if (elem.getMainTag() != null) {
-                                out.print(elem.getMainTag().getTagid());
-                            } %></span></div>
+                        <div class="tt-col-category"><span onclick="follow(this, ${sessionScope.userID})" class="tt-color<%=random.nextInt(21 - 1) + 1%> tt-badge main"><%if (elem.getMainTag() != null) {
+                                        out.print(elem.getMainTag().getTagid());
+                                    } %><i class="fa fa-plus" aria-hidden="true" style="display: block; margin-left: 3px;"></i></span></div>
                         <div class="tt-col-value  hide-mobile">308</div>
                         <div class="tt-col-value tt-color-select  hide-mobile">660</div>
                         <div class="tt-col-value  hide-mobile">8.3k</div>
@@ -127,7 +150,6 @@
                     </div>
                     <%  }
                     %>
-
 
 
 
@@ -238,15 +260,15 @@
     %>
 
     <div id="app">  
-                 <li class="page__btn"><span class="material-icons">chevron_double_left</span></li>
+        <li class="page__btn"><span class="material-icons">chevron_double_left</span></li>
 
-<!--         <li class="page__btn"><span class="material-icons">chevron_left</span></li>-->
+        <!--         <li class="page__btn"><span class="material-icons">chevron_left</span></li>-->
         <ul class="page">
-                   
+
         </ul>  
-<!--         <li class="page__btn"><span class="material-icons">chevron_right</span></li>-->
+        <!--         <li class="page__btn"><span class="material-icons">chevron_right</span></li>-->
     </div>
-    
+
     <script>
         pagger("page",<%=pageindex%>,<%=totalpage%>, 3);
         addFunc(<%=totalpage%>);

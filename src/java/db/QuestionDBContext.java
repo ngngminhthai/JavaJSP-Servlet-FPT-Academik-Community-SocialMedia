@@ -44,14 +44,48 @@ public class QuestionDBContext extends DBContext {
 //        }
 //        return questions;
 //    }
-    public ArrayList<Question> getQuestions(int pageindex, int pagesize) {
+    public void insertLikeToQues(int quesid, int userid) {
+        String sql2 = "INSERT INTO dbo.Question_Like(UserID, QuestionID)\n"
+                + "VALUES(?,\n"
+                + "?   \n"
+                + "    )";
+        try {
+            PreparedStatement stm = connection.prepareStatement(sql2);
+            stm.setInt(1, userid);
+            stm.setInt(2, quesid);
+
+            stm.executeUpdate();
+
+        } catch (SQLException ex) {
+            deleteLikeOfQues(quesid, userid);
+            Logger.getLogger(TagDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void deleteLikeOfQues(int quesid, int userID) {
+        sql = "DELETE FROM dbo.Question_Like WHERE QuestionID = ? AND UserID = ?";
+        try {
+            PreparedStatement stm = connection.prepareStatement(sql);
+
+            stm.setInt(1, quesid);
+            stm.setInt(2, userID);
+
+            stm.executeUpdate();
+
+        } catch (SQLException ex) {
+            
+            Logger.getLogger(CommentDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public ArrayList<Question> getQuestions(int pageindex, int pagesize, int userid) {
 
         try {
             TagDBContext tagDB = new TagDBContext();
             MainTagDBContext mainDB = new MainTagDBContext();
             ArrayList<Question_Tag> tags = null;
             Main_Tag main = null;
-            String sql = "SELECT QuestionID,UserID,title,summary,createdAt,content from  (SELECT *,ROW_NUMBER() OVER (ORDER BY createdAt ASC) as row_index  FROM dbo.Question) tbl\n"
+            String sql = "SELECT QuestionID,UserID,title,summary,createdAt,content,totalLike from  (SELECT *,ROW_NUMBER() OVER (ORDER BY createdAt ASC) as row_index  FROM dbo.Question) tbl\n"
                     + "            WHERE row_index >= (? -1)*? + 1 \n"
                     + "                    AND row_index <= ? * ?";
 
@@ -63,8 +97,8 @@ public class QuestionDBContext extends DBContext {
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                 tags = tagDB.getTagsByQuesID(rs.getInt("QuestionID"));
-                main = mainDB.getMainTagByQuesID(rs.getInt("QuestionID"));
-                Question s = new Question(rs.getInt("QuestionID"), rs.getInt("UserID"), rs.getString("title"), rs.getString("summary"), rs.getString("createdAt"), rs.getString("content"), tags, main);
+                main = mainDB.getMainTagByQuesID(rs.getInt("QuestionID"), userid);
+                Question s = new Question(rs.getInt("QuestionID"), rs.getInt("UserID"), rs.getString("title"), rs.getString("summary"), rs.getString("createdAt"), rs.getString("content"), tags, main, rs.getInt("totalLike"));
                 questions.add(s);
             }
 
@@ -88,28 +122,62 @@ public class QuestionDBContext extends DBContext {
         return -1;
     }
 
-    public ArrayList<Question> getQuestions2() {
+    public Question getQuestions2(int quesid, int currentUser) {
 
         try {
             TagDBContext tagDB = new TagDBContext();
             MainTagDBContext mainDB = new MainTagDBContext();
             ArrayList<Question_Tag> tags = null;
             Main_Tag main = null;
-            String sql = "SELECT QuestionID,UserID,title,summary,createdAt,content from Question";
+            String sql = "SELECT QuestionID,UserID,title,summary,createdAt,content,totalLike from Question where questionid = ?";
 
             PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, quesid);
             ResultSet rs = stm.executeQuery();
-            while (rs.next()) {
-                tags = tagDB.getTagsByQuesID(rs.getInt("QuestionID"));
-                main = mainDB.getMainTagByQuesID(rs.getInt("QuestionID"));
-                Question s = new Question(rs.getInt("QuestionID"), rs.getInt("UserID"), rs.getString("title"), rs.getString("summary"), rs.getString("createdAt"), rs.getString("content"), tags, main);
-                questions.add(s);
+
+            if (currentUser == -1) {
+                if (rs.next()) {
+                    tags = tagDB.getTagsByQuesID(rs.getInt("QuestionID"));
+                    main = mainDB.getMainTagByQuesID(rs.getInt("QuestionID"), currentUser);
+                    Question s = new Question(rs.getInt("QuestionID"), rs.getInt("UserID"), rs.getString("title"), rs.getString("summary"), rs.getString("createdAt"), rs.getString("content"), tags, main, rs.getInt("totalLike"));
+                    return s;
+                }
+            } else {
+                if (rs.next()) {
+                    tags = tagDB.getTagsByQuesID(rs.getInt("QuestionID"));
+                    main = mainDB.getMainTagByQuesID(rs.getInt("QuestionID"), currentUser);
+                    boolean isLike = checkIsLike(currentUser, quesid);
+                    Question s = new Question(rs.getInt("QuestionID"), rs.getInt("UserID"), rs.getString("title"), rs.getString("summary"), rs.getString("createdAt"), rs.getString("content"), tags, main, isLike, rs.getInt("totalLike"));
+                    return s;
+                }
             }
 
         } catch (SQLException ex) {
             Logger.getLogger(QuestionDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return questions;
+        return null;
+    }
+
+    public boolean checkIsLike(int userid, int quesid) {
+        String newsql = "	select count(*) as total from dbo.Question_Like where userid = ? and QuestionID = ?";
+        try {
+            PreparedStatement stm = connection.prepareStatement(newsql);
+            stm.setInt(1, userid);
+            stm.setInt(2, quesid);
+
+            ResultSet rs = stm.executeQuery();
+
+            if (rs.next()) {
+                if (rs.getInt("total") > 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CommentDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
 
     public User getUserByQuestionID(int questionID) {
@@ -157,7 +225,7 @@ public class QuestionDBContext extends DBContext {
         return questions.size();
     }
 
-    public Question createQuestion(int userid, String title, String summary, String createdAt, String content, String maintag) {
+    public int createQuestion(int userid, String title, String summary, String createdAt, String content, String maintag) {
 
         String sql = "insert into question(UserID,title,summary,createdAt,content) VALUES(?,?,?,?,?)";
         try {
@@ -172,16 +240,20 @@ public class QuestionDBContext extends DBContext {
             stm.setString(5, content);
 
             stm.executeUpdate();
+            ResultSet rs = stm.executeQuery("select questionid from question");
+            int quesid = -1;
+            if (rs.last()) {
+                quesid = rs.getInt("questionid");
+            }
 
-            Question q = getQuestions2().get(questions.size() - 1);
-            mainDB.LinkTagToQuestion(q.getQuestionID(), maintag);
+            mainDB.LinkTagToQuestion(quesid, maintag);
 
-            return q;
+            return quesid;
 
         } catch (SQLException ex) {
             Logger.getLogger(QuestionDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return null;
+        return -1;
     }
 
 }

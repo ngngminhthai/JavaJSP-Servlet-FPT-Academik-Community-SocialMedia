@@ -5,6 +5,7 @@
  */
 package controller.QuestionController;
 
+import db.QuestionDBContext;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -35,7 +36,7 @@ public class Post_Like_Controller extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet Post_Like_Controller</title>");            
+            out.println("<title>Servlet Post_Like_Controller</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet Post_Like_Controller at " + request.getContextPath() + "</h1>");
@@ -70,7 +71,10 @@ public class Post_Like_Controller extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        int quesID = Integer.parseInt(request.getParameter("postID")); //comment id is liked
+        int userID = (Integer) request.getSession().getAttribute("userID"); //who liked the comment
+        QuestionDBContext quesDB = new QuestionDBContext();
+        quesDB.insertLikeToQues(quesID, userID);
     }
 
     /**

@@ -23,6 +23,34 @@ public class Question {
     int majorID;
     ArrayList<Question_Tag> tags;
     Main_Tag mainTag;
+    int totalLike;
+    boolean isLike; //determine the current user like the post or not
+
+    public int getTotalLike() {
+        return totalLike;
+    }
+
+    public void setTotalLike(int totalLike) {
+        this.totalLike = totalLike;
+    }
+
+    public int getUserID() {
+        return userID;
+    }
+
+    public void setUserID(int userID) {
+        this.userID = userID;
+    }
+
+    public boolean isIsLike() {
+        return isLike;
+    }
+
+    public void setIsLike(boolean isLike) {
+        this.isLike = isLike;
+    }
+    
+    
 
     public ArrayList<Question_Tag> getTags() {
         return tags;
@@ -49,7 +77,7 @@ public class Question {
     }
 
     
-    public Question(int QuestionID, int userID, String title, String summary, String createdAt, String content, ArrayList<Question_Tag> tags, Main_Tag maintag) {
+    public Question(int QuestionID, int userID, String title, String summary, String createdAt, String content, ArrayList<Question_Tag> tags, Main_Tag maintag, boolean isLike, int total) {
         this.QuestionID = QuestionID;
         this.userID = userID;
         this.title = title;
@@ -58,7 +86,23 @@ public class Question {
         this.content = content;
         this.tags = tags;
         this.mainTag = maintag;
+        this.isLike = isLike;
+        this.totalLike = total;
     }
+    
+     public Question(int QuestionID, int userID, String title, String summary, String createdAt, String content, ArrayList<Question_Tag> tags, Main_Tag maintag, int total) {
+        this.QuestionID = QuestionID;
+        this.userID = userID;
+        this.title = title;
+        this.summary = summary;
+        this.createdAt = createdAt;
+        this.content = content;
+        this.tags = tags;
+        this.mainTag = maintag;
+        this.totalLike = total;
+    }
+    
+    
 
     public Question(int QuestionID, User User, String title, String summary, String createdAt, String content, int majorID) {
         this.QuestionID = QuestionID;

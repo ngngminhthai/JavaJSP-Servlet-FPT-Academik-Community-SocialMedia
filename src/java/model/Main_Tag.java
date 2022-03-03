@@ -12,6 +12,22 @@ package model;
 public class Main_Tag {
 
     String tagid;
+    boolean isLike;
+
+    public Main_Tag(String tagid, boolean isLike) {
+        this.tagid = tagid;
+        this.isLike = isLike;
+    }
+    
+
+    public boolean isIsLike() {
+        return isLike;
+    }
+
+    public void setIsLike(boolean isLike) {
+        this.isLike = isLike;
+    }
+    
 
     public Main_Tag(String tagid) {
         this.tagid = tagid;

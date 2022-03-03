@@ -41,10 +41,10 @@
                     <nav>
                         <ul>
                             <li><a href="page-categories.html"><span style="color: blue; font-weight: bold;">Môn học</span></a></li>
-                            <li><a href="page-tabs.html"><span>Trending</span></a></li>
-                            <li><a href="page-create-topic.html"><span>Mới nhất</span></a></li>
+                            <li><a href="page-tabs.html"><span>Thông tin</span></a></li>
+                            <li><a href="page-create-topic.html"><span>Đăng bài viết</span></a></li>
                             <li>
-                                <a href="page-single-user.html"><span>Trang</span></a>
+                                <a href="page-single-user.html"><span>Theo dõi</span></a>
                                 <ul>
                                     <li><a href="index.html">Home</a></li>
                                     <li><a href="page-single-topic.html">Single Topic</a></li>

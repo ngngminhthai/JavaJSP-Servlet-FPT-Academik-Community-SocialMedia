@@ -59,8 +59,12 @@ public class HomeController extends HttpServlet {
         }
 
         int pageindex = Integer.parseInt(page);
+        int userid = - 1;
+        if (request.getSession().getAttribute("userID") != null) {
+            userid = (Integer) request.getSession().getAttribute("userID");
+        }
 
-        ArrayList<Question> questions = quesDB.getQuestions(pageindex, pagesize);
+        ArrayList<Question> questions = quesDB.getQuestions(pageindex, pagesize, userid);
 
         request.setAttribute("ques", questions);
         int count = quesDB.count();

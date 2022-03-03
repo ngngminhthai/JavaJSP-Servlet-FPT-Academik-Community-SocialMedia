@@ -31,7 +31,7 @@ public class MessageController2 extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
+
         final AsyncContext asyncContext = request.startAsync(request, response);
         asyncContext.setTimeout(10 * 60 * 1000);
         contexts.add(asyncContext);
@@ -48,11 +48,12 @@ public class MessageController2 extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         List<AsyncContext> asyncContexts = new ArrayList<>(this.contexts);
         this.contexts.clear();
 
         request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
 
         String content = request.getParameter("content");
         int replyid = (Integer) request.getSession().getAttribute("userID");
@@ -73,7 +74,7 @@ public class MessageController2 extends HttpServlet {
 
         for (AsyncContext asyncContext : asyncContexts) {
             try (PrintWriter writer = asyncContext.getResponse().getWriter()) {
-                response.setContentType("text/html;charset=UTF-8");
+
                 request.setCharacterEncoding("UTF-8");
                 writer.println(htmlMessage);
                 writer.flush();
