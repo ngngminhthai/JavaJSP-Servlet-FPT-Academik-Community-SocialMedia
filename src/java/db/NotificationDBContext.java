@@ -167,6 +167,7 @@ public class NotificationDBContext extends DBContext {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS");
         String strDate = sdf.format(cal.getTime());
+        
         ArrayList<Notification> notifitcations = new ArrayList<>();
         try {
             String sql = "SELECT u.username,u.UserID,q.QuestionID, q.title, q.summary, n.type, n.createdAt, n.isRead, n.notificationID FROM dbo.Notification AS n JOIN dbo.[User] AS u ON u.UserID = n.fromUser JOIN dbo.Question AS q ON q.QuestionID = n.sourceID WHERE n.toUser = ? ORDER BY n.createdAt";

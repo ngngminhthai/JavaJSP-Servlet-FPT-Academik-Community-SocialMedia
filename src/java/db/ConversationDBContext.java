@@ -5,6 +5,7 @@
  */
 package db;
 
+import controller.UserController.CreateConversation;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -39,10 +40,11 @@ public class ConversationDBContext extends DBContext {
             }
 
         } catch (SQLException ex) {
-            Logger.getLogger(QuestionDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ConversationDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
         return conversations;
     }
+
 
     public ArrayList<Message> getMessages(int cid, int currentNumberItems) {
         ArrayList<Message> messages = new ArrayList<>();
@@ -60,34 +62,54 @@ public class ConversationDBContext extends DBContext {
 
             return messages;
         } catch (SQLException ex) {
-            Logger.getLogger(QuestionDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ConversationDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
         return messages;
     }
 
     public int createConversation(int usersend, int userreceive) {
+        int cid = -1;
         try {
-            String sql = "INSERT INTO dbo.Conversation(user_send, user_receive)\n"
-                    + "VALUES(?,?)";
-
+            String sql = "INSERT INTO dbo.Conversation(user_send, user_receive, lastModify)\n"
+                    + "VALUES(?,?,GETDATE())";
+            connection.setAutoCommit(false);
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, usersend);
             stm.setInt(2, userreceive);
             stm.executeUpdate();
-            ResultSet rs = stm.executeQuery();
+
+            String sql_get_id = "select @@IDENTITY as c_id";
+            PreparedStatement stm_get_id = connection.prepareStatement(sql_get_id);
+
+            ResultSet rs = stm_get_id.executeQuery();
             if (rs.next()) {
-                return rs.getInt(1);
+                cid = rs.getInt("c_id");
             }
+            connection.commit();
 
         } catch (SQLException ex) {
-            Logger.getLogger(QuestionDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ConversationDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            try {
+                connection.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(ConversationDBContext.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+                return cid;
+            } catch (SQLException ex) {
+                Logger.getLogger(ConversationDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            //close connection
         }
-        return -1;
+        return 0;
+
     }
 
     public boolean findConversation(int usersend, int userreceive) {
         try {
-            String sql = "SELECT COUNT(*) FROM dbo.Conversation WHERE (user_send = ? and user_receive = ?) OR (user_receive = ? AND user_send = ?)";
+            String sql = "SELECT COUNT(*) as total FROM dbo.Conversation WHERE (user_send = ? and user_receive = ?) OR (user_receive = ? AND user_send = ?)";
 
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, usersend); //1
@@ -97,12 +119,13 @@ public class ConversationDBContext extends DBContext {
             stm.setInt(4, userreceive); //2
 
             ResultSet rs = stm.executeQuery();
+
             if (rs.next()) {
-                return true;
+                return (rs.getInt("total") > 0);
             }
 
         } catch (SQLException ex) {
-            Logger.getLogger(QuestionDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ConversationDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
     }
@@ -112,7 +135,7 @@ public class ConversationDBContext extends DBContext {
             String sql = "INSERT INTO dbo.Message(message_content, createdAt, userID, c_id)\n"
                     + "VALUES(?,GETDATE(),?,?)";
 
-            if (findConversation(userone, userone)) {
+            if (findConversation(userone, replyid)) {
                 PreparedStatement stm = connection.prepareStatement(sql);
                 stm.setString(1, content);
                 stm.setInt(2, replyid);
@@ -127,8 +150,15 @@ public class ConversationDBContext extends DBContext {
                 stm.executeUpdate();
             }
         } catch (SQLException ex) {
-            Logger.getLogger(QuestionDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ConversationDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
+    public static void main(String[] args) {
+        ConversationDBContext c = new ConversationDBContext();
+        ArrayList<Conversation> cc = c.getConversation(2);
+        for (Conversation conversation : cc) {
+            System.out.println(conversation);
+        }
+    }
 }

@@ -60,6 +60,14 @@
         <servlet-name>TagController</servlet-name>
         <servlet-class>controller.TagController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CreateConversation</servlet-name>
+        <servlet-class>controller.UserController.CreateConversation</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SortHomePageController</servlet-name>
+        <servlet-class>controller.SortHomePageController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>home</servlet-name>
         <url-pattern>/home</url-pattern>
@@ -115,6 +123,14 @@
     <servlet-mapping>
         <servlet-name>TagController</servlet-name>
         <url-pattern>/tag</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreateConversation</servlet-name>
+        <url-pattern>/createconversation</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SortHomePageController</servlet-name>
+        <url-pattern>/sorthomepage</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

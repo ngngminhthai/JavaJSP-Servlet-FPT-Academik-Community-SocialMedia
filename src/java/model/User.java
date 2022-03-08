@@ -14,6 +14,7 @@ public class User {
     String username;
     String password;
     String userName;
+    String major;
     
     public User(int userID) {
         this.userID = userID;

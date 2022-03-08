@@ -431,6 +431,10 @@
                 flex-wrap: wrap;
             }
         </style>
+
+
+
+        <script src="js/tagSuggestion.js"></script>
     </head>
     <body>
         <!-- tt-mobile menu -->
@@ -535,12 +539,14 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="inputTopicTitle">Tag Chính</label>
-                                        <select class="form-control" name="maintag">
-                                            <% for (Main_Tag elem : mains) { %>
-                                            <option value="<%= elem.getTagid() %>"><%= elem.getTagid() %></option>
+                                        <input class="form-control" type="text" list="datalist" onkeyup="ac(this.value)">
+                                        <datalist id="datalist">
+                                            <% for (Main_Tag elem : mains) {%>
+                                            <option value="<%= elem.getTagid()%>"><%= elem.getTagid()%></option>
                                             <%}
                                             %>
-                                        </select>
+                                        </datalist>
+
                                     </div>
                                 </div>
                                 <div class="col-md-8">
@@ -557,7 +563,7 @@
                             </div>
                         </div>
                     </form>
-                                        
+
                 </div>
                 <div class="tt-topic-list tt-offset-top-30">
                     <div class="tt-list-search">
@@ -974,14 +980,23 @@
         <!-- Text Angular JS -->
         <script src='https://cdnjs.cloudflare.com/ajax/libs/textAngular/1.1.2/textAngular.min.js'></script>
         <script>
-                                        angular.module("textAngularTest", ['textAngular']);
-                                        function wysiwygeditor($scope) {
-                                            $scope.orightml = '';
-                                            $scope.htmlcontent = $scope.orightml;
-                                            $scope.disabled = false;
-                                        }
-                                        ;
+                                            var major = [];
+            <% for (Main_Tag elem : mains) {%>
+                                            major.push('<%=elem.getTagid()%>')
+            <% }
+            %>
+                                            pushTag(major, major.length)
+                                            angular.module("textAngularTest", ['textAngular']);
+                                            function wysiwygeditor($scope) {
+                                                $scope.orightml = '';
+                                                $scope.htmlcontent = $scope.orightml;
+                                                $scope.disabled = false;
+                                            }
+                                            ;
+
+
         </script>
+
         <svg width="0" height="0" class="hidden">
     <symbol aria-hidden="true" data-prefix="fab" data-icon="facebook-f" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 264 512" id="facebook-f-brands">
         <path fill="currentColor" d="M215.8 85H264V3.6C255.7 2.5 227.1 0 193.8 0 124.3 0 76.7 42.4 76.7 120.3V192H0v91h76.7v229h94V283h73.6l11.7-91h-85.3v-62.7c0-26.3 7.3-44.3 45.1-44.3z"></path>

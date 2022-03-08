@@ -9,6 +9,8 @@
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.ArrayList"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -340,7 +342,7 @@
                                             <img src="pages/thai.jpg" alt="avatar">
                                         </a>
                                         <div class="chat-about">
-                                            <h6 class="m-b-0">tranducthuan</h6>
+                                            <h6 class="m-b-0"></h6>
                                             <small>Hoạt động: 2 phút trước</small>
                                         </div>
                                     </div>
@@ -424,7 +426,8 @@
         <%    }
             }
         %>
-
+            
+       
         var currentActive = document.querySelector("li.clearfix");
         var userlist = document.querySelectorAll("ul.chat-list li.clearfix");
         var chatNameCurrent = document.querySelector(".chat-about h6");

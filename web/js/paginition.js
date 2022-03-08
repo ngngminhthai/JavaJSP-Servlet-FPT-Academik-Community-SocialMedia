@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-function pagger(id, pageindex, totalpage, gap)
+function pagger(id, pageindex, totalpage, gap, field)
 {
     var url_string = window.location;
     var url = new URL(url_string);
@@ -23,7 +23,7 @@ function pagger(id, pageindex, totalpage, gap)
 
     for (var i = pageindex - gap; i < pageindex; i++) {
         if (i > 0)
-            result += '<a href="home?page=' + i + '" class="page__numbers">' + i + '</a>';
+            result += '<a href="home?page=' + i + ''+field+'" class="page__numbers">' + i + '</a>';
     }
 
     result += '<li class="page__numbers active">' + i + '</li>';
@@ -31,7 +31,7 @@ function pagger(id, pageindex, totalpage, gap)
 
     for (var i = pageindex + 1; i <= pageindex + gap; i++)
         if (i <= totalpage)
-            result += '<a href="home?page=' + i + '" class="page__numbers">' + i + '</a>';
+            result += '<a href="home?page=' + i + ''+field+'" class="page__numbers">' + i + '</a>';
 
     result += '<li class="page__btn btn"><span class="material-icons">chevron_right</span></li>';
 

@@ -8,19 +8,17 @@ package controller.UserController;
 import db.ConversationDBContext;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import model.Conversation;
-import model.Message;
 
 /**
  *
  * @author Admin
  */
-public class OpenMessage extends HttpServlet {
+public class CreateConversation extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,10 +37,10 @@ public class OpenMessage extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet OpenMessage</title>");
+            out.println("<title>Servlet CreateConversation</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet OpenMessage at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet CreateConversation at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -60,19 +58,7 @@ public class OpenMessage extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int userID = (Integer) request.getSession().getAttribute("userID");
-//        who get the message 
-        String raw_user = request.getParameter("user");
-        int user = -1;
-        if (raw_user != null) {
-            user = Integer.parseInt(raw_user);
-            
-        }
-        ConversationDBContext conDB = new ConversationDBContext();
-        ArrayList<Conversation> cons = conDB.getConversation(userID);
-        request.setAttribute("userfocus", user);
-        request.setAttribute("conversations", cons);
-        request.getRequestDispatcher("pages/Conversation_1.jsp").forward(request, response);
+        processRequest(request, response);
     }
 
     /**
@@ -86,17 +72,17 @@ public class OpenMessage extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        ConversationDBContext conDB = new ConversationDBContext();
-        int numberItems = Integer.parseInt(request.getParameter("total"));
-        int cid = Integer.parseInt(request.getParameter("cid"));
-        response.setContentType("text/html;charset=UTF-8");
-        ArrayList<Message> mesages = conDB.getMessages(cid, numberItems);
-        PrintWriter out = response.getWriter();
+        int userone = Integer.parseInt(request.getParameter("userone"));
+        int currentuser = (Integer) request.getSession().getAttribute("userID");
 
-        for (Message mesage : mesages) {
-            out.print(mesage.getContent() + "/" + mesage.getUserID() + "/" + cid + "-");
+        ConversationDBContext condb = new ConversationDBContext();
+//        log(String.valueOf(condb.findConversation(userone, currentuser)));
+        if (condb.findConversation(userone, currentuser)) {
+            response.sendRedirect("OpenMessage?user="+currentuser);
+        } else {
+            condb.createConversation(userone, currentuser);
+            response.sendRedirect("OpenMessage?user="+currentuser);
         }
-
     }
 
     /**

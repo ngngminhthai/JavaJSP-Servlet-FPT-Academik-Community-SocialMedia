@@ -51,7 +51,10 @@ public class HomeController extends HttpServlet {
 //        ArrayList<Major> majorList = majordb.getMajor();
 //
 //        request.setAttribute("majorList", majorList);
+        String field = request.getParameter("order");
+        String sort = request.getParameter("sort");
         QuestionDBContext quesDB = new QuestionDBContext();
+
         int pagesize = 10;
         String page = request.getParameter("page");
         if (page == null || page.trim().length() == 0) {
@@ -63,8 +66,27 @@ public class HomeController extends HttpServlet {
         if (request.getSession().getAttribute("userID") != null) {
             userid = (Integer) request.getSession().getAttribute("userID");
         }
+        ArrayList<Question> questions = new ArrayList<>();
+        if(field == null && sort == null){
+            field = "q.createdAt";
+            sort = "desc";
+            
+        }
+        if (userid != -1) {
+            questions = quesDB.getQuestionsWithUserLogin(pageindex, pagesize, userid, field, sort);
+        } else {
+            questions = quesDB.getQuestions(pageindex, pagesize, userid, field, sort);
+        }
 
-        ArrayList<Question> questions = quesDB.getQuestions(pageindex, pagesize, userid);
+        if (field != null && sort != null) {
+            if (sort.equals("asc")) {
+                sort = "desc";
+            } else {
+                sort = "asc";
+            }
+        }
+        request.setAttribute("order", field);
+        request.setAttribute("sort", sort);
 
         request.setAttribute("ques", questions);
         int count = quesDB.count();

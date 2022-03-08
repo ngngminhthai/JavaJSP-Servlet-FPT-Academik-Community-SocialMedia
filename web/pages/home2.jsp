@@ -77,6 +77,67 @@
                 /*                display: inline !important;*/
                 font-size: 13px !important;
             }
+            .card-box {
+                padding: 20px;
+                border-radius: 3px;
+                margin-bottom: 30px;
+                background-color: #fff;
+            }
+
+            .social-links li a {
+                border-radius: 50%;
+                color: rgba(121, 121, 121, .8);
+                display: inline-block;
+                height: 30px;
+                line-height: 27px;
+                border: 2px solid rgba(121, 121, 121, .5);
+                text-align: center;
+                width: 30px
+            }
+
+            .social-links li a:hover {
+                color: #797979;
+                border: 2px solid #797979
+            }
+            .thumb-lg {
+                height: 88px;
+                width: 88px;
+            }
+            .img-thumbnail {
+                padding: .25rem;
+                background-color: #fff;
+                border: 1px solid #dee2e6;
+                border-radius: .25rem;
+                max-width: 100%;
+                height: auto;
+            }
+            .text-pink {
+                color: #ff679b!important;
+            }
+            .btn-rounded {
+                border-radius: 2em;
+            }
+            .text-muted {
+                color: #98a6ad!important;
+            }
+            h4 {
+                line-height: 22px;
+                font-size: 18px;
+            }
+            .col-lg-4{
+                display: none;
+                position: absolute;
+                top: 85px;
+                z-index: 9;
+                left: 0px;
+            }
+            .fa:hover{
+                cursor: pointer;
+            }
+
+            .tt-col-value.hide-mobile a{
+                color: black;
+            }
 
         </style>
         <script src="js/follow.js"></script>
@@ -89,11 +150,12 @@
                 <div class="tt-topic-list">
                     <div class="tt-list-header">
                         <div class="tt-col-topic">Câu hỏi</div>
-                        <div class="tt-col-category">Môn học</div>
-                        <div class="tt-col-value hide-mobile">Thích</div>
-                        <div class="tt-col-value hide-mobile">Trả lời</div>
-                        <div class="tt-col-value hide-mobile">Lượt xem</div>
-                        <div class="tt-col-value">Lần cuối</div>
+                        <div class="tt-col-category">Môn học
+                        </div>
+                        <div style="white-space: nowrap;" class="tt-col-value hide-mobile"><a id="totalLike" href="home?order=totalLike&sort=asc">Thích </a><i style="display: none" class="fa fa-chevron-down" aria-hidden="true"></i></div>
+                        <div style="white-space: nowrap;" class="tt-col-value hide-mobile"><a id="totalComment" href="home?order=totalComment&sort=asc">Trả Lời </a><i style="display: none" class="fa fa-chevron-down" aria-hidden="true"></i></div>
+                        <div style="white-space: nowrap;" class="tt-col-value hide-mobile"><a id="totalViews" href="home?order=totalViews&sort=asc">Lượt xem </a><i style="display: none" class="fa fa-chevron-down" aria-hidden="true"></i></div>
+                        <div style="white-space: nowrap;" class="tt-col-value"><a style="color: black;" id="lastActive" href="home?order=lastActive&sort=asc">Lần cuối </a><i style="display: none" class="fa fa-chevron-down" aria-hidden="true"></i></div>
                     </div>
                     <div class="tt-topic-alert tt-alert-default" role="alert">
                         <a href="#" target="_blank">3 Bài viết mới </a> đã được thêm, click vào để tải bài viết.
@@ -108,9 +170,11 @@
                             elem = questionList.get(i);
                     %>
                     <div class="tt-item">
-                        <div class="tt-col-avatar">
+                        <div class="tt-col-avatar u<%= elem.getUserID()%> <%if (elem.getUser() != null) {
+                                out.print(elem.getUser().getUsername());
+                            }%>" onclick="displayProfile(this)">
                             <svg class="tt-icon">
-                            <use xlink:href="#icon-ava-<%=(char) (random.nextInt(26) + 'a')%>"></use>
+                            <use  class="useavatar" xlink:href="#icon-ava-<%=(char) (random.nextInt(26) + 'a')%>"></use>
                             </svg>
                         </div>
                         <div class="tt-col-description">
@@ -122,12 +186,20 @@
                                     <ul class="tt-list-badge">
                                         <li class="show-mobile"><a href="#"><span onclick="follow(this, ${sessionScope.userID})" class="tt-color<%=random.nextInt(21 - 1) + 1%> tt-badge main"><% if (elem.getMainTag() != null) {
                                                 out.print(elem.getMainTag().getTagid());
-                                    } %><i class="fa fa-plus" aria-hidden="true"></i></span></a></li>
+                                            } %><i class="fa <% if (elem.getMainTag() != null && !elem.getMainTag().isIsLike()) {
+                                                    out.print("fa-plus");
+                                                } else {
+                                                    out.print("fa-check");
+                                                } %>" aria-hidden="true"></i></span></a></li>
                                                     <% for (int j = 0; j < elem.getTags().size(); j++) {
                                                     %>
                                         <li><a href="#"><span class="tt-badge"><% if (elem.getTags().get(j) != null) {
                                                 out.print(elem.getTags().get(j).getTagID());
-                                            } %><i class="fa fa-plus" aria-hidden="true" style="display: block; margin-left: 3px;"></i></span></a></li>
+                                            } %><i class="fa <% if (elem.getMainTag() != null && !elem.getMainTag().isIsLike()) {
+                                                    out.print("fa-plus");
+                                                } else {
+                                                    out.print("fa-check");
+                                                } %>" aria-hidden="true" style="display: block; margin-left: 3px;"></i></span></a></li>
                                                     <%
                                                         }
                                                     %>
@@ -136,17 +208,63 @@
                                     </ul>
                                 </div>
                                 <div class="col-1 ml-auto show-mobile">
-                                    <div class="tt-value">1d</div>
+                                    <div class="tt-value"><%= elem.getLastActive()%></div>
                                 </div>
                             </div>
                         </div>
                         <div class="tt-col-category"><span onclick="follow(this, ${sessionScope.userID})" class="tt-color<%=random.nextInt(21 - 1) + 1%> tt-badge main"><%if (elem.getMainTag() != null) {
-                                        out.print(elem.getMainTag().getTagid());
-                                    } %><i class="fa fa-plus" aria-hidden="true" style="display: block; margin-left: 3px;"></i></span></div>
-                        <div class="tt-col-value  hide-mobile">308</div>
-                        <div class="tt-col-value tt-color-select  hide-mobile">660</div>
+                                out.print(elem.getMainTag().getTagid());
+                            } %><i class="fa <% if (elem.getMainTag() != null && !elem.getMainTag().isIsLike()) {
+                                    out.print("fa-plus");
+                                } else {
+                                    out.print("fa-check");
+                                }%>" aria-hidden="true" style="display: block; margin-left: 3px;"></i></span></div>
+                        <div class="tt-col-value  hide-mobile"><%= elem.getTotalLike()%></div>
+                        <div class="tt-col-value tt-color-select  hide-mobile"><%= elem.getTotalComment()%></div>
                         <div class="tt-col-value  hide-mobile">8.3k</div>
-                        <div class="tt-col-value hide-mobile">1d</div>
+                        <div class="tt-col-value hide-mobile"><%= elem.getLastActive()%></div>
+                        <div class="col-lg-4">
+                            <div class="text-center card-box">
+                                <div class="member-card pt-2 pb-2">
+                                    <div class="thumb-lg member-thumb mx-auto"><img src="pages/thai.jpg" class="rounded-circle img-thumbnail" alt="profile-image"></div>
+                                    <div class="">
+                                        <h4>Nguyen Minh Thai</h4>
+                                        <p class="text-muted">@Software Engineering <span>| </span><span><a href="#" class="text-pink">thainmhe153666</a></span></p>
+                                    </div>
+                                    <ul class="social-links list-inline">
+                                        <li class="list-inline-item"><a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Facebook"><i class="fa fa-facebook"></i></a></li>
+                                        <li class="list-inline-item"><a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Twitter"><i class="fa fa-twitter"></i></a></li>
+                                        <li class="list-inline-item"><a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Skype"><i class="fa fa-skype"></i></a></li>
+                                    </ul>
+                                    <form action="createconversation" method="POST">
+                                        <input value="<%=elem.getUserID()%>" name="userone">
+                                        <button type="submit" class="btn btn-primary mt-3 btn-rounded waves-effect w-md waves-light">Gui tin nhan</button>
+                                    </form>
+                                    <div class="mt-4">
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <div class="mt-3">
+                                                    <h4>2563</h4>
+                                                    <p class="mb-0 text-muted">So bai viet</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="mt-3">
+                                                    <h4>6952</h4>
+                                                    <p class="mb-0 text-muted">Luot tra loi</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="mt-3">
+                                                    <h4>1125</h4>
+                                                    <p class="mb-0 text-muted">Luot thich</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <%  }
                     %>
@@ -186,20 +304,28 @@
                             </svg>
                         </div>
                         <div class="tt-col-description">
-                            <h6 class="tt-title"><a href="page-single-topic.html">
+                            <h6 class="tt-title"><a href="thread?questionid=<%=elem.getQuestionID()%>">
                                     <%= elem.getTitle()%> 
                                 </a></h6>
                             <div class="row align-items-center no-gutters">
                                 <div class="col-11">
                                     <ul class="tt-list-badge">
-                                        <li class="show-mobile"><a href="#"><span class="tt-color<%=random.nextInt(21 - 1) + 1%> tt-badge"><% if (elem.getMainTag() != null) {
+                                        <li class="show-mobile"><a href="#"><span onclick="follow(this, ${sessionScope.userID})" class="tt-color<%=random.nextInt(21 - 1) + 1%> tt-badge main"><% if (elem.getMainTag() != null) {
                                                 out.print(elem.getMainTag().getTagid());
-                                            } %></span></a></li>
+                                            } %><i class="fa <% if (elem.getMainTag() != null && !elem.getMainTag().isIsLike()) {
+                                                    out.print("fa-plus");
+                                                } else {
+                                                    out.print("fa-check");
+                                                } %>" aria-hidden="true"></i></span></a></li>
                                                     <% for (int j = 0; j < elem.getTags().size(); j++) {
                                                     %>
                                         <li><a href="#"><span class="tt-badge"><% if (elem.getTags().get(j) != null) {
                                                 out.print(elem.getTags().get(j).getTagID());
-                                            } %></span></a></li>
+                                            } %><i class="fa <% if (elem.getMainTag() != null && !elem.getMainTag().isIsLike()) {
+                                                    out.print("fa-plus");
+                                                } else {
+                                                    out.print("fa-check");
+                                                } %>" aria-hidden="true" style="display: block; margin-left: 3px;"></i></span></a></li>
                                                     <%
                                                         }
                                                     %>
@@ -208,17 +334,21 @@
                                     </ul>
                                 </div>
                                 <div class="col-1 ml-auto show-mobile">
-                                    <div class="tt-value">1d</div>
+                                    <div class="tt-value"><%= elem.getLastActive()%></div>
                                 </div>
                             </div>
                         </div>
-                        <div class="tt-col-category"><span class="tt-color<%=random.nextInt(21 - 1) + 1%> tt-badge"><% if (elem.getMainTag() != null) {
+                        <div class="tt-col-category"><span onclick="follow(this, ${sessionScope.userID})" class="tt-color<%=random.nextInt(21 - 1) + 1%> tt-badge main"><%if (elem.getMainTag() != null) {
                                 out.print(elem.getMainTag().getTagid());
-                            } %></span></div>
-                        <div class="tt-col-value  hide-mobile">308</div>
-                        <div class="tt-col-value tt-color-select  hide-mobile">660</div>
+                            } %><i class="fa <% if (elem.getMainTag() != null && !elem.getMainTag().isIsLike()) {
+                                        out.print("fa-plus");
+                                    } else {
+                                        out.print("fa-check");
+                                    }%>" aria-hidden="true" style="display: block; margin-left: 3px;"></i></span></div>
+                        <div class="tt-col-value  hide-mobile"><%= elem.getTotalLike()%></div>
+                        <div class="tt-col-value tt-color-select  hide-mobile"><%= elem.getTotalComment()%></div>
                         <div class="tt-col-value  hide-mobile">8.3k</div>
-                        <div class="tt-col-value hide-mobile">1d</div>
+                        <div class="tt-col-value hide-mobile"><%= elem.getLastActive()%></div>
                     </div>
                     <%  }
                     %>
@@ -268,11 +398,6 @@
         </ul>  
         <!--         <li class="page__btn"><span class="material-icons">chevron_right</span></li>-->
     </div>
-
-    <script>
-        pagger("page",<%=pageindex%>,<%=totalpage%>, 3);
-        addFunc(<%=totalpage%>);
-    </script>
 
 
 
@@ -492,6 +617,57 @@
             </div>
         </div>
     </div>
+    <script>
+
+
+        var field = document.getElementById("<%= request.getAttribute("order")%>");
+        var passField;
+        if (field != null) {
+            var sortIcon = field.nextSibling;
+
+            var sort = '<%=request.getAttribute("sort")%>'
+            var link = "";
+            var reverseLink = "";
+            if (sort == "asc") {
+                passField = "";
+                link = "home?order=" + field.id + "&sort=asc";
+                reverseLink = "order=" + field.id + "&sort=desc"
+                field.setAttribute("href", link);
+                sortIcon.className = "fa fa-chevron-down";
+                sortIcon.style.display = "contents";
+            } else if (sort == "desc") {
+                link = "home?order=" + field.id + "&sort=desc";
+                reverseLink = "order=" + field.id + "&sort=asc"
+                field.setAttribute("href", link);
+                sortIcon.className = "fa fa-chevron-up";
+                sortIcon.style.display = "contents";
+            }
+        }
+        if (reverseLink != "") {
+            reverseLink = "&" + reverseLink;
+        }
+
+        pagger("page",<%=pageindex%>,<%=totalpage%>, 3, reverseLink);
+        addFunc(<%=totalpage%>);
+
+        function displayProfile(elem) {
+            var parent = elem.parentNode;
+            var profilecard = parent.querySelector("div.col-lg-4");
+            var username = profilecard.querySelector('h4');
+            username.innerHTML = elem.classList[2];
+            profilecard.style.display = 'block';
+        }
+
+        window.addEventListener('click', () => {
+            var profilecard = document.querySelectorAll("div.col-lg-4");
+            if (event.target.classList != "useavatar") {
+                profilecard.forEach((elem) => {
+                    elem.style.display = 'none';
+                }
+                )
+            }
+        })
+    </script>
 
     <svg width="0" height="0" class="hidden">
 <symbol aria-hidden="true" data-prefix="fab" data-icon="facebook-f" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 264 512" id="facebook-f-brands">

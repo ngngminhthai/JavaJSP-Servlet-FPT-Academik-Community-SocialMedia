@@ -5,7 +5,6 @@
  */
 package model;
 
-import java.sql.Date;
 import java.util.ArrayList;
 
 /**
@@ -25,6 +24,34 @@ public class Question {
     Main_Tag mainTag;
     int totalLike;
     boolean isLike; //determine the current user like the post or not
+    String lastActive;
+    int totalComment;
+    int views;
+
+    public int getTotalComment() {
+        return totalComment;
+    }
+
+    public void setTotalComment(int totalComment) {
+        this.totalComment = totalComment;
+    }
+
+    public int getViews() {
+        return views;
+    }
+
+    public void setViews(int views) {
+        this.views = views;
+    }
+    
+    public String getLastActive() {
+        return lastActive;
+    }
+
+    public void setLastActive(String lastActive) {
+        this.lastActive = lastActive;
+    }
+    
 
     public int getTotalLike() {
         return totalLike;

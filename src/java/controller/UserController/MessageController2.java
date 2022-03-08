@@ -74,7 +74,6 @@ public class MessageController2 extends HttpServlet {
 
         for (AsyncContext asyncContext : asyncContexts) {
             try (PrintWriter writer = asyncContext.getResponse().getWriter()) {
-
                 request.setCharacterEncoding("UTF-8");
                 writer.println(htmlMessage);
                 writer.flush();

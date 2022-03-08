@@ -104,7 +104,7 @@ public class QuestionController extends BaseAuthController {
 
         QuestionDBContext quesDB = new QuestionDBContext();
 
-        int newQuestion = quesDB.createQuestion(userID, title, summary, createdAt, content, maintag);
+        int quesid = quesDB.createQuestion(userID, title, summary, createdAt, content, maintag);
 
 
         
@@ -112,12 +112,12 @@ public class QuestionController extends BaseAuthController {
         String[] arrOfTags = tags.trim().split(" ");
 
         for (int i = 0; i < arrOfTags.length; i++) {
-            tagDB.createTag(arrOfTags[i].trim(), newQuestion);
+            tagDB.createTag(arrOfTags[i].trim(), quesid);
         }
 
 //        session.setAttribute("questionid", newQuestion.getQuestionID());
 //        request.getRequestDispatcher("thread").forward(request, response);
-        response.sendRedirect("thread?questionid=" + newQuestion);
+        response.sendRedirect("thread?questionid=" + quesid);
     }
 
     /**

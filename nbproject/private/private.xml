@@ -3,19 +3,18 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/js/follow.js</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/model/Main_Tag.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/db/QuestionDBContext.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/assets/header3.jsp</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/controller/TagController.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/controller/HomeController.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/db/MainTagDBContext.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/model/Comment.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/pages/Conversation_1.jsp</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/controller/ThreadController.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/assets/header4.jsp</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/db/CommentDBContext.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/db/NotificationDBContext.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/pages/home2.jsp</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/assets/header2.jsp</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/controller/UserController/MessageController2.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/controller/HomeController.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/model/Notification.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/controller/QuestionController/QuestionController.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/model/Question.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/model/Comment.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/src/java/controller/CommentController/CommentController.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FUWePass/web/pages/Conversation_1.jsp</file>
         </group>
     </open-files>
 </project-private>

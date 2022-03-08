@@ -9,7 +9,9 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Main_Tag;
@@ -25,6 +27,10 @@ public class QuestionDBContext extends DBContext {
 
     String sql = null;
     ArrayList<Question> questions = new ArrayList<>();
+
+    Calendar cal = Calendar.getInstance();
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS");
+    String strDate = sdf.format(cal.getTime());
 
 //    public ArrayList<Question> getQuestions() {
 //
@@ -58,7 +64,7 @@ public class QuestionDBContext extends DBContext {
 
         } catch (SQLException ex) {
             deleteLikeOfQues(quesid, userid);
-            Logger.getLogger(TagDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(QuestionDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -73,32 +79,54 @@ public class QuestionDBContext extends DBContext {
             stm.executeUpdate();
 
         } catch (SQLException ex) {
-            
-            Logger.getLogger(CommentDBContext.class.getName()).log(Level.SEVERE, null, ex);
+
+            Logger.getLogger(QuestionDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public ArrayList<Question> getQuestions(int pageindex, int pagesize, int userid) {
+    public void updateLastActive(int quesid) {
+        String sql = "UPDATE dbo.Question SET lastActive = GETDATE() WHERE QuestionID = ?";
+        try {
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, quesid);
+            stm.executeUpdate();
 
+        } catch (SQLException ex) {
+
+            Logger.getLogger(QuestionDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public ArrayList<Question> getQuestionsWithUserLogin(int pageindex, int pagesize, int userid, String field, String type) {
+        NotificationDBContext notidb = new NotificationDBContext();
         try {
             TagDBContext tagDB = new TagDBContext();
             MainTagDBContext mainDB = new MainTagDBContext();
             ArrayList<Question_Tag> tags = null;
             Main_Tag main = null;
-            String sql = "SELECT QuestionID,UserID,title,summary,createdAt,content,totalLike from  (SELECT *,ROW_NUMBER() OVER (ORDER BY createdAt ASC) as row_index  FROM dbo.Question) tbl\n"
-                    + "            WHERE row_index >= (? -1)*? + 1 \n"
-                    + "                    AND row_index <= ? * ?";
+            String sql = "SELECT tbl.totalComment, tbl.lastActive, tbl.mtid,QuestionID,UserID,title,summary,createdAt,content,totalLike from  (SELECT *,ROW_NUMBER() OVER (ORDER BY "+field+" "+type+",q.rs ASC) as row_index  FROM ( SELECT q.totalComment,q.lastActive,q.QuestionID,q.UserID,q.createdAt,q.totalLike,mq.mtid,q.summary,q.content,q.title,2 AS rs  FROM dbo.Question AS q LEFT JOIN dbo.MainTag_Question AS mq ON mq.questionid = q.QuestionID LEFT JOIN dbo.MainTag_User AS u ON u.mtid = mq.mtid WHERE  u.userid IS NULL OR u.userid != ?\n"
+                    + " UNION\n"
+                    + " SELECT q.totalComment,q.lastActive,q.QuestionID,q.UserID,q.createdAt,q.totalLike,mq.mtid,q.summary,q.content,q.title,1 AS rs FROM dbo.Question AS q LEFT JOIN dbo.MainTag_Question AS mq ON mq.questionid = q.QuestionID JOIN dbo.MainTag_User AS u ON u.mtid = mq.mtid WHERE u.userid = ?\n"
+                    + ") AS q) tbl\n"
+                    + "WHERE row_index >= (? -1)*? + 1\n"
+                    + "AND row_index <= ? * ?";
 
             PreparedStatement stm = connection.prepareStatement(sql);
-            stm.setInt(1, pageindex);
-            stm.setInt(2, pagesize);
+            stm.setInt(1, userid);
+            stm.setInt(2, userid);
             stm.setInt(3, pageindex);
             stm.setInt(4, pagesize);
+            stm.setInt(5, pageindex);
+            stm.setInt(6, pagesize);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                 tags = tagDB.getTagsByQuesID(rs.getInt("QuestionID"));
                 main = mainDB.getMainTagByQuesID(rs.getInt("QuestionID"), userid);
                 Question s = new Question(rs.getInt("QuestionID"), rs.getInt("UserID"), rs.getString("title"), rs.getString("summary"), rs.getString("createdAt"), rs.getString("content"), tags, main, rs.getInt("totalLike"));
+                s.setUser(findUser(rs.getInt("UserID")));
+                s.setLastActive(notidb.findDifference(rs.getString("lastActive"), strDate));
+                s.setTotalComment(rs.getInt("totalComment"));
+
                 questions.add(s);
             }
 
@@ -121,6 +149,91 @@ public class QuestionDBContext extends DBContext {
         }
         return -1;
     }
+
+    public ArrayList<Question> getQuestions(int pageindex, int pagesize, int userid, String field, String type) {
+        NotificationDBContext notidb = new NotificationDBContext();
+        try {
+            TagDBContext tagDB = new TagDBContext();
+            MainTagDBContext mainDB = new MainTagDBContext();
+            ArrayList<Question_Tag> tags = null;
+            Main_Tag main = null;
+            String sql = "SELECT totalComment, lastActive,QuestionID,UserID,title,summary,createdAt,content,totalLike from  (SELECT *,ROW_NUMBER() OVER (ORDER BY "+field+" "+type+") as row_index  FROM dbo.Question as q) tbl\n"
+                    + "            WHERE row_index >= (? -1)*? + 1 \n"
+                    + "                    AND row_index <= ? * ?";
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, pageindex);
+            stm.setInt(2, pagesize);
+            stm.setInt(3, pageindex);
+            stm.setInt(4, pagesize);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                tags = tagDB.getTagsByQuesID(rs.getInt("QuestionID"));
+                main = mainDB.getMainTagByQuesID(rs.getInt("QuestionID"), userid);
+                Question s = new Question(rs.getInt("QuestionID"), rs.getInt("UserID"), rs.getString("title"), rs.getString("summary"), rs.getString("createdAt"), rs.getString("content"), tags, main, rs.getInt("totalLike"));
+                s.setUser(findUser(rs.getInt("UserID")));
+                s.setLastActive(notidb.findDifference(rs.getString("lastActive"), strDate));
+                s.setTotalComment(rs.getInt("totalComment"));
+                questions.add(s);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(QuestionDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return questions;
+    }
+
+    public User findUser(int userid) {
+        try {
+            String sql = "SELECT userid, username from [User] where userid = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, userid);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return new User(rs.getInt("userid"), rs.getString("username"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(QuestionDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+     public ArrayList<Question> getQuestionsSort(int pageindex, int pagesize, int userid, String field, String type) {
+        NotificationDBContext notidb = new NotificationDBContext();
+        try {
+            TagDBContext tagDB = new TagDBContext();
+            MainTagDBContext mainDB = new MainTagDBContext();
+            ArrayList<Question_Tag> tags = null;
+            Main_Tag main = null;
+            String sql = "SELECT totalComment, lastActive,QuestionID,UserID,title,summary,createdAt,content,totalLike from  (SELECT *,ROW_NUMBER() OVER (ORDER BY ? ?) as row_index  FROM dbo.Question) tbl\n"
+                    + "            WHERE row_index >= (? -1)*? + 1 \n"
+                    + "                    AND row_index <= ? * ?";
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, field);
+            stm.setString(2, type);
+            stm.setInt(3, pageindex);
+            stm.setInt(4, pagesize);
+            stm.setInt(5, pageindex);
+            stm.setInt(4, pagesize);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                tags = tagDB.getTagsByQuesID(rs.getInt("QuestionID"));
+                main = mainDB.getMainTagByQuesID(rs.getInt("QuestionID"), userid);
+                Question s = new Question(rs.getInt("QuestionID"), rs.getInt("UserID"), rs.getString("title"), rs.getString("summary"), rs.getString("createdAt"), rs.getString("content"), tags, main, rs.getInt("totalLike"));
+                s.setUser(findUser(rs.getInt("UserID")));
+                s.setLastActive(notidb.findDifference(rs.getString("lastActive"), strDate));
+                s.setTotalComment(rs.getInt("totalComment"));
+                questions.add(s);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(QuestionDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return questions;
+    }
+
+
 
     public Question getQuestions2(int quesid, int currentUser) {
 
@@ -175,7 +288,7 @@ public class QuestionDBContext extends DBContext {
                 }
             }
         } catch (SQLException ex) {
-            Logger.getLogger(CommentDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(QuestionDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
     }
@@ -226,34 +339,55 @@ public class QuestionDBContext extends DBContext {
     }
 
     public int createQuestion(int userid, String title, String summary, String createdAt, String content, String maintag) {
-
-        String sql = "insert into question(UserID,title,summary,createdAt,content) VALUES(?,?,?,?,?)";
+        int quesid = -1;
         try {
-            MainTagDBContext mainDB = new MainTagDBContext();
+            String sql_insert_ques = "insert into question(UserID,title,summary,createdAt,content) VALUES(?,?,?,?,?)";
+            connection.setAutoCommit(false);
+            PreparedStatement stm_insert_ques = connection.prepareStatement(sql_insert_ques);
 
-            PreparedStatement stm = connection.prepareStatement(sql);
+            stm_insert_ques.setInt(1, userid);
+            stm_insert_ques.setString(2, title);
+            stm_insert_ques.setString(3, summary);
+            stm_insert_ques.setString(4, createdAt);
+            stm_insert_ques.setString(5, content);
 
-            stm.setInt(1, userid);
-            stm.setString(2, title);
-            stm.setString(3, summary);
-            stm.setString(4, createdAt);
-            stm.setString(5, content);
+            stm_insert_ques.executeUpdate();
 
-            stm.executeUpdate();
-            ResultSet rs = stm.executeQuery("select questionid from question");
-            int quesid = -1;
-            if (rs.last()) {
-                quesid = rs.getInt("questionid");
+            String sql_get_id = "select @@IDENTITY as QuestionID";
+            PreparedStatement stm_get_id = connection.prepareStatement(sql_get_id);
+
+            ResultSet rs = stm_get_id.executeQuery();
+            if (rs.next()) {
+                quesid = rs.getInt("QuestionID");
             }
 
-            mainDB.LinkTagToQuestion(quesid, maintag);
+            String sql = "INSERT INTO dbo.MainTag_Question(mtid, questionid)\n"
+                    + "VALUES(?,?)";
 
-            return quesid;
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(2, quesid);
+            stm.setString(1, maintag);
 
+            stm.executeUpdate();
+
+            connection.commit();
         } catch (SQLException ex) {
             Logger.getLogger(QuestionDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            try {
+                connection.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(QuestionDBContext.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+                return quesid;
+            } catch (SQLException ex) {
+                Logger.getLogger(QuestionDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            //close connection
         }
-        return -1;
+        return 0;
     }
 
 }
