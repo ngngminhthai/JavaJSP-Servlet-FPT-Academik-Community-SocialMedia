@@ -104,9 +104,9 @@ public class QuestionDBContext extends DBContext {
             MainTagDBContext mainDB = new MainTagDBContext();
             ArrayList<Question_Tag> tags = null;
             Main_Tag main = null;
-            String sql = "SELECT tbl.totalComment, tbl.lastActive, tbl.mtid,QuestionID,UserID,title,summary,createdAt,content,totalLike from  (SELECT *,ROW_NUMBER() OVER (ORDER BY "+field+" "+type+",q.rs ASC) as row_index  FROM ( SELECT q.totalComment,q.lastActive,q.QuestionID,q.UserID,q.createdAt,q.totalLike,mq.mtid,q.summary,q.content,q.title,2 AS rs  FROM dbo.Question AS q LEFT JOIN dbo.MainTag_Question AS mq ON mq.questionid = q.QuestionID LEFT JOIN dbo.MainTag_User AS u ON u.mtid = mq.mtid WHERE  u.userid IS NULL OR u.userid != ?\n"
+            String sql = "SELECT tbl.totalViews, tbl.totalComment, tbl.lastActive, tbl.mtid,QuestionID,UserID,title,summary,createdAt,content,totalLike from  (SELECT *,ROW_NUMBER() OVER (ORDER BY " + field + " " + type + ",q.rs ASC) as row_index  FROM ( SELECT q.totalViews,q.totalComment,q.lastActive,q.QuestionID,q.UserID,q.createdAt,q.totalLike,mq.mtid,q.summary,q.content,q.title,2 AS rs  FROM dbo.Question AS q LEFT JOIN dbo.MainTag_Question AS mq ON mq.questionid = q.QuestionID LEFT JOIN dbo.MainTag_User AS u ON u.mtid = mq.mtid WHERE  u.userid IS NULL OR u.userid != ?\n"
                     + " UNION\n"
-                    + " SELECT q.totalComment,q.lastActive,q.QuestionID,q.UserID,q.createdAt,q.totalLike,mq.mtid,q.summary,q.content,q.title,1 AS rs FROM dbo.Question AS q LEFT JOIN dbo.MainTag_Question AS mq ON mq.questionid = q.QuestionID JOIN dbo.MainTag_User AS u ON u.mtid = mq.mtid WHERE u.userid = ?\n"
+                    + " SELECT q.totalViews,q.totalComment,q.lastActive,q.QuestionID,q.UserID,q.createdAt,q.totalLike,mq.mtid,q.summary,q.content,q.title,1 AS rs FROM dbo.Question AS q LEFT JOIN dbo.MainTag_Question AS mq ON mq.questionid = q.QuestionID JOIN dbo.MainTag_User AS u ON u.mtid = mq.mtid WHERE u.userid = ?\n"
                     + ") AS q) tbl\n"
                     + "WHERE row_index >= (? -1)*? + 1\n"
                     + "AND row_index <= ? * ?";
@@ -126,7 +126,7 @@ public class QuestionDBContext extends DBContext {
                 s.setUser(findUser(rs.getInt("UserID")));
                 s.setLastActive(notidb.findDifference(rs.getString("lastActive"), strDate));
                 s.setTotalComment(rs.getInt("totalComment"));
-
+                s.setViews(rs.getInt("totalViews"));
                 questions.add(s);
             }
 
@@ -135,6 +135,51 @@ public class QuestionDBContext extends DBContext {
         }
         return questions;
     }
+
+    public ArrayList<Question> SearchQuestion(int userid, int pageindex, int pagesize, String field, String type, String searchContent) {
+        NotificationDBContext notidb = new NotificationDBContext();
+        try {
+            TagDBContext tagDB = new TagDBContext();
+            MainTagDBContext mainDB = new MainTagDBContext();
+            ArrayList<Question_Tag> tags = null;
+            Main_Tag main = null;
+            String sql = "SELECT totalViews,totalComment, lastActive,QuestionID,UserID,title,summary,createdAt,content,totalLike from  (SELECT *,ROW_NUMBER() OVER (ORDER BY "+field+" "+type+") as row_index  FROM dbo.Question as q) tbl\n"
+                    + "            WHERE row_index >= (? -1)*? + 1 \n"
+                    + "                    AND row_index <= ? * ? AND (content LIKE ? OR title LIKE ?)";
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, pageindex);
+            stm.setInt(2, pagesize);
+            stm.setInt(3, pageindex);
+            stm.setInt(4, pagesize);
+            searchContent = "%" + searchContent + "%";
+            stm.setString(5, searchContent);
+            stm.setString(6, searchContent);
+
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                tags = tagDB.getTagsByQuesID(rs.getInt("QuestionID"));
+                main = mainDB.getMainTagByQuesID(rs.getInt("QuestionID"), userid);
+                Question s = new Question(rs.getInt("QuestionID"), rs.getInt("UserID"), rs.getString("title"), rs.getString("summary"), rs.getString("createdAt"), rs.getString("content"), tags, main, rs.getInt("totalLike"));
+                s.setUser(findUser(rs.getInt("UserID")));
+                s.setLastActive(notidb.findDifference(rs.getString("lastActive"), strDate));
+                s.setTotalComment(rs.getInt("totalComment"));
+                s.setViews(rs.getInt("totalViews"));
+                questions.add(s);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(QuestionDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return questions;
+    }
+//    public static void main(String[] args) {
+//        QuestionDBContext ques = new QuestionDBContext();
+//        ArrayList<Question> quess = ques.SearchQuestion(-1, 1, 10, "q.createdAt", "desc", "t");
+//        for (Question ques1 : quess) {
+//            System.out.println(ques1.getQuestionID());
+//        }
+//    }
 
     public int count() {
         try {
@@ -157,7 +202,7 @@ public class QuestionDBContext extends DBContext {
             MainTagDBContext mainDB = new MainTagDBContext();
             ArrayList<Question_Tag> tags = null;
             Main_Tag main = null;
-            String sql = "SELECT totalComment, lastActive,QuestionID,UserID,title,summary,createdAt,content,totalLike from  (SELECT *,ROW_NUMBER() OVER (ORDER BY "+field+" "+type+") as row_index  FROM dbo.Question as q) tbl\n"
+            String sql = "SELECT totalViews,totalComment, lastActive,QuestionID,UserID,title,summary,createdAt,content,totalLike from  (SELECT *,ROW_NUMBER() OVER (ORDER BY " + field + " " + type + ") as row_index  FROM dbo.Question as q) tbl\n"
                     + "            WHERE row_index >= (? -1)*? + 1 \n"
                     + "                    AND row_index <= ? * ?";
 
@@ -174,6 +219,7 @@ public class QuestionDBContext extends DBContext {
                 s.setUser(findUser(rs.getInt("UserID")));
                 s.setLastActive(notidb.findDifference(rs.getString("lastActive"), strDate));
                 s.setTotalComment(rs.getInt("totalComment"));
+                s.setViews(rs.getInt("totalViews"));
                 questions.add(s);
             }
 
@@ -197,8 +243,8 @@ public class QuestionDBContext extends DBContext {
         }
         return null;
     }
-    
-     public ArrayList<Question> getQuestionsSort(int pageindex, int pagesize, int userid, String field, String type) {
+
+    public ArrayList<Question> getQuestionsSort(int pageindex, int pagesize, int userid, String field, String type) {
         NotificationDBContext notidb = new NotificationDBContext();
         try {
             TagDBContext tagDB = new TagDBContext();
@@ -232,8 +278,6 @@ public class QuestionDBContext extends DBContext {
         }
         return questions;
     }
-
-
 
     public Question getQuestions2(int quesid, int currentUser) {
 
@@ -341,7 +385,7 @@ public class QuestionDBContext extends DBContext {
     public int createQuestion(int userid, String title, String summary, String createdAt, String content, String maintag) {
         int quesid = -1;
         try {
-            String sql_insert_ques = "insert into question(UserID,title,summary,createdAt,content) VALUES(?,?,?,?,?)";
+            String sql_insert_ques = "insert into question(UserID,title,summary,createdAt,content,lastActive) VALUES(?,?,?,?,?,GETDATE())";
             connection.setAutoCommit(false);
             PreparedStatement stm_insert_ques = connection.prepareStatement(sql_insert_ques);
 

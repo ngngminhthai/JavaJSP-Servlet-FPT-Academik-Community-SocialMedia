@@ -68,6 +68,22 @@
         <servlet-name>SortHomePageController</servlet-name>
         <servlet-class>controller.SortHomePageController</servlet-class>
     </servlet>
+    <filter>
+        <filter-name>CharsetFilter</filter-name>
+        <filter-class>controller.CharsetFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>CharsetFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <listener>
+        <description>ServletContextListener, HttpSessionListener</description>
+        <listener-class>controller.OnlineUserListner</listener-class>
+    </listener>
+    <servlet>
+        <servlet-name>SearchController</servlet-name>
+        <servlet-class>controller.SearchController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>home</servlet-name>
         <url-pattern>/home</url-pattern>
@@ -131,6 +147,10 @@
     <servlet-mapping>
         <servlet-name>SortHomePageController</servlet-name>
         <url-pattern>/sorthomepage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchController</servlet-name>
+        <url-pattern>/search</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

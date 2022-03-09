@@ -1432,7 +1432,7 @@
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
             <script>
-
+                                        
                                         function like(elem) {
                                             var commentID = "." + elem.classList[1];
                                             var iconlike = document.querySelector(commentID).querySelector("svg");
@@ -1513,6 +1513,8 @@
                                             text.scrollIntoView();
                                             document.querySelector(".ng-pristine").focus();
                                         }
+                                        var toolbar = document.querySelector(".ta-toolbar.btn-toolbar");
+                                        console.log(toolbar);
             </script>
 
 

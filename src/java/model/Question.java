@@ -27,6 +27,7 @@ public class Question {
     String lastActive;
     int totalComment;
     int views;
+    
 
     public int getTotalComment() {
         return totalComment;

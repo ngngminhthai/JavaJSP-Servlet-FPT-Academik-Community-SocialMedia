@@ -30,9 +30,9 @@
         <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
-        <link rel="stylesheet" href="style/style2.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/style/style2.css">
 
-        <link rel="stylesheet" href="style/Paginition.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/style/Paginition.css">
 
         <link rel="apple-touch-icon" type="image/png" href="assets/logo.png" />
         <meta name="apple-mobile-web-app-title" content="CodePen">
@@ -149,7 +149,7 @@
             <div class="container">
                 <div class="tt-topic-list">
                     <div class="tt-list-header">
-                        <div class="tt-col-topic">Câu hỏi</div>
+                        <div class="tt-col-topic">Câu hỏi ${applicationScope.onlineUser}</div>
                         <div class="tt-col-category">Môn học
                         </div>
                         <div style="white-space: nowrap;" class="tt-col-value hide-mobile"><a id="totalLike" href="home?order=totalLike&sort=asc">Thích </a><i style="display: none" class="fa fa-chevron-down" aria-hidden="true"></i></div>
@@ -221,7 +221,7 @@
                                 }%>" aria-hidden="true" style="display: block; margin-left: 3px;"></i></span></div>
                         <div class="tt-col-value  hide-mobile"><%= elem.getTotalLike()%></div>
                         <div class="tt-col-value tt-color-select  hide-mobile"><%= elem.getTotalComment()%></div>
-                        <div class="tt-col-value  hide-mobile">8.3k</div>
+                        <div class="tt-col-value  hide-mobile"><%= elem.getViews()%></div>
                         <div class="tt-col-value hide-mobile"><%= elem.getLastActive()%></div>
                         <div class="col-lg-4">
                             <div class="text-center card-box">
@@ -347,7 +347,7 @@
                                     }%>" aria-hidden="true" style="display: block; margin-left: 3px;"></i></span></div>
                         <div class="tt-col-value  hide-mobile"><%= elem.getTotalLike()%></div>
                         <div class="tt-col-value tt-color-select  hide-mobile"><%= elem.getTotalComment()%></div>
-                        <div class="tt-col-value  hide-mobile">8.3k</div>
+                        <div class="tt-col-value  hide-mobile"><%= elem.getViews()%></div>
                         <div class="tt-col-value hide-mobile"><%= elem.getLastActive()%></div>
                     </div>
                     <%  }
@@ -384,7 +384,7 @@
         </script>
 
 
-    </head>
+   
     <% int pageindex = (Integer) request.getAttribute("pageindex");
         int totalpage = (Integer) request.getAttribute("totalpage");
     %>
@@ -646,8 +646,10 @@
         if (reverseLink != "") {
             reverseLink = "&" + reverseLink;
         }
-
-        pagger("page",<%=pageindex%>,<%=totalpage%>, 3, reverseLink);
+        var thePath = window.location.pathname;
+        var getLastItem = thePath.substring(thePath.lastIndexOf('/') + 1)
+       
+        pagger(thePath, "page",<%=pageindex%>,<%=totalpage%>, 3, reverseLink);
         addFunc(<%=totalpage%>);
 
         function displayProfile(elem) {

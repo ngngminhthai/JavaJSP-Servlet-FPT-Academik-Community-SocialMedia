@@ -82,9 +82,9 @@
                         </svg>
                     </button>
                     <!-- /toggle -->
-                    <form class="search-wrapper">
+                    <form class="search-wrapper" method="get" action="search">
                         <div class="search-form">
-                            <input type="text" class="tt-search__input" placeholder="Tìm kiếm">
+                            <input name="q" type="text" class="tt-search__input" placeholder="Tìm kiếm">
                             <button class="tt-search__btn" type="submit">
                                 <svg class="tt-icon">
                                 <use xlink:href="#icon-search"></use>

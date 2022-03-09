@@ -539,7 +539,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="inputTopicTitle">Tag Chính</label>
-                                        <input class="form-control" type="text" list="datalist" onkeyup="ac(this.value)">
+                                        <input class="form-control" type="text" list="datalist" onkeyup="ac(this.value)" name="maintag">
                                         <datalist id="datalist">
                                             <% for (Main_Tag elem : mains) {%>
                                             <option value="<%= elem.getTagid()%>"><%= elem.getTagid()%></option>
