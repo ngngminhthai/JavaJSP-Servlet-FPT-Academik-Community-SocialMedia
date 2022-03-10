@@ -10,15 +10,81 @@ package model;
  * @author Admin
  */
 public class User {
+
     int userID;
     String username;
     String password;
     String userName;
     String major;
-    
+    String firstName;
+    String lastName;
+    String middleName;
+    String email;
+    String img;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getMajor() {
+        return major;
+    }
+
+    public void setMajor(String major) {
+        this.major = major;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getMiddleName() {
+        return middleName;
+    }
+
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+    public User() {
+
+    }
+
     public User(int userID) {
         this.userID = userID;
-        
+
     }
 
     public User(int userID, String username) {
@@ -26,7 +92,6 @@ public class User {
         this.username = username;
     }
 
-    
     public User(int userID, String username, String password) {
         this.userID = userID;
         this.username = username;
@@ -56,5 +121,5 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-    
+
 }

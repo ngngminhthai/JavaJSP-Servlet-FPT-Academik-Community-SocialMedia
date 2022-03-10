@@ -32,7 +32,7 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 
         <link rel="stylesheet" href="${pageContext.request.contextPath}/style/style2.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/style/style2.css">
+        
         <link rel="stylesheet" href="${pageContext.request.contextPath}/style/Paginition.css">
         <script src="js/paginition.js"></script>
         <script src="js/follow.js"></script>

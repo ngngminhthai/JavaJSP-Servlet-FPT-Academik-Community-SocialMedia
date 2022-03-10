@@ -163,9 +163,12 @@
                 <a href="Notification" class="tt-btn-icon">
                     <i class="tt-icon"><svg><use xlink:href="#icon-notification"></use></svg></i>
                 </a>
-                <div class="tt-avatar-icon tt-size-md">
-                    <i class="tt-icon"><svg><use xlink:href="#icon-ava-a"></use></svg></i>
-                </div>
+                <form action="profile" method="get">
+                    <div class="tt-avatar-icon tt-size-md">
+                        <i class="tt-icon"><svg><use xlink:href="#icon-ava-a"></use></svg></i>
+                    </div>
+                </form>
+
                 <div class="custom-select-01">
                     <select>
                         <option value="Default Sorting"><%=session.getAttribute("username")%></option>
