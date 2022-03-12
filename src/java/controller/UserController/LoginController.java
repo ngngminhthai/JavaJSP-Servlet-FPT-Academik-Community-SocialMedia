@@ -6,6 +6,7 @@
 package controller.UserController;
 
 import db.AccountDBContext;
+import db.UserDBContext;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -77,6 +78,9 @@ public class LoginController extends HttpServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String remember = request.getParameter("Remember");
+        String userimg = "";
+        HttpSession session = request.getSession();
+
         AccountDBContext accountDb = new AccountDBContext();
         User user = accountDb.getUser(username, password);
 
@@ -106,9 +110,15 @@ public class LoginController extends HttpServlet {
                 response.addCookie(c_user);
                 response.addCookie(c_pass);
                 response.addCookie(c_reme);
+
+                UserDBContext userdb = new UserDBContext();
+                userimg = userdb.getimg(username);
+                if (!userimg.isEmpty()) {
+                    session.setAttribute("img", userimg);
+                }
+                userdb.updateStatus(1, user.getUserID());
             }
 
-            HttpSession session = request.getSession();
             session.setAttribute("username", username);
             session.setAttribute("userID", user.getUserID());
             response.sendRedirect("home");

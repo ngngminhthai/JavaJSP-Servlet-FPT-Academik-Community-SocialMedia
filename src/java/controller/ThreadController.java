@@ -41,8 +41,10 @@ public class ThreadController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         int questionID = Integer.parseInt(request.getParameter("questionid"));
+      
 
         QuestionDBContext quesDB = new QuestionDBContext();
+        quesDB.updateView(questionID);
         TagDBContext tagDB = new TagDBContext();
         CommentDBContext comDB = new CommentDBContext();
         MainTagDBContext mainDB = new MainTagDBContext();

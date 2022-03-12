@@ -5,6 +5,8 @@
  */
 package model;
 
+import java.sql.Date;
+
 /**
  *
  * @author Admin
@@ -21,6 +23,26 @@ public class User {
     String middleName;
     String email;
     String img;
+    String lastActive;
+    boolean online;
+
+    public boolean isOnline() {
+        return online;
+    }
+
+    public void setOnline(boolean online) {
+        this.online = online;
+    }
+    
+
+    public String getLastActive() {
+        return lastActive;
+    }
+
+    public void setLastActive(String lastActive) {
+        this.lastActive = lastActive;
+    }
+    
 
     public String getUserName() {
         return userName;

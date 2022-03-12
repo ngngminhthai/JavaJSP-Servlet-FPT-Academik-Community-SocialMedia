@@ -27,6 +27,19 @@ public class Question {
     String lastActive;
     int totalComment;
     int views;
+//"QuestionID"), rs.getInt("UserID"), rs.getString("title"), rs.getString("summary"), rs.getString("createdAt"), rs.getString("content"), tags, rs.getInt("totalLike"
+
+    public Question(int QuestionID, int userID, String title, String summary, String createdAt, String content, ArrayList<Question_Tag> tags, int totalLike) {
+        this.QuestionID = QuestionID;
+        this.userID = userID;
+        this.title = title;
+        this.summary = summary;
+        this.createdAt = createdAt;
+        this.content = content;
+        this.tags = tags;
+        this.totalLike = totalLike;
+      
+    }
     
 
     public int getTotalComment() {

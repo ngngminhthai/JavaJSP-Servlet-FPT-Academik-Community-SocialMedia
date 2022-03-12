@@ -322,11 +322,14 @@
                                                                 </li>-->
                                 <% for (Conversation elem : cons) {%>
                                 <li class="clearfix <%= elem.getUsername()%> <%=elem.getC_id()%> u<%=elem.getUserTwo()%>">
-                                    <img src="pages/thai.jpg" alt="avatar">
+                                    <p hidden="">${pageContext.request.contextPath}/img/<%= elem.getUser().getImg()%></p>
+                                    <p hidden=""><%= elem.getUser().getLastActive() %></p>
+                                    <img src="${pageContext.request.contextPath}/img/<%= elem.getUser().getImg()%>" alt="avatar">
                                     <div class="about">
                                         <div class="name userlist<%= elem.getC_id()%>"><%= elem.getUsername()%></div>
-                                        <div class="status"> <i class="fa fa-circle online"></i> đang hoạt động </div>
+                                        <div class="status"> <i class="fa fa-circle <% if(!elem.getUser().isOnline()) out.print("offline"); else out.print("online"); %>"></i><% if(!elem.getUser().isOnline()) out.print(elem.getUser().getLastActive()); else out.print("Đang hoạt động"); %></div>
                                     </div>
+                                    
                                 </li>
                                 <% }
                                 %>
@@ -339,11 +342,11 @@
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">
-                                            <img src="pages/thai.jpg" alt="avatar">
+                                            <img src="${pageContext.request.contextPath}/img/<%=cons.get(0).getUser().getImg() %>" alt="avatar">
                                         </a>
                                         <div class="chat-about">
-                                            <h6 class="m-b-0"></h6>
-                                            <small>Hoạt động: 2 phút trước</small>
+                                            <h6 class="m-b-0"><%=cons.get(0).getUsername()%></h6>
+                                            <small>Hoạt động: <%=cons.get(0).getUser().getLastActive()%></small>
                                         </div>
                                     </div>
                                     <div class="col-lg-6 hidden-sm text-right">
@@ -413,16 +416,17 @@
             });
         });
 
-        function Message(c_id, content, replyid) {
+        function Message(c_id, content, replyid, time) {
             this.c_id = c_id;
             this.content = content;
             this.replyid = replyid;
+            this.time = time;
         }
         var messages = [];
         <% for (Conversation elem : cons) {
                 for (int i = 0; i < elem.getMessages().size(); i++) {
         %>
-        messages.push(new Message(<%= elem.getC_id()%>, '<%= elem.getMessages().get(i).getContent()%>',<%=elem.getMessages().get(i).getUserID()%>));
+        messages.push(new Message(<%= elem.getC_id()%>, '<%= elem.getMessages().get(i).getContent()%>',<%=elem.getMessages().get(i).getUserID()%>,'<%=elem.getMessages().get(i).getCreatedAt()%>'));
         <%    }
             }
         %>
@@ -430,7 +434,12 @@
        
         var currentActive = document.querySelector("li.clearfix");
         var userlist = document.querySelectorAll("ul.chat-list li.clearfix");
+        
+        
         var chatNameCurrent = document.querySelector(".chat-about h6");
+        var avatarCurrent = document.querySelector(".chat-header img");
+        var lastActiveCurrent = document.querySelector(".chat-about small");
+        
         currentActive.classList.add("active");
         chatNameCurrent.innerHTML = currentActive.classList[1];
         var chatHistory = document.querySelector(".chat-history ul");
@@ -467,24 +476,25 @@
                         var contentElement = document.querySelector("ul.m-b-0");
                         var currentAc = '<%=request.getSession().getAttribute("userID")%>'
                         var final = xmlhttp.responseText;
-                        let arr = final.split('-');
+                        let arr = final.split('--');
                         var content = arr[1];
                         var replier = arr[2];
+                        var time = arr[3];
 
                         messages.unshift(new Message(currentActive.classList[2], content, replier));
 
                         if (currentAc != replier) {
                             contentElement.innerHTML = contentElement.innerHTML + `<li class="clearfix">
                                         <div class="message-data">
-                                            <span class="message-data-time">10:10 Sáng nay</span>
+                                            <span class="message-data-time">`+time+`</span>
                                         </div>
                                         <div class="message my-message">` + content + `</div>                                    
                                     </li>               `
                         } else {
                             contentElement.innerHTML = contentElement.innerHTML + `<li class="clearfix">
                             <div class="message-data text-right">
-                                <span class="message-data-time">10:10 Sáng nay</span>
-                                <img src="pages/thai.jpg" alt="avatar">
+                                <span class="message-data-time">`+time+`</span>
+                               
                             </div>
                             <div class="message other-message float-right">` + content + `</div>
                         </li>`
@@ -510,7 +520,7 @@
             var cid = currentActive.classList[2];
             var replyid = '<%=request.getSession().getAttribute("userID")%>'
             $.ajax({
-                url: "/FUWePass/OpenMessage",
+                url: "/FPTCommunity/OpenMessage",
                 type: "post", //send it through get method
                 data: {
                     replyid: replyid,
@@ -522,29 +532,31 @@
                     var currentAc = '<%=request.getSession().getAttribute("userID")%>'
 
                     var final = data;
-                    let arr = final.split('-');
+                    let arr = final.split('//');
                     var content = "";
                     var replier = -1;
                     var cid = -1;
+                    var time;
 
                     for (var i = 0; i < arr.length - 1; i++) {
                         let arr2 = arr[i].split('/');
                         content = arr2[0];
                         replier = arr2[1];
                         cid = arr2[2];
-                        messages.push(new Message(cid, content, replier));
+                        time = arr2[3];
+                        messages.push(new Message(cid, content, replier, time));
                         if (currentAc != replier) {
                             contentElement.innerHTML = `<li class="clearfix">
                                         <div class="message-data">
-                                            <span class="message-data-time">10:10 Sáng nay</span>
+                                            <span class="message-data-time">`+time+`</span>
                                         </div>
                                         <div class="message my-message">` + content + `</div>                                    
                                     </li>               ` + contentElement.innerHTML;
                         } else {
                             contentElement.innerHTML = `<li class="clearfix">
                             <div class="message-data text-right">
-                                <span class="message-data-time">10:10 Sáng nay</span>
-                                <img src="pages/thai.jpg" alt="avatar">
+                                <span class="message-data-time">`+time+`</span>
+                              
                             </div>
                             <div class="message other-message float-right">` + content + `</div>
                         </li>` + contentElement.innerHTML
@@ -566,15 +578,15 @@
                 chatHistory.innerHTML += ` 
                                     <li class="clearfix">
                                         <div class="message-data">
-                                            <span class="message-data-time">10:12 AM, Today</span>
+                                            <span class="message-data-time"`+ messages[i].time + `</span>
                                         </div>
                                         <div class="message my-message">` + messages[i].content + `</div>                                    
                                     </li>                `
             } else if (messages[i].c_id == currentActive.classList[2]) {
                 chatHistory.innerHTML += `  <li class="clearfix">
                             <div class="message-data text-right">
-                                <span class="message-data-time">10:10 AM, Today</span>
-                                <img src="pages/thai.jpg" alt="avatar">
+                                <span class="message-data-time">`+ messages[i].time + `</span>
+                             
                             </div>
                             <div class="message other-message float-right">` + messages[i].content + `</div>
                         </li>`
@@ -587,7 +599,11 @@
                     currentActive.classList.remove("active");
                     currentActive = elem;
                     elem.classList.add("active");
+                    
                     chatNameCurrent.innerHTML = elem.classList[1];
+                    avatarCurrent.src = elem.childNodes[1].innerText;
+                    lastActiveCurrent.innerHTML = "Hoạt động: "+elem.childNodes[3].innerText;
+                    
                     chatHistory.innerHTML = ``;
                     console.log(currentActive.classList[3].charAt(1));
                     for (var i = messages.length - 1; i >= 0; i--) {
@@ -595,15 +611,15 @@
                             chatHistory.innerHTML += ` 
                                     <li class="clearfix">
                                         <div class="message-data">
-                                            <span class="message-data-time">10:12 AM, Today</span>
+                                            <span class="message-data-time">`+ messages[i].time + `</span>
                                         </div>
                                         <div class="message my-message">` + messages[i].content + `</div>                                    
                                     </li>                `
                         } else if (messages[i].c_id == elem.classList[2]) {
                             chatHistory.innerHTML += `  <li class="clearfix">
                             <div class="message-data text-right">
-                                <span class="message-data-time">10:10 AM, Today</span>
-                                <img src="pages/thai.jpg" alt="avatar">
+                                <span class="message-data-time">`+ messages[i].time + `</span>
+                           
                             </div>
                             <div class="message other-message float-right">` + messages[i].content + `</div>
                         </li>`

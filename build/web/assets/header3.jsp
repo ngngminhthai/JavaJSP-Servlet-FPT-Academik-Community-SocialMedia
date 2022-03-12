@@ -40,7 +40,7 @@
                 <div class="tt-desktop-menu">
                     <nav>
                         <ul>
-                            <li><a href="page-categories.html"><span style="color: blue; font-weight: bold;">Môn học</span></a></li>
+                            <li><a href="subject"><span style="color: blue; font-weight: bold;">Môn học</span></a></li>
                             <li><a href="page-tabs.html"><span>Thông tin</span></a></li>
                             <li><a href="page-create-topic.html"><span>Đăng bài viết</span></a></li>
                             <li>
@@ -158,16 +158,22 @@
             <div class="col-auto ml-auto">
                 <% if (session.getAttribute("userID") != null) {%> 
                 <a href="OpenMessage" class="tt-user-info d-flex justify-content-center">
-                    <i class="fa fa-envelope" aria-hidden="true"></i>
+                    <i style="font-size: 18px; color: #607d8b" class="fa fa-envelope" aria-hidden="true"></i>
                 </a>
                 <a href="Notification" class="tt-btn-icon">
                     <i class="tt-icon"><svg><use xlink:href="#icon-notification"></use></svg></i>
                 </a>
                 <form action="profile" method="get">
-                    <div class="tt-avatar-icon tt-size-md">
-                        <i class="tt-icon"><svg><use xlink:href="#icon-ava-a"></use></svg></i>
+                    <div class="tt-avatar-icon tt-size-md" onclick="profile()">
+                        <img style="width: 30px; height: 100%; border-radius: 100%;" src="${pageContext.request.contextPath}/img/${sessionScope.img}">
+                        <!--                        <i  style="font-size: 18px; color: #607d8b" class="tt-icon"><svg><use xlink:href="#icon-ava-a"></use></svg></i>-->
                     </div>
                 </form>
+                <script>
+                        function profile(){
+                            window.location.href = "profile";
+                        }
+                </script>
 
                 <div class="custom-select-01">
                     <select>

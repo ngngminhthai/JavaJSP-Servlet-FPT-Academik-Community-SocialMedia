@@ -5,6 +5,7 @@
  */
 package controller.UserController;
 
+import db.UserDBContext;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -58,6 +59,8 @@ public class LogoutController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
+        UserDBContext udb = new UserDBContext();
+        udb.updateStatus(0, 0);
         session.invalidate();
         response.sendRedirect("home");
     }

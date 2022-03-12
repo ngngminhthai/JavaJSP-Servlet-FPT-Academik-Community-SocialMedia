@@ -43,7 +43,7 @@ public class UploadImage extends HttpServlet {
             throws ServletException, IOException {
 
         // Create path components to save the file
-        final String path = "C:\\Users\\Admin\\Documents\\NetBeansProjects\\FUWePass\\web\\img";
+        final String path = "C:\\Users\\Admin\\Documents\\NetBeansProjects\\FPTCommunity\\web\\img";
         final Part filePart = request.getPart("file");
         UserDBContext userdb = new UserDBContext();
 
@@ -56,7 +56,7 @@ public class UploadImage extends HttpServlet {
 
         String userimg = userdb.findImg(userid);
         if (!userimg.isEmpty()) {
-            File myObj = new File("C:\\Users\\Admin\\Documents\\NetBeansProjects\\FUWePass\\web\\img\\" + userimg);
+            File myObj = new File("C:\\Users\\Admin\\Documents\\NetBeansProjects\\FPTCommunity\\web\\img\\" + userimg);
             if (myObj.delete()) {
                 System.out.println("Deleted the file: " + myObj.getName());
             } else {
@@ -157,10 +157,8 @@ public class UploadImage extends HttpServlet {
     }// </editor-fold>
 
     public static void main(String[] args) {
-        String fileName = "thaideptrai.opp";
-        String type = fileName.substring(fileName.indexOf("."));
-        System.out.println(type);
-        File myObj = new File("C:\\Users\\Admin\\Documents\\NetBeansProjects\\FUWePass\\web\\img\\user"+"user1.png");
+        String userimg = "user1.png";
+        File myObj = new File("C:\\Users\\Admin\\Documents\\NetBeansProjects\\FPTCommunity\\web\\img\\" + userimg);
         if (myObj.delete()) {
             System.out.println("Deleted the file: " + myObj.getName());
         } else {

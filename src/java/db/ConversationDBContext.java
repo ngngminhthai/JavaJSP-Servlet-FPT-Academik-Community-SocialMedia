@@ -9,11 +9,14 @@ import controller.UserController.CreateConversation;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Conversation;
 import model.Message;
+import model.User;
 
 /**
  *
@@ -22,6 +25,11 @@ import model.Message;
 public class ConversationDBContext extends DBContext {
 
     public ArrayList<Conversation> getConversation(int userID) {
+        NotificationDBContext notidb = new NotificationDBContext();
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS");
+        String strDate = sdf.format(cal.getTime());
+
         ArrayList<Conversation> conversations = new ArrayList<>();
         try {
             String sql = "EXEC dbo.userIDCheck @userid = ?";
@@ -31,11 +39,16 @@ public class ConversationDBContext extends DBContext {
 
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
+                User u = new User();
+                u.setImg(rs.getString("img"));
+                u.setLastActive(notidb.findDifference(rs.getString("lastLogin"), strDate));
+                u.setOnline(rs.getBoolean("onlineStatus"));
                 ArrayList<Message> messages = getMessages(rs.getInt("c_id"), 0);
-                String name = rs.getString(2);
-                int userid = rs.getInt(3);
+                String name = rs.getString("username");
+                int userid = rs.getInt("user_receive");
                 int cid = rs.getInt("c_id");
                 Conversation conversation = new Conversation(name, userid, messages, cid);
+                conversation.setUser(u);
                 conversations.add(conversation);
             }
 
@@ -45,11 +58,10 @@ public class ConversationDBContext extends DBContext {
         return conversations;
     }
 
-
     public ArrayList<Message> getMessages(int cid, int currentNumberItems) {
         ArrayList<Message> messages = new ArrayList<>();
         try {
-            String sql = "SELECT message_content, userID FROM dbo.Message WHERE c_id = ? ORDER BY createdAt DESC OFFSET ? ROWS FETCH NEXT 3 ROWS ONLY";
+            String sql = "SELECT message_content, userID,createdAt FROM dbo.Message WHERE c_id = ? ORDER BY createdAt DESC OFFSET ? ROWS FETCH NEXT 3 ROWS ONLY";
 
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, cid);
@@ -57,7 +69,9 @@ public class ConversationDBContext extends DBContext {
 
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
-                messages.add(new Message(rs.getString("message_content"), rs.getInt("userID")));
+                Message m = new Message(rs.getString("message_content"), rs.getInt("userID"));
+                m.setCreatedAt(rs.getString("createdAt"));
+                messages.add(m);
             }
 
             return messages;

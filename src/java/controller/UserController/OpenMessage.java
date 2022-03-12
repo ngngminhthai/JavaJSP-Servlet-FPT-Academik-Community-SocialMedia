@@ -94,7 +94,7 @@ public class OpenMessage extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         for (Message mesage : mesages) {
-            out.print(mesage.getContent() + "/" + mesage.getUserID() + "/" + cid + "-");
+            out.print(mesage.getContent() + "/" + mesage.getUserID() + "/" + cid + "/"+mesage.getCreatedAt()+"//");
         }
 
     }

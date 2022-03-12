@@ -32,7 +32,7 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 
         <link rel="stylesheet" href="${pageContext.request.contextPath}/style/style2.css">
-        
+
         <link rel="stylesheet" href="${pageContext.request.contextPath}/style/Paginition.css">
         <script src="js/paginition.js"></script>
         <script src="js/follow.js"></script>
@@ -191,11 +191,19 @@
                                 %>
                                 <div class="tt-item">
                                     <div class="tt-col-avatar u<%= elem.getUserID()%> <%if (elem.getUser() != null) {
-                                            out.print(elem.getUser().getUsername());
-                                        }%>" onclick="displayProfile(this)">
-                                        <svg class="tt-icon">
-                                        <use  class="useavatar" xlink:href="#icon-ava-<%=(char) (random.nextInt(26) + 'a')%>"></use>
+                                                out.print(elem.getUser().getUsername());
+                                            }%>" onclick="displayProfile(this)">
+                                        <%if (elem.getUser() != null) { %>
+                                        <% if (elem.getUser().getImg() != null) {%>
+                                        <div class="tt-icon">
+                                            <img class="useavatar" src="${pageContext.request.contextPath}/img/<%=elem.getUser().getImg()%>">
+                                        </div>
+                                        <%}%>
+                                        <svg class="tt-icon"> 
+                                        <use  class="useavatar" xlink:href="#icon-ava-<%= elem.getUser().getUsername().charAt(0)%>"></use>
                                         </svg>
+
+                                        <%}%>
                                     </div>
                                     <div class="tt-col-description">
                                         <h6 class="tt-title"><a href="thread?questionid=<%=elem.getQuestionID()%>">
@@ -248,8 +256,8 @@
                                             <div class="member-card pt-2 pb-2">
                                                 <div class="thumb-lg member-thumb mx-auto"><img src="pages/thai.jpg" class="rounded-circle img-thumbnail" alt="profile-image"></div>
                                                 <div class="">
-                                                    <h4>Nguyen Minh Thai</h4>
-                                                    <p class="text-muted">@Software Engineering <span>| </span><span><a href="#" class="text-pink">thainmhe153666</a></span></p>
+                                                    <h4></h4>
+                                                    <p class="text-muted">@Software Engineering <span>| </span><span><a href="#" class="text-pink">useremail@gmail.com</a></span></p>
                                                 </div>
                                                 <ul class="social-links list-inline">
                                                     <li class="list-inline-item"><a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Facebook"><i class="fa fa-facebook"></i></a></li>
@@ -257,7 +265,7 @@
                                                     <li class="list-inline-item"><a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Skype"><i class="fa fa-skype"></i></a></li>
                                                 </ul>
                                                 <form action="createconversation" method="POST">
-                                                    <input value="<%=elem.getUserID()%>" name="userone">
+                                                    <input hidden="" value="<%=elem.getUserID()%>" name="userone">
                                                     <button type="submit" class="btn btn-primary mt-3 btn-rounded waves-effect w-md waves-light">Gui tin nhan</button>
                                                 </form>
                                                 <div class="mt-4">
@@ -2465,8 +2473,8 @@
                     sortIcon.style.display = "contents";
                 }
             }
-            if(field == null || field == ""){
-                reverseLink = "q="+'${requestScope.content}'
+            if (field == null || field == "") {
+                reverseLink = "q=" + '${requestScope.content}'
             }
             var content = "&q=${requestScope.content}"
             console.log(content);

@@ -14,7 +14,7 @@ import java.sql.Date;
 public class Message {
     String content;
     int userID;
-    Date createdAt;
+    String createdAt;
 
     public Message(String content, int userID) {
         this.content = content;
@@ -37,11 +37,11 @@ public class Message {
         this.userID = userID;
     }
 
-    public Date getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 

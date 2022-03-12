@@ -5,7 +5,12 @@
  */
 package controller;
 
+import db.UserDBContext;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
+import javafx.application.Application;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -46,6 +51,29 @@ public class OnlineUserListner implements HttpSessionListener {
         Date now = new Date();
         System.out.println("Da tao session co ID " + session.getId() + " vao thoi diem " + now);
         System.out.println("Dang có " + songuoionline + " online");
+
+        DayOfWeek day = LocalDate.now(ZoneId.of("America/Montreal")).getDayOfWeek();
+        UserDBContext udb = new UserDBContext();
+
+        String today = "";
+        if (day.equals(DayOfWeek.MONDAY)) {
+            today = "mo";
+        } else if (day.equals(DayOfWeek.TUESDAY)) {
+            today = "tu";
+        } else if (day.equals(DayOfWeek.WEDNESDAY)) {
+            today = "we";
+        } else if (day.equals(DayOfWeek.THURSDAY)) {
+            today = "th";
+        } else if (day.equals(DayOfWeek.FRIDAY)) {
+            today = "fr";
+        } else if (day.equals(DayOfWeek.SATURDAY)) {
+            today = "sa";
+        } else if (day.equals(DayOfWeek.SUNDAY)) {
+            today = "su";
+        }
+
+        udb.updateview(today);
+
         songuoionline++;
     }
 

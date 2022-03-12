@@ -68,10 +68,11 @@ public class HomeController extends HttpServlet {
         }
         ArrayList<Question> questions = new ArrayList<>();
         if(field == null && sort == null){
-            field = "q.createdAt";
+            field = "q.lastActive";
             sort = "desc";
             
         }
+        ////int pageindex, int pagesize, int userid, String field, String type
         if (userid != -1) {
             questions = quesDB.getQuestionsWithUserLogin(pageindex, pagesize, userid, field, sort);
         } else {

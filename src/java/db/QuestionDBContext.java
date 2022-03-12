@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 import model.Main_Tag;
 import model.Question;
 import model.Question_Tag;
+import model.Subject;
 import model.User;
 
 /**
@@ -143,7 +144,7 @@ public class QuestionDBContext extends DBContext {
             MainTagDBContext mainDB = new MainTagDBContext();
             ArrayList<Question_Tag> tags = null;
             Main_Tag main = null;
-            String sql = "SELECT totalViews,totalComment, lastActive,QuestionID,UserID,title,summary,createdAt,content,totalLike from  (SELECT *,ROW_NUMBER() OVER (ORDER BY "+field+" "+type+") as row_index  FROM dbo.Question as q) tbl\n"
+            String sql = "SELECT totalViews,totalComment, lastActive,QuestionID,UserID,title,summary,createdAt,content,totalLike from  (SELECT *,ROW_NUMBER() OVER (ORDER BY " + field + " " + type + ") as row_index  FROM dbo.Question as q) tbl\n"
                     + "            WHERE row_index >= (? -1)*? + 1 \n"
                     + "                    AND row_index <= ? * ? AND (content LIKE ? OR title LIKE ?)";
 
@@ -173,13 +174,15 @@ public class QuestionDBContext extends DBContext {
         }
         return questions;
     }
-//    public static void main(String[] args) {
-//        QuestionDBContext ques = new QuestionDBContext();
-//        ArrayList<Question> quess = ques.SearchQuestion(-1, 1, 10, "q.createdAt", "desc", "t");
-//        for (Question ques1 : quess) {
-//            System.out.println(ques1.getQuestionID());
-//        }
-//    }
+
+    public static void main(String[] args) {
+        QuestionDBContext ques = new QuestionDBContext();
+        //int pageindex, int pagesize, int userid, String field, String type
+        ArrayList<String> quess = ques.getTags("prj301");
+        for (String ques1 : quess) {
+            System.out.println(ques1);
+        }
+    }
 
     public int count() {
         try {
@@ -231,12 +234,14 @@ public class QuestionDBContext extends DBContext {
 
     public User findUser(int userid) {
         try {
-            String sql = "SELECT userid, username from [User] where userid = ?";
+            String sql = "SELECT userid, username, img from [User] where userid = ?";
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, userid);
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {
-                return new User(rs.getInt("userid"), rs.getString("username"));
+                User u = new User(rs.getInt("userid"), rs.getString("username"));
+                u.setImg(rs.getString("img"));
+                return u;
             }
         } catch (SQLException ex) {
             Logger.getLogger(QuestionDBContext.class.getName()).log(Level.SEVERE, null, ex);
@@ -432,6 +437,82 @@ public class QuestionDBContext extends DBContext {
             //close connection
         }
         return 0;
+    }
+
+    public void updateView(int quesid) {
+        String sql2 = "update question set totalViews = totalViews + 1 where questionid = ?";
+        try {
+            PreparedStatement stm = connection.prepareStatement(sql2);
+
+            stm.setInt(1, quesid);
+
+            stm.executeUpdate();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(TagDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public ArrayList<Subject> getSubject() {
+        ArrayList<Subject> subs = new ArrayList<>();
+        ArrayList<String> tags = new ArrayList<>();
+        try {
+            String sql = "SELECT m.mtid,m2.[des], COUNT(q.QuestionID) AS total FROM dbo.MainTag_Question AS m JOIN dbo.Question AS q ON q.QuestionID = m.questionid JOIN dbo.Main_Tag AS m2 ON m2.mtid = m.mtid \n"
+                    + "GROUP BY m.mtid,m2.[des]";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                Subject s = new Subject();
+                s.setDes(rs.getString("des"));
+                s.setSubjectid(rs.getString("mtid"));
+                s.setTotal(rs.getInt("total"));
+                tags = getTags(rs.getString("mtid"));
+                s.setTags(tags);
+                subs.add(s);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(QuestionDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return subs;
+    }
+
+    public ArrayList<String> getTags(String subjectid) {
+        ArrayList<String> tags = new ArrayList<>();
+        try {
+            String sql = "SELECT DISTINCT qm.TagID FROM dbo.Question AS q JOIN dbo.MainTag_Question AS m ON m.questionid = q.QuestionID JOIN dbo.Question_Tag AS qm ON qm.QuestionID = q.QuestionID WHERE m.mtid LIKE ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, subjectid);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                tags.add(rs.getString("TagID"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(QuestionDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return tags;
+    }
+
+    public ArrayList<Question> getQuesBySub(String subid) {
+        ArrayList<Question> ques = new ArrayList<>();
+        TagDBContext tagDB = new TagDBContext();
+        ArrayList<Question_Tag> tags = new ArrayList<>();
+        try {
+            String sql = "SELECT q.totalComment, lastActive,q.QuestionID,UserID,title,summary,createdAt,content,totalLike FROM dbo.Question AS q JOIN dbo.MainTag_Question AS mq ON mq.questionid = q.QuestionID WHERE mq.mtid LIKE ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, subid);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                tags = tagDB.getTagsByQuesID(rs.getInt("QuestionID"));
+                Question s = new Question(rs.getInt("QuestionID"), rs.getInt("UserID"), rs.getString("title"), rs.getString("summary"), rs.getString("createdAt"), rs.getString("content"), tags, rs.getInt("totalLike"));
+                s.setUser(findUser(rs.getInt("UserID")));
+                s.setTotalComment(rs.getInt("totalComment"));
+                s.setViews(rs.getInt("totalViews"));
+                ques.add(s);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(QuestionDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return ques;
     }
 
 }

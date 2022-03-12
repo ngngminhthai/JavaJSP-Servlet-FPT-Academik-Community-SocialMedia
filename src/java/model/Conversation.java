@@ -17,6 +17,16 @@ public class Conversation {
     int userTwo;
     ArrayList<Message> messages;
     int c_id;
+    User user;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+    
 
     public Conversation(String username, int userTwo, ArrayList<Message> messages, int c_id) {
         this.username = username;

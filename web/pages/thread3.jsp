@@ -451,7 +451,7 @@
             li:hover{
                 cursor: pointer;
             }
-             span.tt-badge{
+            span.tt-badge{
                 text-align: center;
                 width: fit-content;
                 transition: 0.5s;
@@ -510,8 +510,8 @@
 
                                         <% for (Question_Tag elem : tagList) {%>
                                         <li><a href="#"><span class="tt-badge"><%= elem.getTagID()%><i class="fa fa-plus" aria-hidden="true" style="display: block; margin-left: 3px; margin-top: 3px;"></i></span></a></li>
-                                                <%}
-                                                %>
+                                                    <%}
+                                                    %>
 
 
 
@@ -547,7 +547,7 @@
                                 <a href="#" class="tt-icon-btn tt-hover-02 tt-small-indent">
                                     <i class="tt-icon"><svg><use xlink:href="#icon-flag"></use></svg></i>
                                 </a>
-                                <li class="tt-icon-btn tt-hover-02 tt-small-indent" onclick="scrollingToComment(this)">
+                                <li class="tt-icon-btn <%= clickedQuestion.getQuestionID()%> tt-hover-02 tt-small-indent" onclick="scrollingToComment(1)">
                                     <i class="tt-icon "><svg><use xlink:href="#icon-reply"></use></svg></i>
                                 </li>
                             </div>
@@ -985,9 +985,9 @@
                                     <div class="text" placeholder="Nhập bình luận" class="form-control" text-angular="text-angular" rows="5" name="message" ng-model="htmlcontent" ta-disabled='disabled'></div>
                                     <textarea ng-model="htmlcontent" style="width: 100%" hidden name="comment-content"></textarea>
                                     <input value="<%= clickedQuestion.getQuestionID()%>" hidden name="questionid">
-                                    <input class="sourceType" value="" style="display: none;" name="sourceType">
-                                    <input name="questionOwner"  hidden="" value="<%=user.getUserID()%>">
-                                    <input name="commentOwner" hidden="" value="" class="commentOwner"> 
+                                    <input class="sourceType" value="" hidden="" name="sourceType">
+                                    <input name="questionOwner"   hidden="" value="<%=user.getUserID()%>">
+                                    <input name="commentOwner"  hidden="" value="" class="commentOwner"> 
                                 </div>
                             </div>
                             <div class="pt-row">
@@ -1432,7 +1432,7 @@
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
             <script>
-                                        
+
                                         function like(elem) {
                                             var commentID = "." + elem.classList[1];
                                             var iconlike = document.querySelector(commentID).querySelector("svg");
@@ -1448,7 +1448,7 @@
                                             iconlike.classList.toggle('pressed')
                                             var commentID = elem.classList[2];
                                             $.ajax({
-                                                url: "/FUWePass/Comment_Like",
+                                                url: "/FPTCommunity/Comment_Like",
                                                 type: "get", //send it through get method
                                                 data: {
                                                     commentID: commentID
@@ -1477,7 +1477,7 @@
                                             iconlike.classList.toggle('pressed')
                                             var quesID = elem.classList[2];
                                             $.ajax({
-                                                url: "/FUWePass/Post_Like",
+                                                url: "/FPTCommunity/Post_Like",
                                                 type: "post", //send it through get method
                                                 data: {
                                                     postID: quesID
@@ -1502,13 +1502,14 @@
                                             var text = document.querySelector(".first-comment");
                                             var comment = document.querySelector(".commentOwner");
                                             var source = document.querySelector(".sourceType");
-                                            console.log(ele.classList[1]);
-                                            console.log(ele.classList[2]);
-                                            comment.value = ele.classList[1];
-                                            source.value = ele.classList[2];
-
-
-
+                                            if (ele == 1) {
+                                                source.value = "";
+                                            } else {
+                                                console.log(ele.classList[1]);
+                                                console.log(ele.classList[2]);
+                                                comment.value = ele.classList[1];
+                                                source.value = ele.classList[2];
+                                            }
 
                                             text.scrollIntoView();
                                             document.querySelector(".ng-pristine").focus();

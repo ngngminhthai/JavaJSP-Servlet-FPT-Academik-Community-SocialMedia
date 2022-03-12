@@ -47,7 +47,9 @@ public abstract class BaseAuthController extends HttpServlet {
             //business
             processGet(request, response);
         } else {
-            response.getWriter().println("access denied!");
+
+            String path = request.getContextPath();
+            response.sendRedirect(path+"/"+"401.html");
         }
     }
 

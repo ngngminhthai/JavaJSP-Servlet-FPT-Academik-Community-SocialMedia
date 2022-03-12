@@ -8,7 +8,9 @@ package controller.UserController;
 import db.ConversationDBContext;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 import javax.servlet.AsyncContext;
@@ -54,13 +56,16 @@ public class MessageController2 extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        String strDate = sdf.format(cal.getTime());
 
         String content = request.getParameter("content");
         int replyid = (Integer) request.getSession().getAttribute("userID");
         int cid = Integer.parseInt(request.getParameter("cid"));
         int usertwo = Integer.parseInt(request.getParameter("usernameReplied"));
 
-        String htmlMessage = cid + "-" + content + "-" + replyid + "-" + 1;
+        String htmlMessage = cid + "--" + content + "--" + replyid + "--" + strDate+ "--"+1;
 
         ServletContext sc = request.getServletContext();
 //        if (sc.getAttribute("messages") == null) {
