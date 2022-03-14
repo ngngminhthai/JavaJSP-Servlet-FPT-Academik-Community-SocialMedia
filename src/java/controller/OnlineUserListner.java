@@ -52,7 +52,7 @@ public class OnlineUserListner implements HttpSessionListener {
         System.out.println("Da tao session co ID " + session.getId() + " vao thoi diem " + now);
         System.out.println("Dang có " + songuoionline + " online");
 
-        DayOfWeek day = LocalDate.now(ZoneId.of("America/Montreal")).getDayOfWeek();
+        DayOfWeek day = LocalDate.now(ZoneId.of("Asia/Ho_Chi_Minh")).getDayOfWeek();
         UserDBContext udb = new UserDBContext();
 
         String today = "";

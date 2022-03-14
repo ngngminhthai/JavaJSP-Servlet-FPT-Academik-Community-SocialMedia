@@ -24,7 +24,7 @@
         <% UserDBContext udb = new UserDBContext(); %>
     </head>
     <body class="sb-nav-fixed">
-        <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <nav class="sb-topnav navbar navbar-expand navbar-light bg-light">
             <!-- Navbar Brand-->
             <a class="navbar-brand ps-3" href="index.html">Admin</a>
             <!-- Sidebar Toggle-->
@@ -48,7 +48,7 @@
         </nav>
         <div id="layoutSidenav">
             <div id="layoutSidenav_nav">
-                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                <nav class="sb-sidenav accordion sb-sidenav-light" id="sidenavAccordion">
                     <div class="sb-sidenav-menu">
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading">Core</div>
@@ -112,7 +112,7 @@
                     </div>
                     <div class="sb-sidenav-footer">
                         <div class="small">Logged in as:</div>
-                        Start Bootstrap
+                        ${sessionScope.username}
                     </div>
                 </nav>
             </div>
@@ -128,7 +128,7 @@
                                 <div class="card bg-primary text-white mb-4">
                                     <div class="card-body">Quản lí bài viết</div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">Xem bài viết</a>
+                                        <a class="small text-white stretched-link" href="admin/question">Xem bài viết</a>
                                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                                     </div>
                                 </div>
@@ -137,7 +137,7 @@
                                 <div class="card bg-warning text-white mb-4">
                                     <div class="card-body">Quản lí thành viên</div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">Xem thành viên</a>
+                                        <a class="small text-white stretched-link" href="admin/member">Xem thành viên</a>
                                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                                     </div>
                                 </div>

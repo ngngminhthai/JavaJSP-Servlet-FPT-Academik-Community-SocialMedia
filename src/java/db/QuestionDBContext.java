@@ -284,6 +284,34 @@ public class QuestionDBContext extends DBContext {
         return questions;
     }
 
+    public ArrayList<Question> getQuestions() {
+        NotificationDBContext notidb = new NotificationDBContext();
+        try {
+            TagDBContext tagDB = new TagDBContext();
+            MainTagDBContext mainDB = new MainTagDBContext();
+            ArrayList<Question_Tag> tags = null;
+            Main_Tag main = null;
+            String sql = "SELECT totalComment, lastActive,QuestionID,UserID,title,summary,createdAt,content,totalLike from question";
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+            int userid = -1;
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                tags = tagDB.getTagsByQuesID(rs.getInt("QuestionID"));
+                main = mainDB.getMainTagByQuesID(rs.getInt("QuestionID"), userid);
+                Question s = new Question(rs.getInt("QuestionID"), rs.getInt("UserID"), rs.getString("title"), rs.getString("summary"), rs.getString("createdAt"), rs.getString("content"), tags, main, rs.getInt("totalLike"));
+                s.setUser(findUser(rs.getInt("UserID")));
+                s.setCreatedAt(rs.getString("createdAt"));
+                s.setTotalComment(rs.getInt("totalComment"));
+                questions.add(s);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(QuestionDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return questions;
+    }
+
     public Question getQuestions2(int quesid, int currentUser) {
 
         try {
@@ -513,6 +541,44 @@ public class QuestionDBContext extends DBContext {
             Logger.getLogger(QuestionDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
         return ques;
+    }
+
+    public void updateQues(String title, String content, int quesid, String maintag) {
+        String sql2 = "update question set title = ?,  content = ? where questionid = ?";
+        String sql3 = "update Maintag_Question set mtid = ? where questionid = ?";
+        try {
+            PreparedStatement stm = connection.prepareStatement(sql2);
+
+            stm.setInt(3, quesid);
+            stm.setString(1, title);
+            stm.setString(2, content);
+
+            stm.executeUpdate();
+
+            stm = connection.prepareStatement(sql3);
+            stm.setString(1, maintag);
+            stm.setInt(2, quesid);
+
+            stm.executeUpdate();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(TagDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void deleteQues(int quesid) {
+        String sql2 = "delete question where questionid = ?";
+        try {
+            PreparedStatement stm = connection.prepareStatement(sql2);
+
+            stm.setInt(1, quesid);
+
+
+            stm.executeUpdate();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(TagDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }

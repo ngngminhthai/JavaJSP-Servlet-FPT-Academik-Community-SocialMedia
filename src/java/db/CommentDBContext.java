@@ -23,64 +23,131 @@ import model.User;
  * @author Admin
  */
 public class CommentDBContext extends DBContext {
-    
+
     String sql = null;
     ArrayList<Comment> comments = new ArrayList<>();
-    
+
     public ArrayList<Comment> getCommentByQuestionID(int questionId, int userid) {
-        
+
         try {
             sql = "SELECT q1.CommentID,q1.QuestionID,q1.content,q1.createdAt,u.UserID,u.username,q2.CommentID AS commentid2,q2.QuestionID AS questionid2,q2.content AS content2,q2.createdAt AS createdat2, u2.UserID AS userid2, u2.username AS username2 FROM dbo.Question_comment AS q1 FULL OUTER JOIN dbo.[User] AS u ON u.UserID = q1.UserID FULL OUTER JOIN dbo.Question_comment AS q2 ON q2.CommentID = q1.replyTo FULL OUTER JOIN dbo.[User] AS u2 ON u2.UserID = q2.UserID WHERE q1.QuestionID = ?";
-            
+
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, questionId);
             ResultSet rs = stm.executeQuery();
-            
+
             User user2 = null;
             Comment comment2 = null;
             User user1 = null;
             int totalLike = -1;
             Comment comment1 = null;
-            
+
             if (userid == -1) {
                 while (rs.next()) {
                     user2 = new User(rs.getInt(11), rs.getString(12));
-                    
+
                     comment2 = new Comment(rs.getInt(7), rs.getInt(8), user2, rs.getString(9), rs.getString(10));
-                    
+
                     user1 = new User(rs.getInt("userid"), rs.getString("username"));
-                    
+
                     totalLike = getLikeByCommentID2(rs.getInt("CommentID"));
-                    
+
                     comment1 = new Comment(rs.getInt("CommentID"), rs.getInt("QuestionID"), user1, rs.getString("content"), rs.getString("createdAt"), comment2, totalLike);
-                    
+
                     comments.add(comment1);
                 }
             } else {
                 while (rs.next()) {
                     user2 = new User(rs.getInt(11), rs.getString(12));
-                    
+
                     comment2 = new Comment(rs.getInt(7), rs.getInt(8), user2, rs.getString(9), rs.getString(10));
-                    
+
                     user1 = new User(rs.getInt("userid"), rs.getString("username"));
-                    
+
                     boolean islike = checkIsLike(userid, rs.getInt("CommentID"));
-                    
+
                     totalLike = getLikeByCommentID2(rs.getInt("CommentID"));
-                    
+
                     comment1 = new Comment(rs.getInt("CommentID"), rs.getInt("QuestionID"), user1, rs.getString("content"), rs.getString("createdAt"), comment2, islike, totalLike);
-                    
+
                     comments.add(comment1);
                 }
             }
             return comments;
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(CommentDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
         return comments;
     }
-    
+
+    public ArrayList<Comment> getCommentByQuestionID2(int questionId, int userid) {
+
+        try {
+            String sql = "(SELECT q1.CommentID,q1.QuestionID,q1.content,q1.createdAt,u.UserID,u.username,q2.CommentID AS commentid2,q2.QuestionID AS questionid2,q2.content AS content2,q2.createdAt AS createdat2, u2.UserID AS userid2, u2.username AS username2, 1 AS rs,q1.isBest FROM dbo.Question_comment AS q1 FULL OUTER JOIN dbo.[User] AS u ON u.UserID = q1.UserID FULL OUTER JOIN dbo.Question_comment AS q2 ON q2.CommentID = q1.replyTo FULL OUTER JOIN dbo.[User] AS u2 ON u2.UserID = q2.UserID WHERE q1.QuestionID = ? and q1.isBest is NULL)\n"
+                    + "UNION all\n"
+                    + "(SELECT q1.CommentID,q1.QuestionID,q1.content,q1.createdAt,u.UserID,u.username,q2.CommentID AS commentid2,q2.QuestionID AS questionid2,q2.content AS content2,q2.createdAt AS createdat2, u2.UserID AS userid2, u2.username AS username2,2 AS rs ,q1.isBest FROM dbo.Question_comment AS q1 FULL OUTER JOIN dbo.[User] AS u ON u.UserID = q1.UserID FULL OUTER JOIN dbo.Question_comment AS q2 ON q2.CommentID = q1.replyTo FULL OUTER JOIN dbo.[User] AS u2 ON u2.UserID = q2.UserID WHERE q1.QuestionID = ? and q1.isBest = 1)\n"
+                    + "UNION all\n"
+                    + "(SELECT q1.CommentID,q1.QuestionID,q1.content,q1.createdAt,u.UserID,u.username,q2.CommentID AS commentid2,q2.QuestionID AS questionid2,q2.content AS content2,q2.createdAt AS createdat2, u2.UserID AS userid2, u2.username AS username2,0 AS rs,q1.isBest FROM dbo.Question_comment AS q1 FULL OUTER JOIN dbo.[User] AS u ON u.UserID = q1.UserID FULL OUTER JOIN dbo.Question_comment AS q2 ON q2.CommentID = q1.replyTo FULL OUTER JOIN dbo.[User] AS u2 ON u2.UserID = q2.UserID WHERE q1.QuestionID = ? and q1.isBest = 0)\n"
+                    + "ORDER BY rs DESC";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, questionId);
+            stm.setInt(2, questionId);
+            stm.setInt(3, questionId);
+            ResultSet rs = stm.executeQuery();
+
+            User user2 = null;
+            Comment comment2 = null;
+            User user1 = null;
+            int totalLike = -1;
+            Comment comment1 = null;
+
+            if (userid == -1) {
+                while (rs.next()) {
+                    user2 = new User(rs.getInt(11), rs.getString(12));
+
+                    comment2 = new Comment(rs.getInt(7), rs.getInt(8), user2, rs.getString(9), rs.getString(10));
+
+                    user1 = new User(rs.getInt("userid"), rs.getString("username"));
+
+                    totalLike = getLikeByCommentID2(rs.getInt("CommentID"));
+
+                    comment1 = new Comment(rs.getInt("CommentID"), rs.getInt("QuestionID"), user1, rs.getString("content"), rs.getString("createdAt"), comment2, totalLike);
+
+                    comments.add(comment1);
+                }
+            } else {
+                while (rs.next()) {
+                    user2 = new User(rs.getInt(11), rs.getString(12));
+
+                    comment2 = new Comment(rs.getInt(7), rs.getInt(8), user2, rs.getString(9), rs.getString(10));
+
+                    user1 = new User(rs.getInt("userid"), rs.getString("username"));
+
+                    boolean islike = checkIsLike(userid, rs.getInt("CommentID"));
+
+                    totalLike = getLikeByCommentID2(rs.getInt("CommentID"));
+
+                    comment1 = new Comment(rs.getInt("CommentID"), rs.getInt("QuestionID"), user1, rs.getString("content"), rs.getString("createdAt"), comment2, islike, totalLike);
+
+                    comments.add(comment1);
+                }
+            }
+            return comments;
+
+        } catch (SQLException ex) {
+            Logger.getLogger(CommentDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return comments;
+    }
+
+//    public static void main(String[] args) {
+//        CommentDBContext c = new CommentDBContext();
+//        ArrayList<Comment> cm = c.getComment();
+//        for (Comment comment : cm) {
+//            System.out.println(comment.getContent());
+//        }
+//    }
     public int getLikeByCommentIDLogin(int userid, int commentid) {
         //select * from comment_like where userid not like 1 and CommentID = 33
         String newsql = "SELECT count(*)\n"
@@ -90,9 +157,9 @@ public class CommentDBContext extends DBContext {
             PreparedStatement stm = connection.prepareStatement(newsql);
             stm.setInt(1, userid);
             stm.setInt(2, commentid);
-            
+
             ResultSet rs = stm.executeQuery();
-            
+
             if (rs.next()) {
                 return rs.getInt(1);
             } else {
@@ -103,7 +170,7 @@ public class CommentDBContext extends DBContext {
         }
         return 0;
     }
-    
+
     public int getLikeByCommentID2(int commentid) {
         //select * from comment_like where userid not like 1 and CommentID = 33
         String newsql = "SELECT count(*)\n"
@@ -112,9 +179,9 @@ public class CommentDBContext extends DBContext {
         try {
             PreparedStatement stm = connection.prepareStatement(newsql);
             stm.setInt(1, commentid);
-            
+
             ResultSet rs = stm.executeQuery();
-            
+
             if (rs.next()) {
                 return rs.getInt(1);
             } else {
@@ -125,16 +192,16 @@ public class CommentDBContext extends DBContext {
         }
         return 0;
     }
-    
+
     public boolean checkIsLike(int userid, int commentid) {
         String newsql = "select count(*) as total from Comment_like where userid = ? and commentid = ?";
         try {
             PreparedStatement stm = connection.prepareStatement(newsql);
             stm.setInt(1, userid);
             stm.setInt(2, commentid);
-            
+
             ResultSet rs = stm.executeQuery();
-            
+
             if (rs.next()) {
                 if (rs.getInt("total") > 0) {
                     return true;
@@ -178,42 +245,42 @@ public class CommentDBContext extends DBContext {
         sql = "INSERT INTO dbo.Question_comment(QuestionID, UserID, content, createdAt) VALUES(?,?,?,GETDATE() )";
         try {
             PreparedStatement stm = connection.prepareStatement(sql);
-            
+
             stm.setInt(1, questionID);
             stm.setInt(2, userID);
             stm.setString(3, content);
-            
+
             stm.executeUpdate();
             quesdb.updateLastActive(questionID);
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(CommentDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public void updateForReplies(int old_commentID, int new_commentID) {
         String newsql = "	UPDATE dbo.Question_comment SET replyTo = ? WHERE CommentID = ?";
         try {
             PreparedStatement stm = connection.prepareStatement(newsql);
-            
+
             stm.setInt(1, old_commentID);
             stm.setInt(2, new_commentID);
-            
+
             stm.executeUpdate();
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(CommentDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public int getLastCommentAdded() {
         String newsql = "WITH x AS (SELECT *, r = RANK() OVER (ORDER BY createdAt DESC) FROM dbo.Question_comment) SELECT x.CommentID FROM x WHERE r = 1";
         int commentIDAdded = -1;
         try {
-            
+
             PreparedStatement stm = connection.prepareStatement(newsql);
             ResultSet rs = stm.executeQuery();
-            
+
             if (rs.next()) {
                 commentIDAdded = rs.getInt("CommentID");
             }
@@ -223,36 +290,57 @@ public class CommentDBContext extends DBContext {
         }
         return -1;
     }
-    
+
     public void insertLikeToComment(int commentID, int userID) {
         sql = "insert into Comment_like (UserID,CommentID) values(?,?)";
         try {
             PreparedStatement stm = connection.prepareStatement(sql);
-            
+
             stm.setInt(1, userID);
             stm.setInt(2, commentID);
-            
+
             stm.executeUpdate();
-            
+
         } catch (SQLException ex) {
             deleteLikeOfComment(commentID, userID);
             Logger.getLogger(CommentDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     private void deleteLikeOfComment(int commentID, int userID) {
         sql = "delete comment_like where userid = ? and CommentID = ?";
         try {
             PreparedStatement stm = connection.prepareStatement(sql);
-            
+
             stm.setInt(1, userID);
             stm.setInt(2, commentID);
-            
+
             stm.executeUpdate();
-            
+
         } catch (SQLException ex) {
             deleteLikeOfComment(commentID, userID);
             Logger.getLogger(CommentDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    public ArrayList<Comment> getComment() {
+        ArrayList<Comment> cl = new ArrayList<>();
+        try {
+            String sql = "SELECT QuestionID,CommentID,UserID,content,createdAt FROM dbo.Question_comment";
+            PreparedStatement stm = connection.prepareStatement(sql);
+
+            ResultSet rs = stm.executeQuery();
+
+            while (rs.next()) {
+                User u = new User();
+                u.setUserID(rs.getInt("UserID"));
+                Comment c = new Comment(rs.getInt("CommentID"), rs.getInt("QuestionID"), u, rs.getString("content"), rs.getString("createdAt"));
+                cl.add(c);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CommentDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return cl;
+    }
+    
 }

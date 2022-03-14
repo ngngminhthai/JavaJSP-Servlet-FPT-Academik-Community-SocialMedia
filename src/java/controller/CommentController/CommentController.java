@@ -5,6 +5,7 @@
  */
 package controller.CommentController;
 
+import controller.BaseAuthController;
 import db.CommentDBContext;
 import db.NotificationDBContext;
 import java.io.IOException;
@@ -21,7 +22,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author Admin
  */
-public class CommentController extends HttpServlet {
+public class CommentController extends BaseAuthController {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -59,7 +60,7 @@ public class CommentController extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void processGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
@@ -73,7 +74,7 @@ public class CommentController extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void processPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
 

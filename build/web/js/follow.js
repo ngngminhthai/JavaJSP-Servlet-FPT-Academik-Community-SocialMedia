@@ -15,7 +15,7 @@ function follow(elem, userid) {
 }
 function sendData(maintagid, userid) {
     $.ajax({
-        url: "/FUWePass/tag",
+        url: "/FPTCommunity/tag",
         type: "post", //send it through get method
         data: {
             maintagid: maintagid,

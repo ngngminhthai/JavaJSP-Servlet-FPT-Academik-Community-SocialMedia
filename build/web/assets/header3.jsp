@@ -169,11 +169,7 @@
                         <!--                        <i  style="font-size: 18px; color: #607d8b" class="tt-icon"><svg><use xlink:href="#icon-ava-a"></use></svg></i>-->
                     </div>
                 </form>
-                <script>
-                        function profile(){
-                            window.location.href = "profile";
-                        }
-                </script>
+
 
                 <div class="custom-select-01">
                     <select>
@@ -212,22 +208,22 @@
                 <div>     <a href="#" data-toggle="dropdown" aria-expanded="true" style="    margin-left: 8px;
                              " class="btn btn-secondary dropdown-toggle sign-up-btn">Đăng kí</a>
                     <div class="dropdown-menu action-form">
-                        <form action="/examples/actions/confirmation.php" method="post">
+                      
                             <p class="hint-text">Fill in this form to create your account!</p>
                             <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Username" required="required">
+                                <input type="text" class="username form-control" placeholder="Username" required="required">
                             </div>
                             <div class="form-group">
-                                <input type="password" class="form-control" placeholder="Password" required="required">
+                                <input  type="password" class="password form-control" placeholder="Password" required="required">
                             </div>
+<!--                                                        <div class="form-group">
+                                                            <input type="password" class="form-control" placeholder="Confirm Password" required="required">
+                                                        </div>-->
                             <div class="form-group">
-                                <input type="password" class="form-control" placeholder="Confirm Password" required="required">
+                                <p class="warning-account"></p>
                             </div>
-                            <div class="form-group">
-                                <label class="form-check-label"><input type="checkbox" required="required"> I accept the <a href="#">Terms &amp; Conditions</a></label>
-                            </div>
-                            <input type="submit" class="btn btn-primary btn-block" value="Sign up">
-                        </form>
+                            <input onclick="register()" type="submit" class="btn btn-primary btn-block" value="Đăng kí">
+                       
                     </div></div>
 
             </div>
@@ -238,6 +234,33 @@
 </div>
 
 </header>
+<script>
+    function profile() {
+        window.location.href = "profile";
+    }
+    
+    function register() {
+        var username = document.querySelector(".username").value;
+        var password = document.querySelector(".password").value;
+        var warning = document.querySelector(".warning-account")
+        $.ajax({
+            url: "/FPTCommunity/register",
+            type: "post", //send it through get method
+            data: {
+                username: username,
+                password: password
+            },
+            success: function (data) {
+                warning.innerHTML = "";
+                warning.innerHTML += data;
+            },
+            error: function () {
+                //Do Something to handle error
+            }
+        });
+    }
+
+</script>
 
 <a href="ask" class="tt-btn-create-topic">
     <span class="tt-icon">

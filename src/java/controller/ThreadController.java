@@ -58,7 +58,7 @@ public class ThreadController extends HttpServlet {
         Question clickedQuestion = quesDB.getQuestions2(questionID, userID);
         User user = quesDB.getUserByQuestionID(clickedQuestion.getQuestionID());
         ArrayList<Question_Tag> tagList = tagDB.getTagsByQuesID(clickedQuestion.getQuestionID());
-        ArrayList<Comment> comLists = comDB.getCommentByQuestionID(questionID, userID);
+        ArrayList<Comment> comLists = comDB.getCommentByQuestionID2(questionID, userID);
         Main_Tag main = mainDB.getMainTagByQuesID(clickedQuestion.getQuestionID(), userID);
 
         request.setAttribute("comlist", comLists);

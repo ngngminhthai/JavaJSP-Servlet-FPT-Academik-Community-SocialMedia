@@ -25,8 +25,10 @@ public class OnlineStatus implements HttpSessionListener {
 
     @Override
     public void sessionDestroyed(HttpSessionEvent se) {
-        int userid = (Integer) se.getSession().getAttribute("userID");
-        UserDBContext userdb = new UserDBContext();
-        userdb.updateStatus(0, userid);
+        if (se.getSession().getAttribute("userID") != null) {
+            int userid = (Integer) se.getSession().getAttribute("userID");
+            UserDBContext userdb = new UserDBContext();
+            userdb.updateStatus(0, userid);
+        }
     }
 }

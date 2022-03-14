@@ -17,7 +17,7 @@ function setView(mo, tu, we, th, fr, sa, su) {
     var myLineChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: ["su", "mo", "tu", "we", "th", "fr", "sa"],
+            labels: ["mo", "tu", "we", "th", "fr", "sa", "su"],
             datasets: [{
                     label: "Lượt truy cập",
                     lineTension: 0.3,

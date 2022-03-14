@@ -25,6 +25,16 @@ public class User {
     String img;
     String lastActive;
     boolean online;
+    String feature;
+
+    public String getFeature() {
+        return feature;
+    }
+
+    public void setFeature(String feature) {
+        this.feature = feature;
+    }
+    
 
     public boolean isOnline() {
         return online;
