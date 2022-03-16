@@ -5,6 +5,8 @@
  */
 package admin.comment;
 
+import db.CommentDBContext;
+import db.UserDBContext;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -35,7 +37,7 @@ public class FlagComment extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet FlagComment</title>");            
+            out.println("<title>Servlet FlagComment</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet FlagComment at " + request.getContextPath() + "</h1>");
@@ -56,7 +58,21 @@ public class FlagComment extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        request.setCharacterEncoding("UTF-8");
+        int memid = Integer.parseInt(request.getParameter("id"));
+        int userid = (Integer) request.getSession().getAttribute("userID");
+
+        UserDBContext udb = new UserDBContext();
+        if (udb.getRole(userid) > udb.getRole(memid)) {
+            int comid = Integer.parseInt(request.getParameter("comid"));
+            int quesid = Integer.parseInt(request.getParameter("quesid"));
+            String status = request.getParameter("status");
+            CommentDBContext comdb = new CommentDBContext();
+            comdb.flag(comid, status, quesid);
+            response.sendRedirect("comment");
+        } else {
+            response.sendRedirect("comment");
+        }
     }
 
     /**

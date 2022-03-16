@@ -1,4 +1,6 @@
 
+<%@page import="model.User"%>
+<%@page import="db.UserDBContext"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <nav class="panel-menu" id="mobile-menu">
     <ul>
@@ -163,9 +165,10 @@
                 <a href="Notification" class="tt-btn-icon">
                     <i class="tt-icon"><svg><use xlink:href="#icon-notification"></use></svg></i>
                 </a>
+                <% UserDBContext u = new UserDBContext(); User us = new User(); us = u.getUserInfo((Integer)session.getAttribute("userID")); %>
                 <form action="profile" method="get">
                     <div class="tt-avatar-icon tt-size-md" onclick="profile()">
-                        <img style="width: 30px; height: 100%; border-radius: 100%;" src="${pageContext.request.contextPath}/img/${sessionScope.img}">
+                        <img style="width: 30px; height: 30px; border-radius: 100%; object-fit: hidden;" src="${pageContext.request.contextPath}/img/<%=us.getImg() %>">
                         <!--                        <i  style="font-size: 18px; color: #607d8b" class="tt-icon"><svg><use xlink:href="#icon-ava-a"></use></svg></i>-->
                     </div>
                 </form>
@@ -183,7 +186,7 @@
             <div class="tt-account-btn">
                 <div>      <a href="#" data-toggle="dropdown" aria-expanded="true" class="btn btn-primary nav-link dropdown-toggle">Đăng nhập</a>
                     <div class="dropdown-menu action-form">
-                        <form action="login" method="post">
+                        <form action="login" method="post" style="padding: 20px;">
                             <p class="hint-text">Sign in with your social media account</p>
                             <div class="form-group social-btn clearfix">
                                 <a href="#" class="btn btn-secondary facebook-btn float-left"><i class="fa fa-facebook"></i> Facebook</a>

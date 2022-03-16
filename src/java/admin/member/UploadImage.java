@@ -1,10 +1,11 @@
-package controller.UserController;
+package admin.member;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+import controller.UserController.*;
 import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
 import db.UserDBContext;
 import java.io.File;

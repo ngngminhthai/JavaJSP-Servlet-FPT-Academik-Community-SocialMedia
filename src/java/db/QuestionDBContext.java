@@ -175,15 +175,14 @@ public class QuestionDBContext extends DBContext {
         return questions;
     }
 
-    public static void main(String[] args) {
-        QuestionDBContext ques = new QuestionDBContext();
-        //int pageindex, int pagesize, int userid, String field, String type
-        ArrayList<String> quess = ques.getTags("prj301");
-        for (String ques1 : quess) {
-            System.out.println(ques1);
-        }
-    }
-
+//    public static void main(String[] args) {
+//        QuestionDBContext ques = new QuestionDBContext();
+//        //int pageindex, int pagesize, int userid, String field, String type
+//        ArrayList<Question> quess = ques.getQuesBySub("prj301");
+//        for (Question ques1 : quess) {
+//            System.out.println(ques1);
+//        }
+//    }
     public int count() {
         try {
             String sql = "SELECT COUNT(*) as Total FROM Question";
@@ -372,7 +371,7 @@ public class QuestionDBContext extends DBContext {
 
     public User getUserByQuestionID(int questionID) {
         try {
-            String sql = "SELECT u.UserID, u.username FROM dbo.[User] AS u JOIN dbo.Question AS q ON q.UserID = u.UserID WHERE q.QuestionID = ?";
+            String sql = "SELECT u.UserID, u.username, u.img FROM dbo.[User] AS u JOIN dbo.Question AS q ON q.UserID = u.UserID WHERE q.QuestionID = ?";
 
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, questionID);
@@ -380,6 +379,7 @@ public class QuestionDBContext extends DBContext {
 
             if (rs.next()) {
                 User user = new User(rs.getInt("UserID"), rs.getString("username"));
+                user.setImg(rs.getString("img"));
                 return user;
             }
 
@@ -387,6 +387,10 @@ public class QuestionDBContext extends DBContext {
             Logger.getLogger(QuestionDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+    public static void main(String[] args) {
+        QuestionDBContext u = new QuestionDBContext();
+        System.out.println(u.getUserByQuestionID(17).getImg());
     }
 
     public ArrayList<Question> getQuestionsByForum(int majorID) {
@@ -525,7 +529,7 @@ public class QuestionDBContext extends DBContext {
         TagDBContext tagDB = new TagDBContext();
         ArrayList<Question_Tag> tags = new ArrayList<>();
         try {
-            String sql = "SELECT q.totalComment, lastActive,q.QuestionID,UserID,title,summary,createdAt,content,totalLike FROM dbo.Question AS q JOIN dbo.MainTag_Question AS mq ON mq.questionid = q.QuestionID WHERE mq.mtid LIKE ?";
+            String sql = "SELECT q.totalViews,q.totalComment, lastActive,q.QuestionID,UserID,title,summary,createdAt,content,totalLike FROM dbo.Question AS q JOIN dbo.MainTag_Question AS mq ON mq.questionid = q.QuestionID WHERE mq.mtid LIKE ? ORDER BY q.createdAt";
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setString(1, subid);
             ResultSet rs = stm.executeQuery();
@@ -573,12 +577,36 @@ public class QuestionDBContext extends DBContext {
 
             stm.setInt(1, quesid);
 
-
             stm.executeUpdate();
 
         } catch (SQLException ex) {
             Logger.getLogger(TagDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public ArrayList<Question> loadMore(String subid, int number) {
+        ArrayList<Question> ques = new ArrayList<>();
+        TagDBContext tagDB = new TagDBContext();
+        ArrayList<Question_Tag> tags = new ArrayList<>();
+        try {
+            String sql = "SELECT q.totalViews,q.totalComment, q.lastActive,q.QuestionID,UserID,title,summary,createdAt,content,totalLike FROM dbo.Question AS q JOIN dbo.MainTag_Question AS mq ON mq.questionid = q.QuestionID  WHERE mq.mtid LIKE ? ORDER BY q.createdAt OFFSET ? ROWS \n"
+                    + "FETCH FIRST 5 ROWS ONLY;";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, subid);
+            stm.setInt(2, number);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                tags = tagDB.getTagsByQuesID(rs.getInt("QuestionID"));
+                Question s = new Question(rs.getInt("QuestionID"), rs.getInt("UserID"), rs.getString("title"), rs.getString("summary"), rs.getString("createdAt"), rs.getString("content"), tags, rs.getInt("totalLike"));
+                s.setUser(findUser(rs.getInt("UserID")));
+                s.setTotalComment(rs.getInt("totalComment"));
+                s.setViews(rs.getInt("totalViews"));
+                ques.add(s);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(QuestionDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return ques;
     }
 
 }

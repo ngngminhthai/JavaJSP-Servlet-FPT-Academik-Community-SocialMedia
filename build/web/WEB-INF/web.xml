@@ -180,6 +180,22 @@
         <servlet-name>AdminCommentController</servlet-name>
         <servlet-class>admin.comment.CommentController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>VoteComment</servlet-name>
+        <servlet-class>admin.comment.VoteComment</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SearchSubject</servlet-name>
+        <servlet-class>controller.SearchSubject</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CommentOfSubject</servlet-name>
+        <servlet-class>controller.CommentController.CommentOfSubject</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CommentFilter</servlet-name>
+        <servlet-class>controller.CommentController.CommentFilter</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>home</servlet-name>
         <url-pattern>/home</url-pattern>
@@ -290,7 +306,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>FlagComment</servlet-name>
-        <url-pattern>/flag</url-pattern>
+        <url-pattern>/admin/flag</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>CreatePost</servlet-name>
@@ -339,6 +355,22 @@
     <servlet-mapping>
         <servlet-name>AdminCommentController</servlet-name>
         <url-pattern>/admin/comment</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>VoteComment</servlet-name>
+        <url-pattern>/admin/vote</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchSubject</servlet-name>
+        <url-pattern>/searchsubject</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CommentOfSubject</servlet-name>
+        <url-pattern>/subjectcomment</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CommentFilter</servlet-name>
+        <url-pattern>/sortcomment</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

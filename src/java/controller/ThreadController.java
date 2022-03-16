@@ -41,9 +41,23 @@ public class ThreadController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         int questionID = Integer.parseInt(request.getParameter("questionid"));
-      
+        String raw_sort = request.getParameter("sort");
+
+        String sort = "createdAt";
+        if (raw_sort == null) {
+            sort = "createdAt";
+        } else {
+            if (raw_sort.equals("new")) {
+                sort = "createdAt";
+            } else if (raw_sort.equals("like")) {
+                sort = "q1.TotalLike";
+            } else if (raw_sort.equals("reply")) {
+                sort = "totalReplies";
+            }
+        }
 
         QuestionDBContext quesDB = new QuestionDBContext();
+
         quesDB.updateView(questionID);
         TagDBContext tagDB = new TagDBContext();
         CommentDBContext comDB = new CommentDBContext();
@@ -51,22 +65,33 @@ public class ThreadController extends HttpServlet {
 
         Object raw_userID = request.getSession().getAttribute("userID");
         int userID = -1;
-        if (raw_userID != null) {
+        if (raw_userID
+                != null) {
             userID = (Integer) request.getSession().getAttribute("userID");
         }
 
         Question clickedQuestion = quesDB.getQuestions2(questionID, userID);
         User user = quesDB.getUserByQuestionID(clickedQuestion.getQuestionID());
         ArrayList<Question_Tag> tagList = tagDB.getTagsByQuesID(clickedQuestion.getQuestionID());
-        ArrayList<Comment> comLists = comDB.getCommentByQuestionID2(questionID, userID);
+        ArrayList<Comment> comLists = comDB.getCommentByQuestionID2(questionID, userID, sort);
         Main_Tag main = mainDB.getMainTagByQuesID(clickedQuestion.getQuestionID(), userID);
 
-        request.setAttribute("comlist", comLists);
-        request.setAttribute("userid", user);
-        request.setAttribute("clickedQues", clickedQuestion);
-        request.setAttribute("taglist", tagList);
-        request.setAttribute("main", main);
-        request.getRequestDispatcher("pages/thread3.jsp").forward(request, response);
+        if (raw_sort == null) {
+            request.setAttribute("sort", "new");
+        }
+        else   request.setAttribute("sort", raw_sort);
+        request.setAttribute(
+                "comlist", comLists);
+        request.setAttribute(
+                "userid", user);
+        request.setAttribute(
+                "clickedQues", clickedQuestion);
+        request.setAttribute(
+                "taglist", tagList);
+        request.setAttribute(
+                "main", main);
+        request.getRequestDispatcher(
+                "pages/thread3.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

@@ -4,6 +4,8 @@
     Author     : Admin
 --%>
 
+<%@page import="java.util.Random"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page import="model.Main_Tag"%>
 <%@page import="model.Tag"%>
 <%@page import="model.Comment"%>
@@ -483,6 +485,9 @@
             Main_Tag main = (Main_Tag) request.getAttribute("main");
 
         %>
+        <% Random random = new Random();
+
+        %>
         <main id="tt-pageContent">
             <div class="container">
                 <div class="tt-single-topic-list">
@@ -491,7 +496,10 @@
                             <div class="tt-item-header">
                                 <div class="tt-item-info info-top">
                                     <div class="tt-avatar-icon">
-                                        <i class="tt-icon"><svg><use xlink:href="#icon-ava-d"></use></svg></i>
+                                        <!--                                        <i class="tt-icon"><svg><use xlink:href="#icon-ava-d"></use></svg></i>-->
+                                        <img style="width: 70px;
+                                             height: 70px;
+                                             border-radius: 100%;" src="${pageContext.request.contextPath}/img/${userid.getImg()}">
                                     </div>
                                     <div class="tt-avatar-title">
                                         <a href="#"><%=user.getUsername()%></a>
@@ -505,7 +513,7 @@
                                 </h3>
                                 <div class="tt-item-tag">
                                     <ul class="tt-list-badge">
-                                        <li><a href="#"><span class="tt-color3 tt-badge"><%= main.getTagid()%><i class="fa fa-plus" aria-hidden="true" style="display: block; margin-left: 3px; margin-top: 3px;"></i></span></a></li>
+                                        <li><a href="#"><span class="tt-color<%=random.nextInt(21 - 1) + 1%> tt-badge"><%= main.getTagid()%><i class="fa fa-plus" aria-hidden="true" style="display: block; margin-left: 3px; margin-top: 3px;"></i></span></a></li>
 
 
                                         <% for (Question_Tag elem : tagList) {%>
@@ -555,7 +563,7 @@
                     </div>
                     <div class="tt-item">
                         <div class="tt-info-box">
-                            <h6 class="tt-title">Thread Status</h6>
+                            <h6 class="tt-title">Trạng thái câu hỏi</h6>
                             <div class="tt-row-icon">
                                 <div class="tt-item">
                                     <a href="#" class="tt-icon-btn tt-position-bottom">
@@ -595,7 +603,7 @@
                                 </div>
                             </div>
                             <hr>
-                            <h6 class="tt-title">Frequent Posters</h6>
+                            <h6 class="tt-title">Người bình luận gần đây</h6>
                             <div class="tt-row-icon">
                                 <div class="tt-item">
                                     <a href="#" class=" tt-icon-avatar">
@@ -635,13 +643,12 @@
                             </div>
                             <hr>
                             <div class="row-object-inline form-default">
-                                <h6 class="tt-title">Sort replies by:</h6>
+                                <h6 class="tt-title">Sắp xếp theo:</h6>
                                 <ul class="tt-list-badge tt-size-lg">
-                                    <li><a href="#"><span class="tt-badge">Recent</span></a></li>
-                                    <li><a href="#"><span class="tt-color2 tt-badge">Most Liked</span></a></li>
-                                    <li><a href="#"><span class="tt-badge">Longest</span></a></li>
-                                    <li><a href="#"><span class="tt-badge">Shortest</span></a></li>
-                                    <li><a href="#"><span class="tt-badge">Accepted Answers</span></a></li>
+                                    <li><a href="thread?questionid=${clickedQues.getQuestionID()}&sort=new"><span id="new" class="tt-badge">Mới nhất</span></a></li>
+                                    <li><a href="thread?questionid=${clickedQues.getQuestionID()}&sort=like"><span id="like" class="tt-badge">Thích nhiều nhất</span></a></li>
+                                    <li><a href="thread?questionid=${clickedQues.getQuestionID()}&sort=reply"><span id="reply" class="tt-badge">Được trả lời nhiều nhất</span></a></li>
+                                    <li><a href="thread?questionid=${clickedQues.getQuestionID()}&sort=vote"><span id="vote" class="tt-badge">Được bình chọn</span></a></li>
                                 </ul>
                                 <select class="tt-select form-control">
                                     <option value="Recent">Recent</option>
@@ -657,20 +664,20 @@
                     <% int good = 1;
                         int bad = commentList.size(); %>
                     <% for (Comment elem : commentList) { %>
-                    <div class="tt-item <% if (good == 1) {
+                    <div class="tt-item <% if (good == 1 && elem.getStatus().equals("Được bình chọn")) {
                             out.print("tt-wrapper-success");
-                        } else if (good == bad) {
+                        } else if (good == bad && elem.getStatus().equals("Bị gắn cờ")) {
                             out.print("tt-wrapper-danger");
                         }%>">
                         <div class="tt-single-topic">
                             <div class="tt-item-header pt-noborder">
                                 <div class="tt-item-info info-top">
                                     <div class="tt-avatar-icon">
-                                        <i class="tt-icon"><svg><use xlink:href="#icon-ava-v"></use></svg></i>
+                                        <img style="width: 50px;height: 50px; border-radius: 100%" src="${pageContext.request.contextPath}/img/<%=elem.getUser().getImg()%>">
                                     </div>
                                     <div class="tt-avatar-title">
                                         <a href="#"><%=elem.getUser().getUsername()%></a>
-                                        <% if (good == 1) {
+                                        <% if (good == 1 && elem.getStatus().equals("Được bình chọn")) {
                                                 out.print("<span class=\"tt-color13 tt-badge\">Câu trả lời tốt nhất</span>");
                                             } %>
                                     </div>
@@ -685,7 +692,8 @@
                                     <div class="topic-inner">
                                         <div class="topic-inner-title">
                                             <div class="topic-inner-avatar">
-                                                <i class="tt-icon"><svg><use xlink:href="#icon-ava-s"></use></svg></i>
+                                                <div class="tt-icon">                                                <img style="width: 40px;height: 40px; border-radius: 100%;" src="${pageContext.request.contextPath}/img/<%=elem.getReplyToComment().getUser().getImg()%>">
+                                                </div>
                                             </div>
                                             <div class="topic-inner-title"><a href="#"> <%= elem.getReplyToComment().getUser().getUsername()%></a></div>
                                         </div>
@@ -696,11 +704,11 @@
                                     </div>
                                 </div>
                                 <%}%>
-                                <% if (good == bad) {
-                                                                                   out.print("Bình luận này đã bị gắn cờ do vi phạm nguyên tắc diễn đàn");
-                                                                               } else {
-                                                                                   out.print(elem.getContent());
-                                                                               }%>
+                                <% if (good == bad && elem.getStatus().equals("Bị gắn cờ")) {
+                                        out.print("Bình luận này đã bị gắn cờ do vi phạm nguyên tắc diễn đàn");
+                                    } else {
+                                        out.print(elem.getContent());
+                                    }%>
 
 
                             </div>
@@ -727,7 +735,7 @@
                                     <i class="tt-icon"><svg><use xlink:href="#icon-flag"></use></svg></i>
                                 </a>
                                 <li class="tt-icon-btn tt-hover-02 tt-small-indent">
-                                    <i class="tt-icon <%=elem.getUser().getUserID()%> <%=elem.getCommentID()%>" onclick="scrollingToComment(this)"><svg><use xlink:href="#icon-reply"></use></svg></i>
+                                    <i class="tt-icon <%=elem.getUser().getUserID()%> <%=elem.getCommentID()%> <%=elem.getStatus()%>" onclick="scrollingToComment(this)"><svg><use xlink:href="#icon-reply"></use></svg></i>
                                 </li>
                             </div>
                         </div>
@@ -740,647 +748,590 @@
 
                 </div>
                 <div class="tt-wrapper-inner">
-                    <h4 class="tt-title-separator"><span>You’ve reached the end of replies</span></h4>
+                    <h4 class="tt-title-separator"><span>Hết phần bình luận </span></h4>
                 </div>
-                <div class="tt-topic-list">
-                    <div class="tt-item tt-item-popup">
-                        <div class="tt-col-avatar">
-                            <svg class="tt-icon">
-                            <use xlink:href="#icon-ava-f"></use>
-                            </svg>
-                        </div>
-                        <div class="tt-col-message">
-                            Looks like you are new here. Register for free, learn and contribute.
-                        </div>
-                        <div class="tt-col-btn">
-                            <button type="button" class="btn btn-primary">Log in</button>
-                            <button type="button" class="btn btn-secondary">Sign up</button>
-                            <button type="button" class="btn-icon">
+                <c:if test="${sessionScope.userID == null}"> <div class="tt-topic-list">
+                        <div class="tt-item tt-item-popup">
+                            <div class="tt-col-avatar">
                                 <svg class="tt-icon">
-                                <use xlink:href="#icon-cancel"></use>
+                                <use xlink:href="#icon-ava-f"></use>
+                                </svg>
+                            </div>
+                            <div class="tt-col-message">
+                                Có vẻ như bạn chưa đăng nhập, hãy đăng nhập hoặc đăng kí để gửi bình luận.
+                            </div>
+                            <div class="tt-col-btn">
+                                <button type="button" class="btn btn-primary">Đăng nhập</button>
+                                <button type="button" class="btn btn-secondary">Đăng kí</button>
+                                <button type="button" class="btn-icon">
+                                    <svg class="tt-icon">
+                                    <use xlink:href="#icon-cancel"></use>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div></c:if>
+                <c:if test="${sessionScope.userID != null}">    <div class="tt-wrapper-inner">
+                        <div class="pt-editor form-default">
+                            <h6 class="pt-title first-comment">Gửi bình luận của bạn</h6>
+                            <div class="pt-row">
+                                <div class="col-left">
+                                </div>
+                                <div class="col-right tt-hidden-mobile">
+                                    <a href="#" class="btn btn-primary">Preview</a>
+                                </div>
+                            </div>
+                            <form action="Comment" method="post">
+                                <div class="form-group">
+                                    <!--                            <div name="message" text-angular="text-angular" class="form-control" contenteditable="true"  rows="5" placeholder="Lets get started"></div>-->
+
+                                    <div ng-app="textAngularTest" ng-controller="wysiwygeditor" class="container app">
+
+                                        <div class="text" placeholder="Nhập bình luận" class="form-control" text-angular="text-angular" rows="5" name="message" ng-model="htmlcontent" ta-disabled='disabled'></div>
+                                        <textarea ng-model="htmlcontent" style="width: 100%" hidden name="comment-content"></textarea>
+                                        <input value="<%= clickedQuestion.getQuestionID()%>" hidden name="questionid">
+                                        <input class="sourceType" value="" hidden="" name="sourceType">
+                                        <input name="questionOwner"   hidden="" value="<%=user.getUserID()%>">
+                                        <input name="commentOwner"  hidden="" value="" class="commentOwner">
+                                        <input name="status" hidden="" value="fine" class="status">
+
+                                    </div>
+                                </div>
+                                <div class="pt-row">
+                                    <div class="col-auto">
+                                        <div class="checkbox-group">
+                                            <input type="checkbox" id="checkBox21" name="checkbox" checked="">
+                                            <label for="checkBox21">
+                                                <span class="check"></span>
+                                                <span class="box"></span>
+                                                <span class="tt-text">Subscribe to this topic.</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <button class="btn btn-secondary btn-width-lg" value="Trả lời">Đăng bình luận</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div></c:if>
+
+                    <div class="tt-topic-list tt-ofset-30">
+                        <div class="tt-list-search">
+                            <div class="tt-title">Suggested Topics</div>
+                            <!-- tt-search -->
+                            <div class="tt-search">
+                                <form class="search-wrapper">
+                                    <div class="search-form">
+                                        <input type="text" class="tt-search__input" placeholder="Search for topics">
+                                        <button class="tt-search__btn" type="submit">
+                                            <svg class="tt-icon">
+                                            <use xlink:href="#icon-search"></use>
+                                            </svg>
+                                        </button>
+                                        <button class="tt-search__close">
+                                            <svg class="tt-icon">
+                                            <use xlink:href="#icon-cancel"></use>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- /tt-search -->
+                        </div>
+                        <div class="tt-list-header tt-border-bottom">
+                            <div class="tt-col-topic">Topic</div>
+                            <div class="tt-col-category">Category</div>
+                            <div class="tt-col-value hide-mobile">Likes</div>
+                            <div class="tt-col-value hide-mobile">Replies</div>
+                            <div class="tt-col-value hide-mobile">Views</div>
+                            <div class="tt-col-value">Activity</div>
+                        </div>
+                        <div class="tt-item">
+                            <div class="tt-col-avatar">
+                                <svg class="tt-icon">
+                                <use xlink:href="#icon-ava-n"></use>
+                                </svg>
+                            </div>
+                            <div class="tt-col-description">
+                                <h6 class="tt-title"><a href="#">
+                                        Does Envato act against the authors of Envato markets?
+                                    </a></h6>
+                                <div class="row align-items-center no-gutters hide-desktope">
+                                    <div class="col-11">
+                                        <ul class="tt-list-badge">
+                                            <li class="show-mobile"><a href="#"><span class="tt-color5 tt-badge">music</span></a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-1 ml-auto show-mobile">
+                                        <div class="tt-value">1d</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tt-col-category"><span class="tt-color5 tt-badge">music</span></div>
+                            <div class="tt-col-value hide-mobile">358</div>
+                            <div class="tt-col-value tt-color-select hide-mobile">68</div>
+                            <div class="tt-col-value hide-mobile">8.3k</div>
+                            <div class="tt-col-value hide-mobile">1d</div>
+                        </div>
+                        <div class="tt-item">
+                            <div class="tt-col-avatar">
+                                <svg class="tt-icon">
+                                <use xlink:href="#icon-ava-h"></use>
+                                </svg>
+                            </div>
+                            <div class="tt-col-description">
+                                <h6 class="tt-title"><a href="#">
+                                        <svg class="tt-icon">
+                                        <use xlink:href="#icon-locked"></use>
+                                        </svg>
+                                        We Want to Hear From You! What Would You Like?
+                                    </a></h6>
+                                <div class="row align-items-center no-gutters hide-desktope">
+                                    <div class="col-11">
+                                        <ul class="tt-list-badge">
+                                            <li class="show-mobile"><a href="#"><span class="tt-color6 tt-badge">movies</span></a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-1 ml-auto show-mobile">
+                                        <div class="tt-value">2d</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tt-col-category"><span class="tt-color6 tt-badge">movies</span></div>
+                            <div class="tt-col-value hide-mobile">674</div>
+                            <div class="tt-col-value tt-color-select  hide-mobile">29</div>
+                            <div class="tt-col-value hide-mobile">1.3k</div>
+                            <div class="tt-col-value hide-mobile">2d</div>
+                        </div>
+                        <div class="tt-item">
+                            <div class="tt-col-avatar">
+                                <svg class="tt-icon">
+                                <use xlink:href="#icon-ava-j"></use>
+                                </svg>
+                            </div>
+                            <div class="tt-col-description">
+                                <h6 class="tt-title"><a href="#">
+                                        Seeking partner backend developer
+                                    </a></h6>
+                                <div class="row align-items-center no-gutters">
+                                    <div class="col-11">
+                                        <ul class="tt-list-badge">
+                                            <li class="show-mobile"><a href="#"><span class="tt-color3 tt-badge">exchange</span></a></li>
+                                            <li><a href="#"><span class="tt-badge">themeforest</span></a></li>
+                                            <li><a href="#"><span class="tt-badge">elements</span></a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-1 ml-auto show-mobile">
+                                        <div class="tt-value">2d</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tt-col-category"><span class="tt-color13 tt-badge">movies</span></div>
+                            <div class="tt-col-value hide-mobile">278</div>
+                            <div class="tt-col-value tt-color-select  hide-mobile">27</div>
+                            <div class="tt-col-value hide-mobile">1.4k</div>
+                            <div class="tt-col-value hide-mobile">2d</div>
+                        </div>
+                        <div class="tt-item">
+                            <div class="tt-col-avatar">
+                                <svg class="tt-icon">
+                                <use xlink:href="#icon-ava-t"></use>
+                                </svg>
+                            </div>
+                            <div class="tt-col-description">
+                                <h6 class="tt-title"><a href="#">
+                                        Cannot customize my intro
+                                    </a></h6>
+                                <div class="row align-items-center no-gutters">
+                                    <div class="col-11">
+                                        <ul class="tt-list-badge">
+                                            <li class="show-mobile"><a href="#"><span class="tt-color7 tt-badge">video games</span></a></li>
+                                            <li><a href="#"><span class="tt-badge">videohive</span></a></li>
+                                            <li><a href="#"><span class="tt-badge">photodune</span></a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-1 ml-auto show-mobile">
+                                        <div class="tt-value">2d</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tt-col-category"><span class="tt-color7 tt-badge">video games</span></div>
+                            <div class="tt-col-value hide-mobile">364</div>
+                            <div class="tt-col-value tt-color-select  hide-mobile">36</div>
+                            <div class="tt-col-value  hide-mobile">982</div>
+                            <div class="tt-col-value hide-mobile">2d</div>
+                        </div>
+                        <div class="tt-item">
+                            <div class="tt-col-avatar">
+                                <svg class="tt-icon">
+                                <use xlink:href="#icon-ava-k"></use>
+                                </svg>
+                            </div>
+                            <div class="tt-col-description">
+                                <h6 class="tt-title"><a href="#">
+                                        <svg class="tt-icon">
+                                        <use xlink:href="#icon-verified"></use>
+                                        </svg>
+                                        Microsoft Word and Power Point
+                                    </a></h6>
+                                <div class="row align-items-center no-gutters hide-desktope">
+                                    <div class="col-11">
+                                        <ul class="tt-list-badge">
+                                            <li class="show-mobile"><a href="#"><span class="tt-color8 tt-badge">youtube</span></a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-1 ml-auto show-mobile">
+                                        <div class="tt-value">3d</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tt-col-category"><span class="tt-color8 tt-badge">youtube</span></div>
+                            <div class="tt-col-value  hide-mobile">698</div>
+                            <div class="tt-col-value tt-color-select  hide-mobile">78</div>
+                            <div class="tt-col-value  hide-mobile">2.1k</div>
+                            <div class="tt-col-value hide-mobile">3d</div>
+                        </div>
+                        <div class="tt-row-btn">
+                            <button type="button" class="btn-icon js-topiclist-showmore">
+                                <svg class="tt-icon">
+                                <use xlink:href="#icon-load_lore_icon"></use>
                                 </svg>
                             </button>
                         </div>
                     </div>
                 </div>
-                <div class="tt-wrapper-inner">
-                    <div class="pt-editor form-default">
-                        <h6 class="pt-title first-comment">Post Your Reply</h6>
-                        <div class="pt-row">
-                            <div class="col-left">
-                                <!--                                <ul class="pt-edit-btn">
-                                                                    <li><button type="button" class="btn-icon">
-                                                                            <svg class="tt-icon">
-                                                                            <use xlink:href="#icon-quote"></use>
-                                                                            </svg>
-                                                                        </button></li>
-                                                                    <li><button type="button" class="btn-icon">
-                                                                            <svg class="tt-icon">
-                                                                            <use xlink:href="#icon-bold"></use>
-                                                                            </svg>
-                                                                        </button></li>
-                                                                    <li><button type="button" class="btn-icon">
-                                                                            <svg class="tt-icon">
-                                                                            <use xlink:href="#icon-italic"></use>
-                                                                            </svg>
-                                                                        </button></li>
-                                                                    <li><button type="button" class="btn-icon">
-                                                                            <svg class="tt-icon">
-                                                                            <use xlink:href="#icon-share_topic"></use>
-                                                                            </svg>
-                                                                        </button></li>
-                                                                    <li><button type="button" class="btn-icon">
-                                                                            <svg class="tt-icon">
-                                                                            <use xlink:href="#icon-blockquote"></use>
-                                                                            </svg>
-                                                                        </button></li>
-                                                                    <li><button type="button" class="btn-icon">
-                                                                            <svg class="tt-icon">
-                                                                            <use xlink:href="#icon-performatted"></use>
-                                                                            </svg>
-                                                                        </button></li>
-                                                                    <li class="hr"></li>
-                                                                    <li><button type="button" class="btn-icon">
-                                                                            <svg class="tt-icon">
-                                                                            <use xlink:href="#icon-upload_files"></use>
-                                                                            </svg>
-                                                                        </button></li>
-                                                                    <li><button type="button" class="btn-icon">
-                                                                            <svg class="tt-icon">
-                                                                            <use xlink:href="#icon-bullet_list"></use>
-                                                                            </svg>
-                                                                        </button></li>
-                                                                    <li><button type="button" class="btn-icon">
-                                                                            <svg class="tt-icon">
-                                                                            <use xlink:href="#icon-heading"></use>
-                                                                            </svg>
-                                                                        </button></li>
-                                                                    <li><button type="button" class="btn-icon">
-                                                                            <svg class="tt-icon">
-                                                                            <use xlink:href="#icon-horizontal_line"></use>
-                                                                            </svg>
-                                                                        </button></li>
-                                                                    <li><button type="button" class="btn-icon">
-                                                                            <svg class="tt-icon">
-                                                                            <use xlink:href="#icon-emoticon"></use>
-                                                                            </svg>
-                                                                        </button></li>
-                                                                    <li><button type="button" class="btn-icon">
-                                                                            <svg class="tt-icon">
-                                                                            <use xlink:href="#icon-settings"></use>
-                                                                            </svg>
-                                                                        </button></li>
-                                                                    <li><button type="button" class="btn-icon">
-                                                                            <svg class="tt-icon">
-                                                                            <use xlink:href="#icon-color_picker"></use>
-                                                                            </svg>
-                                                                        </button></li>
-                                                                </ul>-->
+            </main>
+            <div id="js-popup-settings" class="tt-popup-settings">
+                <div class="tt-btn-col-close">
+                    <a href="#">
+                        <span class="tt-icon-title">
+                            <svg>
+                            <use xlink:href="#icon-settings_fill"></use>
+                            </svg>
+                        </span>
+                        <span class="tt-icon-text">
+                            Settings
+                        </span>
+                        <span class="tt-icon-close">
+                            <svg>
+                            <use xlink:href="#icon-cancel"></use>
+                            </svg>
+                        </span>
+                    </a>
+                </div>
+                <form class="form-default">
+                    <div class="tt-form-upload">
+                        <div class="row no-gutter">
+                            <div class="col-auto">
+                                <div class="tt-avatar">
+                                    <svg>
+                                    <use xlink:href="#icon-ava-d"></use>
+                                    </svg>
+                                </div>
                             </div>
-                            <div class="col-right tt-hidden-mobile">
-                                <a href="#" class="btn btn-primary">Preview</a>
+                            <div class="col-auto ml-auto">
+                                <a href="#" class="btn btn-primary">Upload Picture</a>
                             </div>
                         </div>
-                        <form action="Comment" method="post">
-                            <div class="form-group">
-                                <!--                            <div name="message" text-angular="text-angular" class="form-control" contenteditable="true"  rows="5" placeholder="Lets get started"></div>-->
-
-                                <div ng-app="textAngularTest" ng-controller="wysiwygeditor" class="container app">
-
-                                    <div class="text" placeholder="Nhập bình luận" class="form-control" text-angular="text-angular" rows="5" name="message" ng-model="htmlcontent" ta-disabled='disabled'></div>
-                                    <textarea ng-model="htmlcontent" style="width: 100%" hidden name="comment-content"></textarea>
-                                    <input value="<%= clickedQuestion.getQuestionID()%>" hidden name="questionid">
-                                    <input class="sourceType" value="" hidden="" name="sourceType">
-                                    <input name="questionOwner"   hidden="" value="<%=user.getUserID()%>">
-                                    <input name="commentOwner"  hidden="" value="" class="commentOwner"> 
-                                </div>
-                            </div>
-                            <div class="pt-row">
-                                <div class="col-auto">
-                                    <div class="checkbox-group">
-                                        <input type="checkbox" id="checkBox21" name="checkbox" checked="">
-                                        <label for="checkBox21">
-                                            <span class="check"></span>
-                                            <span class="box"></span>
-                                            <span class="tt-text">Subscribe to this topic.</span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-auto">
-                                    <button class="btn btn-secondary btn-width-lg" value="Trả lời">Đăng bình luận</button>
-                                </div>
-                            </div>
-                        </form>
                     </div>
-                </div>
-                <div class="tt-topic-list tt-ofset-30">
-                    <div class="tt-list-search">
-                        <div class="tt-title">Suggested Topics</div>
-                        <!-- tt-search -->
-                        <div class="tt-search">
-                            <form class="search-wrapper">
-                                <div class="search-form">
-                                    <input type="text" class="tt-search__input" placeholder="Search for topics">
-                                    <button class="tt-search__btn" type="submit">
+                    <div class="form-group">
+                        <label for="settingsUserName">Username</label>
+                        <input type="text" name="name" class="form-control" id="settingsUserName" placeholder="azyrusmax">
+                    </div>
+                    <div class="form-group">
+                        <label for="settingsUserEmail">Email</label>
+                        <input type="text" name="name" class="form-control" id="settingsUserEmail" placeholder="Sample@sample.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="settingsUserPassword">Password</label>
+                        <input type="password" name="name" class="form-control" id="settingsUserPassword" placeholder="************">
+                    </div>
+                    <div class="form-group">
+                        <label for="settingsUserLocation">Location</label>
+                        <input type="text" name="name" class="form-control" id="settingsUserLocation" placeholder="Slovakia">
+                    </div>
+                    <div class="form-group">
+                        <label for="settingsUserWebsite">Website</label>
+                        <input type="text" name="name" class="form-control" id="settingsUserWebsite" placeholder="Sample.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="settingsUserAbout">About</label>
+                        <textarea name="" placeholder="Few words about you" class="form-control" id="settingsUserAbout"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="settingsUserAbout">Notify me via Email</label>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="settingsCheckBox01" name="checkbox">
+                            <label for="settingsCheckBox01">
+                                <span class="check"></span>
+                                <span class="box"></span>
+                                <span class="tt-text">When someone replies to my thread</span>
+                            </label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="settingsCheckBox02" name="checkbox">
+                            <label for="settingsCheckBox02">
+                                <span class="check"></span>
+                                <span class="box"></span>
+                                <span class="tt-text">When someone likes my thread or reply</span>
+                            </label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="settingsCheckBox03" name="checkbox">
+                            <label for="settingsCheckBox03">
+                                <span class="check"></span>
+                                <span class="box"></span>
+                                <span class="tt-text">When someone mentions me</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <a href="#" class="btn btn-secondary">Save</a>
+                    </div>
+                </form>
+            </div>
+            <a href="page-create-topic.html" class="tt-btn-create-topic">
+                <span class="tt-icon">
+                    <svg>
+                    <use xlink:href="#icon-create_new"></use>
+                    </svg>
+                </span>
+            </a>
+
+            <div class="modal fade" id="modalAdvancedSearch" tabindex="-1" role="dialog" aria-label="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="tt-modal-advancedSearch">
+                            <div class="tt-modal-title">
+                                <i class="pt-icon">
+                                    <svg>
+                                    <use xlink:href="#icon-advanced_search"></use>
+                                    </svg>
+                                </i>
+                                Advanced Search
+                                <a class="pt-close-modal" href="#" data-dismiss="modal">
+                                    <svg class="icon">
+                                    <use xlink:href="#icon-cancel"></use>
+                                    </svg>
+                                </a>
+                            </div>
+                            <form class="form-default">
+                                <div class="form-group">
+                                    <i class="pt-customInputIcon">
                                         <svg class="tt-icon">
                                         <use xlink:href="#icon-search"></use>
                                         </svg>
-                                    </button>
-                                    <button class="tt-search__close">
-                                        <svg class="tt-icon">
-                                        <use xlink:href="#icon-cancel"></use>
-                                        </svg>
-                                    </button>
+                                    </i>
+                                    <input type="text" name="name" class="form-control pt-customInputSearch" id="searchForum" placeholder="Search all forums">
+                                </div>
+                                <div class="form-group">
+                                    <label for="searchName">Posted by</label>
+                                    <input type="text" name="name" class="form-control" id="searchName" placeholder="Username">
+                                </div>
+                                <div class="form-group">
+                                    <label for="searchCategory">In Category</label>
+                                    <input type="text" name="name" class="form-control" id="searchCategory" placeholder="Add Category">
+                                </div>
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="searcCheckBox01" name="checkbox">
+                                    <label for="searcCheckBox01">
+                                        <span class="check"></span>
+                                        <span class="box"></span>
+                                        <span class="tt-text">Include all tags</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>Only return topics/posts that...</label>
+                                    <div class="checkbox-group">
+                                        <input type="checkbox" id="searcCheckBox02" name="checkbox">
+                                        <label for="searcCheckBox02">
+                                            <span class="check"></span>
+                                            <span class="box"></span>
+                                            <span class="tt-text">I liked</span>
+                                        </label>
+                                    </div>
+                                    <div class="checkbox-group">
+                                        <input type="checkbox" id="searcCheckBox03" name="checkbox">
+                                        <label for="searcCheckBox03">
+                                            <span class="check"></span>
+                                            <span class="box"></span>
+                                            <span class="tt-text">are in my messages</span>
+                                        </label>
+                                    </div>
+                                    <div class="checkbox-group">
+                                        <input type="checkbox" id="searcCheckBox04" name="checkbox">
+                                        <label for="searcCheckBox04">
+                                            <span class="check"></span>
+                                            <span class="box"></span>
+                                            <span class="tt-text">I’ve read</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <select class="form-control" id="searchTop">
+                                        <option>any</option>
+                                        <option>value 01</option>
+                                        <option>value 02</option>
+                                        <option>value 03</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="searchaTopics">Where topics</label>
+                                    <select class="form-control" id="searchaTopics">
+                                        <option>any</option>
+                                        <option>value 01</option>
+                                        <option>value 02</option>
+                                        <option>value 03</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="searchAdvTime">Posted</label>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <select class="form-control">
+                                                <option>any</option>
+                                                <option>value 01</option>
+                                                <option>value 02</option>
+                                                <option>value 03</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="text" name="name" class="form-control" id="searchAdvTime" placeholder="dd-mm-yyyy">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="minPostCount">Minimum Post Count</label>
+                                    <select class="form-control" id="minPostCount">
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                        <option>5</option>
+                                        <option>6</option>
+                                        <option>7</option>
+                                        <option>8</option>
+                                        <option>9</option>
+                                        <option selected>10</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <a href="#" class="btn btn-secondary btn-block">Search</a>
                                 </div>
                             </form>
                         </div>
-                        <!-- /tt-search -->
-                    </div>
-                    <div class="tt-list-header tt-border-bottom">
-                        <div class="tt-col-topic">Topic</div>
-                        <div class="tt-col-category">Category</div>
-                        <div class="tt-col-value hide-mobile">Likes</div>
-                        <div class="tt-col-value hide-mobile">Replies</div>
-                        <div class="tt-col-value hide-mobile">Views</div>
-                        <div class="tt-col-value">Activity</div>
-                    </div>
-                    <div class="tt-item">
-                        <div class="tt-col-avatar">
-                            <svg class="tt-icon">
-                            <use xlink:href="#icon-ava-n"></use>
-                            </svg>
-                        </div>
-                        <div class="tt-col-description">
-                            <h6 class="tt-title"><a href="#">
-                                    Does Envato act against the authors of Envato markets?
-                                </a></h6>
-                            <div class="row align-items-center no-gutters hide-desktope">
-                                <div class="col-11">
-                                    <ul class="tt-list-badge">
-                                        <li class="show-mobile"><a href="#"><span class="tt-color5 tt-badge">music</span></a></li>
-                                    </ul>
-                                </div>
-                                <div class="col-1 ml-auto show-mobile">
-                                    <div class="tt-value">1d</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tt-col-category"><span class="tt-color5 tt-badge">music</span></div>
-                        <div class="tt-col-value hide-mobile">358</div>
-                        <div class="tt-col-value tt-color-select hide-mobile">68</div>
-                        <div class="tt-col-value hide-mobile">8.3k</div>
-                        <div class="tt-col-value hide-mobile">1d</div>
-                    </div>
-                    <div class="tt-item">
-                        <div class="tt-col-avatar">
-                            <svg class="tt-icon">
-                            <use xlink:href="#icon-ava-h"></use>
-                            </svg>
-                        </div>
-                        <div class="tt-col-description">
-                            <h6 class="tt-title"><a href="#">
-                                    <svg class="tt-icon">
-                                    <use xlink:href="#icon-locked"></use>
-                                    </svg>
-                                    We Want to Hear From You! What Would You Like?
-                                </a></h6>
-                            <div class="row align-items-center no-gutters hide-desktope">
-                                <div class="col-11">
-                                    <ul class="tt-list-badge">
-                                        <li class="show-mobile"><a href="#"><span class="tt-color6 tt-badge">movies</span></a></li>
-                                    </ul>
-                                </div>
-                                <div class="col-1 ml-auto show-mobile">
-                                    <div class="tt-value">2d</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tt-col-category"><span class="tt-color6 tt-badge">movies</span></div>
-                        <div class="tt-col-value hide-mobile">674</div>
-                        <div class="tt-col-value tt-color-select  hide-mobile">29</div>
-                        <div class="tt-col-value hide-mobile">1.3k</div>
-                        <div class="tt-col-value hide-mobile">2d</div>
-                    </div>
-                    <div class="tt-item">
-                        <div class="tt-col-avatar">
-                            <svg class="tt-icon">
-                            <use xlink:href="#icon-ava-j"></use>
-                            </svg>
-                        </div>
-                        <div class="tt-col-description">
-                            <h6 class="tt-title"><a href="#">
-                                    Seeking partner backend developer
-                                </a></h6>
-                            <div class="row align-items-center no-gutters">
-                                <div class="col-11">
-                                    <ul class="tt-list-badge">
-                                        <li class="show-mobile"><a href="#"><span class="tt-color3 tt-badge">exchange</span></a></li>
-                                        <li><a href="#"><span class="tt-badge">themeforest</span></a></li>
-                                        <li><a href="#"><span class="tt-badge">elements</span></a></li>
-                                    </ul>
-                                </div>
-                                <div class="col-1 ml-auto show-mobile">
-                                    <div class="tt-value">2d</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tt-col-category"><span class="tt-color13 tt-badge">movies</span></div>
-                        <div class="tt-col-value hide-mobile">278</div>
-                        <div class="tt-col-value tt-color-select  hide-mobile">27</div>
-                        <div class="tt-col-value hide-mobile">1.4k</div>
-                        <div class="tt-col-value hide-mobile">2d</div>
-                    </div>
-                    <div class="tt-item">
-                        <div class="tt-col-avatar">
-                            <svg class="tt-icon">
-                            <use xlink:href="#icon-ava-t"></use>
-                            </svg>
-                        </div>
-                        <div class="tt-col-description">
-                            <h6 class="tt-title"><a href="#">
-                                    Cannot customize my intro
-                                </a></h6>
-                            <div class="row align-items-center no-gutters">
-                                <div class="col-11">
-                                    <ul class="tt-list-badge">
-                                        <li class="show-mobile"><a href="#"><span class="tt-color7 tt-badge">video games</span></a></li>
-                                        <li><a href="#"><span class="tt-badge">videohive</span></a></li>
-                                        <li><a href="#"><span class="tt-badge">photodune</span></a></li>
-                                    </ul>
-                                </div>
-                                <div class="col-1 ml-auto show-mobile">
-                                    <div class="tt-value">2d</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tt-col-category"><span class="tt-color7 tt-badge">video games</span></div>
-                        <div class="tt-col-value hide-mobile">364</div>
-                        <div class="tt-col-value tt-color-select  hide-mobile">36</div>
-                        <div class="tt-col-value  hide-mobile">982</div>
-                        <div class="tt-col-value hide-mobile">2d</div>
-                    </div>
-                    <div class="tt-item">
-                        <div class="tt-col-avatar">
-                            <svg class="tt-icon">
-                            <use xlink:href="#icon-ava-k"></use>
-                            </svg>
-                        </div>
-                        <div class="tt-col-description">
-                            <h6 class="tt-title"><a href="#">
-                                    <svg class="tt-icon">
-                                    <use xlink:href="#icon-verified"></use>
-                                    </svg>
-                                    Microsoft Word and Power Point
-                                </a></h6>
-                            <div class="row align-items-center no-gutters hide-desktope">
-                                <div class="col-11">
-                                    <ul class="tt-list-badge">
-                                        <li class="show-mobile"><a href="#"><span class="tt-color8 tt-badge">youtube</span></a></li>
-                                    </ul>
-                                </div>
-                                <div class="col-1 ml-auto show-mobile">
-                                    <div class="tt-value">3d</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tt-col-category"><span class="tt-color8 tt-badge">youtube</span></div>
-                        <div class="tt-col-value  hide-mobile">698</div>
-                        <div class="tt-col-value tt-color-select  hide-mobile">78</div>
-                        <div class="tt-col-value  hide-mobile">2.1k</div>
-                        <div class="tt-col-value hide-mobile">3d</div>
-                    </div>
-                    <div class="tt-row-btn">
-                        <button type="button" class="btn-icon js-topiclist-showmore">
-                            <svg class="tt-icon">
-                            <use xlink:href="#icon-load_lore_icon"></use>
-                            </svg>
-                        </button>
                     </div>
                 </div>
             </div>
-        </main>
-        <div id="js-popup-settings" class="tt-popup-settings">
-            <div class="tt-btn-col-close">
-                <a href="#">
-                    <span class="tt-icon-title">
-                        <svg>
-                        <use xlink:href="#icon-settings_fill"></use>
-                        </svg>
-                    </span>
-                    <span class="tt-icon-text">
-                        Settings
-                    </span>
-                    <span class="tt-icon-close">
-                        <svg>
-                        <use xlink:href="#icon-cancel"></use>
-                        </svg>
-                    </span>
-                </a>
-            </div>
-            <form class="form-default">
-                <div class="tt-form-upload">
-                    <div class="row no-gutter">
-                        <div class="col-auto">
-                            <div class="tt-avatar">
-                                <svg>
-                                <use xlink:href="#icon-ava-d"></use>
-                                </svg>
-                            </div>
-                        </div>
-                        <div class="col-auto ml-auto">
-                            <a href="#" class="btn btn-primary">Upload Picture</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="settingsUserName">Username</label>
-                    <input type="text" name="name" class="form-control" id="settingsUserName" placeholder="azyrusmax">
-                </div>
-                <div class="form-group">
-                    <label for="settingsUserEmail">Email</label>
-                    <input type="text" name="name" class="form-control" id="settingsUserEmail" placeholder="Sample@sample.com">
-                </div>
-                <div class="form-group">
-                    <label for="settingsUserPassword">Password</label>
-                    <input type="password" name="name" class="form-control" id="settingsUserPassword" placeholder="************">
-                </div>
-                <div class="form-group">
-                    <label for="settingsUserLocation">Location</label>
-                    <input type="text" name="name" class="form-control" id="settingsUserLocation" placeholder="Slovakia">
-                </div>
-                <div class="form-group">
-                    <label for="settingsUserWebsite">Website</label>
-                    <input type="text" name="name" class="form-control" id="settingsUserWebsite" placeholder="Sample.com">
-                </div>
-                <div class="form-group">
-                    <label for="settingsUserAbout">About</label>
-                    <textarea name="" placeholder="Few words about you" class="form-control" id="settingsUserAbout"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="settingsUserAbout">Notify me via Email</label>
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="settingsCheckBox01" name="checkbox">
-                        <label for="settingsCheckBox01">
-                            <span class="check"></span>
-                            <span class="box"></span>
-                            <span class="tt-text">When someone replies to my thread</span>
-                        </label>
-                    </div>
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="settingsCheckBox02" name="checkbox">
-                        <label for="settingsCheckBox02">
-                            <span class="check"></span>
-                            <span class="box"></span>
-                            <span class="tt-text">When someone likes my thread or reply</span>
-                        </label>
-                    </div>
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="settingsCheckBox03" name="checkbox">
-                        <label for="settingsCheckBox03">
-                            <span class="check"></span>
-                            <span class="box"></span>
-                            <span class="tt-text">When someone mentions me</span>
-                        </label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <a href="#" class="btn btn-secondary">Save</a>
-                </div>
-            </form>
-        </div>
-        <a href="page-create-topic.html" class="tt-btn-create-topic">
-            <span class="tt-icon">
-                <svg>
-                <use xlink:href="#icon-create_new"></use>
-                </svg>
-            </span>
-        </a>
-
-        <div class="modal fade" id="modalAdvancedSearch" tabindex="-1" role="dialog" aria-label="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content">
-                    <div class="tt-modal-advancedSearch">
-                        <div class="tt-modal-title">
-                            <i class="pt-icon">
-                                <svg>
-                                <use xlink:href="#icon-advanced_search"></use>
-                                </svg>
-                            </i>
-                            Advanced Search
-                            <a class="pt-close-modal" href="#" data-dismiss="modal">
-                                <svg class="icon">
-                                <use xlink:href="#icon-cancel"></use>
-                                </svg>
-                            </a>
-                        </div>
-                        <form class="form-default">
-                            <div class="form-group">
-                                <i class="pt-customInputIcon">
-                                    <svg class="tt-icon">
-                                    <use xlink:href="#icon-search"></use>
-                                    </svg>
-                                </i>
-                                <input type="text" name="name" class="form-control pt-customInputSearch" id="searchForum" placeholder="Search all forums">
-                            </div>
-                            <div class="form-group">
-                                <label for="searchName">Posted by</label>
-                                <input type="text" name="name" class="form-control" id="searchName" placeholder="Username">
-                            </div>
-                            <div class="form-group">
-                                <label for="searchCategory">In Category</label>
-                                <input type="text" name="name" class="form-control" id="searchCategory" placeholder="Add Category">
-                            </div>
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="searcCheckBox01" name="checkbox">
-                                <label for="searcCheckBox01">
-                                    <span class="check"></span>
-                                    <span class="box"></span>
-                                    <span class="tt-text">Include all tags</span>
-                                </label>
-                            </div>
-                            <div class="form-group">
-                                <label>Only return topics/posts that...</label>
-                                <div class="checkbox-group">
-                                    <input type="checkbox" id="searcCheckBox02" name="checkbox">
-                                    <label for="searcCheckBox02">
-                                        <span class="check"></span>
-                                        <span class="box"></span>
-                                        <span class="tt-text">I liked</span>
-                                    </label>
-                                </div>
-                                <div class="checkbox-group">
-                                    <input type="checkbox" id="searcCheckBox03" name="checkbox">
-                                    <label for="searcCheckBox03">
-                                        <span class="check"></span>
-                                        <span class="box"></span>
-                                        <span class="tt-text">are in my messages</span>
-                                    </label>
-                                </div>
-                                <div class="checkbox-group">
-                                    <input type="checkbox" id="searcCheckBox04" name="checkbox">
-                                    <label for="searcCheckBox04">
-                                        <span class="check"></span>
-                                        <span class="box"></span>
-                                        <span class="tt-text">I’ve read</span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <select class="form-control" id="searchTop">
-                                    <option>any</option>
-                                    <option>value 01</option>
-                                    <option>value 02</option>
-                                    <option>value 03</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="searchaTopics">Where topics</label>
-                                <select class="form-control" id="searchaTopics">
-                                    <option>any</option>
-                                    <option>value 01</option>
-                                    <option>value 02</option>
-                                    <option>value 03</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="searchAdvTime">Posted</label>
-                                <div class="row">
-                                    <div class="col-6">
-                                        <select class="form-control">
-                                            <option>any</option>
-                                            <option>value 01</option>
-                                            <option>value 02</option>
-                                            <option>value 03</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-6">
-                                        <input type="text" name="name" class="form-control" id="searchAdvTime" placeholder="dd-mm-yyyy">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="minPostCount">Minimum Post Count</label>
-                                <select class="form-control" id="minPostCount">
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                    <option>5</option>
-                                    <option>6</option>
-                                    <option>7</option>
-                                    <option>8</option>
-                                    <option>9</option>
-                                    <option selected>10</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <a href="#" class="btn btn-secondary btn-block">Search</a>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
 
 
-        <main>
-            <!-- DEMO HTML -->
+            <main>
+                <!-- DEMO HTML -->
 
-            <!-- END DEMO HTML -->
+                <!-- END DEMO HTML -->
 
-            <!-- Angular JS -->
-            <script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular.min.js'></script>
-            <!-- Angular Sanitize JS -->
-            <script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-sanitize.min.js'></script>
-            <!-- Text Angular JS -->
-            <script src='https://cdnjs.cloudflare.com/ajax/libs/textAngular/1.1.2/textAngular.min.js'></script>
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+                <!-- Angular JS -->
+                <script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular.min.js'></script>
+                <!-- Angular Sanitize JS -->
+                <script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-sanitize.min.js'></script>
+                <!-- Text Angular JS -->
+                <script src='https://cdnjs.cloudflare.com/ajax/libs/textAngular/1.1.2/textAngular.min.js'></script>
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
-            <script>
+                <script>
+                                            var field = "#" + '${sort}';
+                                            var box = document.querySelector(field);
+                                            box.classList.add("tt-color2");
+                                            box.style.setProperty('color', 'white', 'important');
 
-                                        function like(elem) {
-                                            var commentID = "." + elem.classList[1];
-                                            var iconlike = document.querySelector(commentID).querySelector("svg");
-                                            var raw_numberLike = document.querySelector(commentID).querySelector("span");
-                                            var numberLike = parseInt(raw_numberLike.innerHTML);
-                                            if (iconlike.classList.contains('pressed')) {
-                                                numberLike = numberLike - 1;
-                                                raw_numberLike.innerHTML = numberLike;
-                                            } else {
-                                                numberLike = numberLike + 1;
-                                                raw_numberLike.innerHTML = numberLike;
-                                            }
-                                            iconlike.classList.toggle('pressed')
-                                            var commentID = elem.classList[2];
-                                            $.ajax({
-                                                url: "/FPTCommunity/Comment_Like",
-                                                type: "get", //send it through get method
-                                                data: {
-                                                    commentID: commentID
-                                                },
-                                                success: function (data) {
-                                                    console.log(commentClicked)
-                                                },
-                                                error: function (xhr) {
-                                                    //Do Something to handle error
+
+                                            function like(elem) {
+                                                var commentID = "." + elem.classList[1];
+                                                var iconlike = document.querySelector(commentID).querySelector("svg");
+                                                var raw_numberLike = document.querySelector(commentID).querySelector("span");
+                                                var numberLike = parseInt(raw_numberLike.innerHTML);
+                                                if (iconlike.classList.contains('pressed')) {
+                                                    numberLike = numberLike - 1;
+                                                    raw_numberLike.innerHTML = numberLike;
+                                                } else {
+                                                    numberLike = numberLike + 1;
+                                                    raw_numberLike.innerHTML = numberLike;
                                                 }
-                                            });
-                                        }
-                                        function likepost(elem) {
-                                            var quesID = "." + elem.classList[1];
-                                            var iconlike = document.querySelector(quesID).querySelector("svg");
-                                            var raw_numberLike = document.querySelector(quesID).querySelector("span");
-
-                                            var numberLike = parseInt(raw_numberLike.innerHTML);
-                                            if (iconlike.classList.contains('pressed')) {
-                                                numberLike = numberLike - 1;
-                                                raw_numberLike.innerHTML = numberLike;
-                                            } else {
-                                                numberLike = numberLike + 1;
-                                                raw_numberLike.innerHTML = numberLike;
+                                                iconlike.classList.toggle('pressed')
+                                                var commentID = elem.classList[2];
+                                                $.ajax({
+                                                    url: "/FPTCommunity/Comment_Like",
+                                                    type: "get", //send it through get method
+                                                    data: {
+                                                        commentID: commentID
+                                                    },
+                                                    success: function (data) {
+                                                        console.log(commentClicked)
+                                                    },
+                                                    error: function (xhr) {
+                                                        //Do Something to handle error
+                                                    }
+                                                });
                                             }
-                                            iconlike.classList.toggle('pressed')
-                                            var quesID = elem.classList[2];
-                                            $.ajax({
-                                                url: "/FPTCommunity/Post_Like",
-                                                type: "post", //send it through get method
-                                                data: {
-                                                    postID: quesID
-                                                },
-                                                success: function (data) {
-                                                    console.log("ok")
-                                                },
-                                                error: function (xhr) {
-                                                    //Do Something to handle error
+                                            function likepost(elem) {
+                                                var quesID = "." + elem.classList[1];
+                                                var iconlike = document.querySelector(quesID).querySelector("svg");
+                                                var raw_numberLike = document.querySelector(quesID).querySelector("span");
+
+                                                var numberLike = parseInt(raw_numberLike.innerHTML);
+                                                if (iconlike.classList.contains('pressed')) {
+                                                    numberLike = numberLike - 1;
+                                                    raw_numberLike.innerHTML = numberLike;
+                                                } else {
+                                                    numberLike = numberLike + 1;
+                                                    raw_numberLike.innerHTML = numberLike;
                                                 }
-                                            });
-                                        }
-                                        angular.module("textAngularTest", ['textAngular']);
-                                        function wysiwygeditor($scope) {
-                                            $scope.orightml = '';
-                                            $scope.htmlcontent = $scope.orightml;
-                                            $scope.disabled = false;
-                                        }
-                                        ;
-
-                                        function scrollingToComment(ele) {
-                                            var text = document.querySelector(".first-comment");
-                                            var comment = document.querySelector(".commentOwner");
-                                            var source = document.querySelector(".sourceType");
-                                            if (ele == 1) {
-                                                source.value = "";
-                                            } else {
-                                                console.log(ele.classList[1]);
-                                                console.log(ele.classList[2]);
-                                                comment.value = ele.classList[1];
-                                                source.value = ele.classList[2];
+                                                iconlike.classList.toggle('pressed')
+                                                var quesID = elem.classList[2];
+                                                $.ajax({
+                                                    url: "/FPTCommunity/Post_Like",
+                                                    type: "post", //send it through get method
+                                                    data: {
+                                                        postID: quesID
+                                                    },
+                                                    success: function (data) {
+                                                        console.log("ok")
+                                                    },
+                                                    error: function (xhr) {
+                                                        //Do Something to handle error
+                                                    }
+                                                });
                                             }
+                                            angular.module("textAngularTest", ['textAngular']);
+                                            function wysiwygeditor($scope) {
+                                                $scope.orightml = '';
+                                                $scope.htmlcontent = $scope.orightml;
+                                                $scope.disabled = false;
+                                            }
+                                            ;
 
-                                            text.scrollIntoView();
-                                            document.querySelector(".ng-pristine").focus();
-                                        }
-                                        var toolbar = document.querySelector(".ta-toolbar.btn-toolbar");
-                                        console.log(toolbar);
+                                            function scrollingToComment(ele) {
+                                                var text = document.querySelector(".first-comment");
+                                                var comment = document.querySelector(".commentOwner");
+                                                var source = document.querySelector(".sourceType");
+                                                var status = document.querySelector(".status");
+                                                if (ele == 1) {
+                                                    source.value = "";
+                                                } else {
+                                                    status.value = ele.classList[3];
+                                                    console.log(status.value);
+                                                    console.log(ele.classList[1]);
+                                                    console.log(ele.classList[2]);
+                                                    comment.value = ele.classList[1];
+                                                    source.value = ele.classList[2];
+                                                }
+
+                                                text.scrollIntoView();
+                                                document.querySelector(".ng-pristine").focus();
+                                            }
+                                            var toolbar = document.querySelector(".ta-toolbar.btn-toolbar");
+                                            console.log(toolbar);
             </script>
 
 

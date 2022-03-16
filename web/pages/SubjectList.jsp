@@ -67,7 +67,7 @@
                                 <div class="tt-item">
                                     <div class="tt-item-header">
                                         <ul class="tt-list-badge">
-                                            <li><a href="#"><span class="tt-color<%=random.nextInt(21 - 1) + 1%> tt-badge">${s.subjectid}</span></a></li>
+                                            <li><a href="subthread?id=${s.subjectid}"><span class="tt-color<%=random.nextInt(21 - 1) + 1%> tt-badge">${s.subjectid}</span></a></li>
                                         </ul>
                                         <h6 class="tt-title"><a href="threadOfSubject">Câu hỏi - ${s.total}</a></h6>
                                     </div>

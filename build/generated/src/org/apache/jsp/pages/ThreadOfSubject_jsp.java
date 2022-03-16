@@ -56,7 +56,9 @@ public final class ThreadOfSubject_jsp extends org.apache.jasper.runtime.HttpJsp
       out.write("    <link rel=\"shortcut icon\" href=\"favicon/favicon.ico\">\n");
       out.write("    <meta name=\"format-detection\" content=\"telephone=no\">\n");
       out.write("    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\">\n");
-      out.write("    <link rel=\"stylesheet\" href=\"css/style.css\">\n");
+      out.write("    <link rel=\"stylesheet\" href=\"");
+      out.write((java.lang.String) org.apache.jasper.runtime.PageContextImpl.evaluateExpression("${pageContext.request.contextPath}", java.lang.String.class, (PageContext)_jspx_page_context, null));
+      out.write("/style/style2.css\">\n");
       out.write("</head>\n");
       out.write("<body>\n");
       out.write("<!-- tt-mobile menu -->\n");

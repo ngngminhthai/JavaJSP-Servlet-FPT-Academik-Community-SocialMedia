@@ -87,11 +87,10 @@ public class CommentController extends BaseAuthController {
         int userID = (Integer) session.getAttribute("userID");
         int sourceType = Integer.parseInt(request.getParameter("questionid"));
         int questionOwnerID = Integer.parseInt(request.getParameter("questionOwner"));
-        
-        
+        String status = request.getParameter("status");
+
         String replyType = "reply";
         String commentType = "comment";
-       
 
         CommentDBContext comDb = new CommentDBContext();
         NotificationDBContext notiDb = new NotificationDBContext();
@@ -100,44 +99,49 @@ public class CommentController extends BaseAuthController {
         LocalDateTime now = LocalDateTime.now();
         String createdAt = dtf.format(now);
 
-        if (raw_Type == null || raw_Type.isEmpty()) {
-            comDb.createComment(sourceType, userID, comment_content);
-            //add notification
-            if (userID == questionOwnerID) {
+        if (!status.equals("Bị")) {
+            if (raw_Type == null || raw_Type.isEmpty()) {
+                comDb.createComment(sourceType, userID, comment_content);
+                //add notification
+                if (userID == questionOwnerID) {
+                } else {
+                    notiDb.addNotification(questionOwnerID, userID, sourceType, commentType, createdAt);
+                }
+                response.sendRedirect("thread?questionid=" + sourceType);
             } else {
-                notiDb.addNotification(questionOwnerID, userID, sourceType, commentType, createdAt);
+
+                //get the id of user that was repied by another user
+                int commentOwnerID = Integer.parseInt(request.getParameter("commentOwner"));
+
+                int Type = Integer.parseInt(raw_Type);
+                //type = the id of comment that user replied
+
+                //create new comment
+                comDb.createComment(sourceType, userID, comment_content);
+
+                //get new commentid just added
+                int new_CommentID = comDb.getLastCommentAdded();
+
+                //update reply_id of old comment with new comment
+                //type = the comment that user replied for, new_comment is the comment that just have created
+                comDb.updateForReplies(Type, new_CommentID);
+
+                if (userID == questionOwnerID) {
+
+                } else {
+                    //add notification for question owner
+                    notiDb.addNotification(questionOwnerID, userID, sourceType, commentType, createdAt);
+                }
+                if (userID == commentOwnerID) {
+                } //add notification for comment owner
+                else {
+                    notiDb.addNotification(commentOwnerID, userID, sourceType, replyType, createdAt);
+                }
+
+                response.sendRedirect("thread?questionid=" + sourceType);
             }
-            response.sendRedirect("thread?questionid=" + sourceType);
-        } else {
-            //get the id of user that was repied by another user
-            int commentOwnerID = Integer.parseInt(request.getParameter("commentOwner"));
-
-            int Type = Integer.parseInt(raw_Type);
-            //type = the id of comment that user replied
-            //create new comment
-            comDb.createComment(sourceType, userID, comment_content);
-
-            //get new commentid just added
-            int new_CommentID = comDb.getLastCommentAdded();
-
-            //update reply_id of old comment with new comment
-            //type = the comment that user replied for, new_comment is the comment that just have created
-            comDb.updateForReplies(Type, new_CommentID);
-
-            if (userID == questionOwnerID) {
-
-            } else {
-                //add notification for question owner
-                notiDb.addNotification(questionOwnerID, userID, sourceType, commentType, createdAt);
-            }
-            if (userID == commentOwnerID) {
-            } //add notification for comment owner
-            else {
-                notiDb.addNotification(commentOwnerID, userID, sourceType, replyType, createdAt);
-            }
-
-            response.sendRedirect("thread?questionid=" + sourceType);
         }
+        else response.sendRedirect("thread?questionid=" + sourceType);
 
     }
 

@@ -3,25 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller;
+package admin.comment;
 
 import db.CommentDBContext;
-import db.QuestionDBContext;
+import db.UserDBContext;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.Comment;
-import model.Question;
 
 /**
  *
  * @author Admin
  */
-public class ThreadOfSubjectController extends HttpServlet {
+public class VoteComment extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,10 +37,10 @@ public class ThreadOfSubjectController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ThreadOfSubjectController</title>");
+            out.println("<title>Servlet VoteComment</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ThreadOfSubjectController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet VoteComment at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -61,15 +58,22 @@ public class ThreadOfSubjectController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String subid = request.getParameter("id");
-        QuestionDBContext quesdb = new QuestionDBContext();
-        ArrayList<Question> ques = quesdb.getQuesBySub(subid);
-        CommentDBContext comdb = new CommentDBContext();
-        ArrayList<Comment> coms = comdb.getCommentBySubid(subid);
-        request.setAttribute("com", coms);
-        request.setAttribute("subject", subid);
-        request.setAttribute("ques", ques);
-        request.getRequestDispatcher("pages/ThreadOfSubject.jsp").forward(request, response);
+        request.setCharacterEncoding("UTF-8");
+        int memid = Integer.parseInt(request.getParameter("id"));
+        int userid = (Integer) request.getSession().getAttribute("userID");
+
+        UserDBContext udb = new UserDBContext();
+        if (udb.getRole(userid) > udb.getRole(memid) || udb.getRole(userid) == 4) {
+            int comid = Integer.parseInt(request.getParameter("comid"));
+            int quesid = Integer.parseInt(request.getParameter("quesid"));
+            String status = request.getParameter("status");
+            CommentDBContext comdb = new CommentDBContext();
+            comdb.vote(comid, status, quesid);
+            response.sendRedirect("comment");
+        } else {
+            response.sendRedirect("comment");
+        }
+
     }
 
     /**

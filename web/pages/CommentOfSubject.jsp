@@ -4,7 +4,6 @@
     Author     : Admin
 --%>
 
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page import="model.Question"%>
 <%@page import="java.util.Random"%>
 <%@page import="java.util.ArrayList"%>
@@ -123,7 +122,7 @@
     <body>
         <!-- tt-mobile menu -->
 
-        <% ArrayList<Question> questionList = (ArrayList<Question>) request.getAttribute("ques");%>
+        <% ArrayList<Question> com = (ArrayList<Question>) request.getAttribute("ques");%>
         <% Random random = new Random();
             int i;
             Question elem = null;
@@ -157,10 +156,8 @@
                                 <a style="    background-color: #f8f9fb;
                                    border: none;" class="nav-link active" data-toggle="tab" href="#tt-tab-01" role="tab"><span>Tất cả chủ đề</span></a>
                             </li>
-                            <li style="    background-color: #f8f9fb;
-                                border: none;"  class="nav-item">
-                                <a style="background-color: #f8f9fb;
-                                   border: none;" class="nav-link" data-toggle="tab" href="#tt-tab-02" role="tab"><span>Các câu trả lời</span></a>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#tt-tab-02" role="tab"><span>Các câu trả lời</span></a>
                             </li>
 
 
@@ -193,7 +190,7 @@
                                         </svg>
 
                                         <%}
-                                            }%>
+                                }%>
                                     </div>
                                     <div class="tt-col-description">
                                         <h6 class="tt-title"><a href="thread?questionid=<%=elem.getQuestionID()%>">
@@ -203,12 +200,12 @@
                                             <div class="col-11">
                                                 <ul class="tt-list-badge">
                                                     <li class="show-mobile"><a href="#"><span onclick="follow(this, ${sessionScope.userID})" class="tt-color<%=random.nextInt(21 - 1) + 1%> tt-badge main"><% if (elem.getMainTag() != null) {
-                                                            out.print(elem.getMainTag().getTagid());
-                                                        } %><i class="fa <% if (elem.getMainTag() != null && !elem.getMainTag().isIsLike()) {
-                                                                out.print("fa-plus");
-                                                            } else {
-                                                                out.print("fa-check");
-                                                            } %>" aria-hidden="true"></i></span></a></li>
+                                                out.print(elem.getMainTag().getTagid());
+                                            } %><i class="fa <% if (elem.getMainTag() != null && !elem.getMainTag().isIsLike()) {
+                                                                        out.print("fa-plus");
+                                                                    } else {
+                                                                        out.print("fa-check");
+                                                                    } %>" aria-hidden="true"></i></span></a></li>
                                                                 <% for (int j = 0; j < elem.getTags().size(); j++) {
                                                                 %>
                                                     <li><a href="#"><span class="tt-badge"><% if (elem.getTags().get(j) != null) {
@@ -292,44 +289,456 @@
                         <div class="tab-pane tt-indent-none" id="tt-tab-02" role="tabpanel">
                             <div class="tt-topic-list">
                                 <div class="tt-list-header">
-                                    <div class="tt-col-topic">Bình luận</div>
-
-                                    <div class="tt-col-value hide-mobile">Lượt thích</div>
-                                    <div class="tt-col-value">Giờ tạo</div>
+                                    <div class="tt-col-topic">Topic</div>
+                                    <div class="tt-col-category">Category</div>
+                                    <div class="tt-col-value hide-mobile">Likes</div>
+                                    <div class="tt-col-value hide-mobile">Replies</div>
+                                    <div class="tt-col-value hide-mobile">Views</div>
+                                    <div class="tt-col-value">Activity</div>
                                 </div>
-                                <c:forEach items="${com}" var="c">
-                                    <div class="tt-item">
-                                        <div class="tt-col-avatar">
-                                            <!--                                            <svg class="tt-icon">
-                                                                                        <use xlink:href="#icon-ava-d"></use>
-                                                                                        </svg>-->
-                                            <img src="${pageContext.request.contextPath}/img/${c.getUser().img}">
-                                        </div>
-                                        <div class="tt-col-description">
-                                            <h6 class="tt-title"><a href="#">
-
-                                                    ${c.content}
-                                                </a></h6>
-                                            <div class="row align-items-center no-gutters">
-                                                <div class="col-11">
-                                                    <ul class="tt-list-badge">
-                                                        <li class="show-mobile"><a href="#"><span class="tt-color01 tt-badge">Tag</span></a></li>
-                                                        <li><a href="#"><span class="tt-badge">Tag1</span></a></li>
-                                                        <li><a href="#"><span class="tt-badge">Tag2</span></a></li>
-                                                    </ul>
-                                                </div>
-                                                <div class="col-1 ml-auto show-mobile">
-                                                    <div class="tt-value">1h</div>
-                                                </div>
+                                <div class="tt-item">
+                                    <div class="tt-col-avatar">
+                                        <svg class="tt-icon">
+                                        <use xlink:href="#icon-ava-d"></use>
+                                        </svg>
+                                    </div>
+                                    <div class="tt-col-description">
+                                        <h6 class="tt-title"><a href="#">
+                                                <svg class="tt-icon">
+                                                <use xlink:href="#icon-pinned"></use>
+                                                </svg>
+                                                Halloween Costume Contest 2018
+                                            </a></h6>
+                                        <div class="row align-items-center no-gutters">
+                                            <div class="col-11">
+                                                <ul class="tt-list-badge">
+                                                    <li class="show-mobile"><a href="#"><span class="tt-color01 tt-badge">politics</span></a></li>
+                                                    <li><a href="#"><span class="tt-badge">contests</span></a></li>
+                                                    <li><a href="#"><span class="tt-badge">authors</span></a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-1 ml-auto show-mobile">
+                                                <div class="tt-value">1h</div>
                                             </div>
                                         </div>
-
-                                        <div class="tt-col-value hide-mobile">${c.totalLike}</div>
-                                        <div class="tt-col-value hide-mobile">${c.createdAt}</div>
                                     </div>
-                                </c:forEach>
-
-
+                                    <div class="tt-col-category"><span class="tt-color01 tt-badge">politics</span></div>
+                                    <div class="tt-col-value hide-mobile">985</div>
+                                    <div class="tt-col-value tt-color-select  hide-mobile">502</div>
+                                    <div class="tt-col-value hide-mobile">15.1k</div>
+                                    <div class="tt-col-value hide-mobile">1h</div>
+                                </div>
+                                <div class="tt-item">
+                                    <div class="tt-col-avatar">
+                                        <svg class="tt-icon">
+                                        <use xlink:href="#icon-ava-d"></use>
+                                        </svg>
+                                    </div>
+                                    <div class="tt-col-description">
+                                        <h6 class="tt-title"><a href="#">
+                                                <svg class="tt-icon">
+                                                <use xlink:href="#icon-locked"></use>
+                                                </svg>
+                                                We’re removing Envato Credits from Market
+                                            </a></h6>
+                                        <div class="row align-items-center no-gutters hide-desktope">
+                                            <div class="col-11">
+                                                <ul class="tt-list-badge">
+                                                    <li class="show-mobile"><a href="#"><span class="tt-color02 tt-badge">video</span></a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-1 ml-auto show-mobile">
+                                                <div class="tt-value">1d</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tt-col-category"><span class="tt-color02 tt-badge">video</span></div>
+                                    <div class="tt-col-value hide-mobile">584</div>
+                                    <div class="tt-col-value tt-color-select  hide-mobile">35</div>
+                                    <div class="tt-col-value hide-mobile">1.3k</div>
+                                    <div class="tt-col-value hide-mobile">2h</div>
+                                </div>
+                                <div class="tt-item">
+                                    <div class="tt-col-avatar">
+                                        <svg class="tt-icon">
+                                        <use xlink:href="#icon-ava-d"></use>
+                                        </svg>
+                                    </div>
+                                    <div class="tt-col-description">
+                                        <h6 class="tt-title"><a href="#">
+                                                Web Hosting Packages for ThemeForest WordPress
+                                            </a></h6>
+                                        <div class="row align-items-center no-gutters">
+                                            <div class="col-11">
+                                                <ul class="tt-list-badge">
+                                                    <li class="show-mobile"><a href="#"><span class="tt-color03 tt-badge">exchange</span></a></li>
+                                                    <li><a href="#"><span class="tt-badge">themeforest</span></a></li>
+                                                    <li><a href="#"><span class="tt-badge">elements</span></a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-1 ml-auto show-mobile">
+                                                <div class="tt-value">2h</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tt-col-category"><span class="tt-color03 tt-badge">exchange</span></div>
+                                    <div class="tt-col-value hide-mobile">401</div>
+                                    <div class="tt-col-value tt-color-select  hide-mobile">975</div>
+                                    <div class="tt-col-value hide-mobile">12.6k</div>
+                                    <div class="tt-col-value hide-mobile">2h</div>
+                                </div>
+                                <div class="tt-item">
+                                    <div class="tt-col-avatar">
+                                        <svg class="tt-icon">
+                                        <use xlink:href="#icon-ava-d"></use>
+                                        </svg>
+                                    </div>
+                                    <div class="tt-col-description">
+                                        <h6 class="tt-title"><a href="#">
+                                                Review Queue Changes for VideoHive &amp; PhotoDune
+                                            </a></h6>
+                                        <div class="row align-items-center no-gutters">
+                                            <div class="col-11">
+                                                <ul class="tt-list-badge">
+                                                    <li class="show-mobile"><a href="#"><span class="tt-color04 tt-badge">pets</span></a></li>
+                                                    <li><a href="#"><span class="tt-badge">videohive</span></a></li>
+                                                    <li><a href="#"><span class="tt-badge">photodune</span></a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-1 ml-auto show-mobile">
+                                                <div class="tt-value">1d</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tt-col-category"><span class="tt-color04 tt-badge">pets</span></div>
+                                    <div class="tt-col-value hide-mobile">308</div>
+                                    <div class="tt-col-value tt-color-select  hide-mobile">660</div>
+                                    <div class="tt-col-value hide-mobile">8.3k</div>
+                                    <div class="tt-col-value hide-mobile">1d</div>
+                                </div>
+                                <div class="tt-item">
+                                    <div class="tt-col-avatar">
+                                        <svg class="tt-icon">
+                                        <use xlink:href="#icon-ava-d"></use>
+                                        </svg>
+                                    </div>
+                                    <div class="tt-col-description">
+                                        <h6 class="tt-title"><a href="#">
+                                                Does Envato act against the authors of Envato markets?
+                                            </a></h6>
+                                        <div class="row align-items-center no-gutters">
+                                            <div class="col-11">
+                                                <ul class="tt-list-badge">
+                                                    <li class="show-mobile"><a href="#"><span class="tt-color05 tt-badge">music</span></a></li>
+                                                    <li><a href="#"><span class="tt-badge">videohive</span></a></li>
+                                                    <li><a href="#"><span class="tt-badge">photodune</span></a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-1 ml-auto show-mobile">
+                                                <div class="tt-value">1d</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tt-col-category"><span class="tt-color05 tt-badge">music</span></div>
+                                    <div class="tt-col-value hide-mobile">358</div>
+                                    <div class="tt-col-value tt-color-select  hide-mobile">68</div>
+                                    <div class="tt-col-value hide-mobile">8.3k</div>
+                                    <div class="tt-col-value hide-mobile">1d</div>
+                                </div>
+                                <div class="tt-item">
+                                    <div class="tt-col-avatar">
+                                        <svg class="tt-icon">
+                                        <use xlink:href="#icon-ava-d"></use>
+                                        </svg>
+                                    </div>
+                                    <div class="tt-col-description">
+                                        <h6 class="tt-title"><a href="#">
+                                                <svg class="tt-icon">
+                                                <use xlink:href="#icon-locked"></use>
+                                                </svg>
+                                                We Want to Hear From You! What Would You Like?
+                                            </a></h6>
+                                        <div class="row align-items-center no-gutters hide-desktope">
+                                            <div class="col-11">
+                                                <ul class="tt-list-badge">
+                                                    <li class="show-mobile"><a href="#"><span class="tt-color06 tt-badge">movies</span></a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-1 ml-auto show-mobile">
+                                                <div class="tt-value">2d</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tt-col-category"><span class="tt-color06 tt-badge">movies</span></div>
+                                    <div class="tt-col-value hide-mobile">671</div>
+                                    <div class="tt-col-value tt-color-select  hide-mobile">29</div>
+                                    <div class="tt-col-value hide-mobile">1.3k</div>
+                                    <div class="tt-col-value hide-mobile">2d</div>
+                                </div>
+                                <div class="tt-item">
+                                    <div class="tt-col-avatar">
+                                        <svg class="tt-icon">
+                                        <use xlink:href="#icon-ava-d"></use>
+                                        </svg>
+                                    </div>
+                                    <div class="tt-col-description">
+                                        <h6 class="tt-title"><a href="#">
+                                                Seeking partner backend developer
+                                            </a></h6>
+                                        <div class="row align-items-center no-gutters">
+                                            <div class="col-11">
+                                                <ul class="tt-list-badge">
+                                                    <li class="show-mobile"><a href="#"><span class="tt-color15 tt-badge">nature</span></a></li>
+                                                    <li><a href="#"><span class="tt-badge">themeforest</span></a></li>
+                                                    <li><a href="#"><span class="tt-badge">elements</span></a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-1 ml-auto show-mobile">
+                                                <div class="tt-value">2d</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tt-col-category"><span class="tt-color15 tt-badge">nature</span></div>
+                                    <div class="tt-col-value hide-mobile">278</div>
+                                    <div class="tt-col-value tt-color-select  hide-mobile">27</div>
+                                    <div class="tt-col-value hide-mobile">1.4k</div>
+                                    <div class="tt-col-value hide-mobile">2d</div>
+                                </div>
+                                <div class="tt-item">
+                                    <div class="tt-col-avatar">
+                                        <svg class="tt-icon">
+                                        <use xlink:href="#icon-ava-d"></use>
+                                        </svg>
+                                    </div>
+                                    <div class="tt-col-description">
+                                        <h6 class="tt-title"><a href="#">
+                                                Seeking partner backend developer
+                                            </a></h6>
+                                        <div class="row align-items-center no-gutters">
+                                            <div class="col-11">
+                                                <ul class="tt-list-badge">
+                                                    <li class="show-mobile"><a href="#"><span class="tt-color07 tt-badge">video games</span></a></li>
+                                                    <li><a href="#"><span class="tt-badge">videohive</span></a></li>
+                                                    <li><a href="#"><span class="tt-badge">photodune</span></a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-1 ml-auto show-mobile">
+                                                <div class="tt-value">2d</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tt-col-category"><span class="tt-color07 tt-badge">video games</span></div>
+                                    <div class="tt-col-value hide-mobile">364</div>
+                                    <div class="tt-col-value tt-color-select  hide-mobile">36</div>
+                                    <div class="tt-col-value hide-mobile">982</div>
+                                    <div class="tt-col-value hide-mobile">2d</div>
+                                </div>
+                                <div class="tt-item">
+                                    <div class="tt-col-avatar">
+                                        <svg class="tt-icon">
+                                        <use xlink:href="#icon-ava-d"></use>
+                                        </svg>
+                                    </div>
+                                    <div class="tt-col-description">
+                                        <h6 class="tt-title"><a href="#">
+                                                <svg class="tt-icon">
+                                                <use xlink:href="#icon-verified"></use>
+                                                </svg>
+                                                Microsoft Word and Power Point
+                                            </a></h6>
+                                        <div class="row align-items-center no-gutters hide-desktope">
+                                            <div class="col-11">
+                                                <ul class="tt-list-badge">
+                                                    <li class="show-mobile"><a href="#"><span class="tt-color08 tt-badge">youtube</span></a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-1 ml-auto show-mobile">
+                                                <div class="tt-value">3d</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tt-col-category"><span class="tt-color08 tt-badge">youtube</span></div>
+                                    <div class="tt-col-value hide-mobile">698</div>
+                                    <div class="tt-col-value tt-color-select  hide-mobile">78</div>
+                                    <div class="tt-col-value hide-mobile">2.1k</div>
+                                    <div class="tt-col-value hide-mobile">3d</div>
+                                </div>
+                                <div class="tt-item">
+                                    <div class="tt-col-avatar">
+                                        <svg class="tt-icon">
+                                        <use xlink:href="#icon-ava-d"></use>
+                                        </svg>
+                                    </div>
+                                    <div class="tt-col-description">
+                                        <h6 class="tt-title"><a href="#">
+                                                First website template got rejected.
+                                            </a></h6>
+                                        <div class="row align-items-center no-gutters hide-desktope">
+                                            <div class="col-11">
+                                                <ul class="tt-list-badge">
+                                                    <li class="show-mobile"><a href="#"><span class="tt-color09 tt-badge">social</span></a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-1 ml-auto show-mobile">
+                                                <div class="tt-value">3d</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tt-col-category"><span class="tt-color09 tt-badge">social</span></div>
+                                    <div class="tt-col-value hide-mobile">12</div>
+                                    <div class="tt-col-value tt-color-select hide-mobile">3</div>
+                                    <div class="tt-col-value hide-mobile">268</div>
+                                    <div class="tt-col-value hide-mobile">3d</div>
+                                </div>
+                                <div class="tt-item">
+                                    <div class="tt-col-avatar">
+                                        <svg class="tt-icon">
+                                        <use xlink:href="#icon-ava-d"></use>
+                                        </svg>
+                                    </div>
+                                    <div class="tt-col-description">
+                                        <h6 class="tt-title"><a href="#">
+                                                <svg class="tt-icon">
+                                                <use xlink:href="#icon-pinned"></use>
+                                                </svg>
+                                                Proform or looking for contacting billing department
+                                            </a></h6>
+                                        <div class="row align-items-center no-gutters">
+                                            <div class="col-11">
+                                                <ul class="tt-list-badge">
+                                                    <li class="show-mobile"><a href="#"><span class="tt-color10 tt-badge">science</span></a></li>
+                                                    <li><a href="#"><span class="tt-badge">contests</span></a></li>
+                                                    <li><a href="#"><span class="tt-badge">authors</span></a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-1 ml-auto show-mobile">
+                                                <div class="tt-value">2d</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tt-col-category"><span class="tt-color10 tt-badge">science</span></div>
+                                    <div class="tt-col-value hide-mobile">364</div>
+                                    <div class="tt-col-value tt-color-select  hide-mobile">36</div>
+                                    <div class="tt-col-value hide-mobile">982</div>
+                                    <div class="tt-col-value hide-mobile">2d</div>
+                                </div>
+                                <div class="tt-item">
+                                    <div class="tt-col-avatar">
+                                        <svg class="tt-icon">
+                                        <use xlink:href="#icon-ava-d"></use>
+                                        </svg>
+                                    </div>
+                                    <div class="tt-col-description">
+                                        <h6 class="tt-title"><a href="#">
+                                                <svg class="tt-icon">
+                                                <use xlink:href="#icon-locked"></use>
+                                                </svg>
+                                                Refund for wrongly purchase HTML template
+                                            </a></h6>
+                                        <div class="row align-items-center no-gutters hide-desktope">
+                                            <div class="col-11">
+                                                <ul class="tt-list-badge">
+                                                    <li class="show-mobile"><a href="#"><span class="tt-color11 tt-badge">entertainment</span></a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-1 ml-auto show-mobile">
+                                                <div class="tt-value">3d</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tt-col-category"><span class="tt-color11 tt-badge">entertainment</span></div>
+                                    <div class="tt-col-value hide-mobile">657</div>
+                                    <div class="tt-col-value tt-color-select  hide-mobile">177</div>
+                                    <div class="tt-col-value hide-mobile">2.6k</div>
+                                    <div class="tt-col-value hide-mobile">3d</div>
+                                </div>
+                                <div class="tt-item">
+                                    <div class="tt-col-avatar">
+                                        <svg class="tt-icon">
+                                        <use xlink:href="#icon-ava-d"></use>
+                                        </svg>
+                                    </div>
+                                    <div class="tt-col-description">
+                                        <h6 class="tt-title"><a href="#">
+                                                Why all my affiliate balance is pending?
+                                            </a></h6>
+                                        <div class="row align-items-center no-gutters">
+                                            <div class="col-11">
+                                                <ul class="tt-list-badge">
+                                                    <li class="show-mobile"><a href="#"><span class="tt-color03 tt-badge">exchange</span></a></li>
+                                                    <li><a href="#"><span class="tt-badge">themeforest</span></a></li>
+                                                    <li><a href="#"><span class="tt-badge">elements</span></a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-1 ml-auto show-mobile">
+                                                <div class="tt-value">4d</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tt-col-category"><span class="tt-color03 tt-badge">exchange</span></div>
+                                    <div class="tt-col-value hide-mobile">37</div>
+                                    <div class="tt-col-value tt-color-select  hide-mobile">31</div>
+                                    <div class="tt-col-value hide-mobile">257</div>
+                                    <div class="tt-col-value hide-mobile">4d</div>
+                                </div>
+                                <div class="tt-item">
+                                    <div class="tt-col-avatar">
+                                        <svg class="tt-icon">
+                                        <use xlink:href="#icon-ava-d"></use>
+                                        </svg>
+                                    </div>
+                                    <div class="tt-col-description">
+                                        <h6 class="tt-title"><a href="#">
+                                                Google snippets wordpress plugin
+                                            </a></h6>
+                                        <div class="row align-items-center no-gutters">
+                                            <div class="col-11">
+                                                <ul class="tt-list-badge">
+                                                    <li class="show-mobile"><a href="#"><span class="tt-color04 tt-badge">pets</span></a></li>
+                                                    <li><a href="#"><span class="tt-badge">videohive</span></a></li>
+                                                    <li><a href="#"><span class="tt-badge">photodune</span></a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-1 ml-auto show-mobile">
+                                                <div class="tt-value">4d</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tt-col-category"><span class="tt-color04 tt-badge">pets</span></div>
+                                    <div class="tt-col-value hide-mobile">987</div>
+                                    <div class="tt-col-value tt-color-select  hide-mobile">271</div>
+                                    <div class="tt-col-value hide-mobile">3.8k</div>
+                                    <div class="tt-col-value hide-mobile">4d</div>
+                                </div>
+                                <div class="tt-item">
+                                    <div class="tt-col-avatar">
+                                        <svg class="tt-icon">
+                                        <use xlink:href="#icon-ava-d"></use>
+                                        </svg>
+                                    </div>
+                                    <div class="tt-col-description">
+                                        <h6 class="tt-title"><a href="#">
+                                                How to use Team Listing?
+                                            </a></h6>
+                                        <div class="row align-items-center no-gutters">
+                                            <div class="col-11">
+                                                <ul class="tt-list-badge">
+                                                    <li class="show-mobile"><a href="#"><span class="tt-color09 tt-badge">social</span></a></li>
+                                                    <li><a href="#"><span class="tt-badge">videohive</span></a></li>
+                                                    <li><a href="#"><span class="tt-badge">photodune</span></a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-1 ml-auto show-mobile">
+                                                <div class="tt-value">5d</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tt-col-category"><span class="tt-color09 tt-badge">social</span></div>
+                                    <div class="tt-col-value hide-mobile">324</div>
+                                    <div class="tt-col-value tt-color-select  hide-mobile">163</div>
+                                    <div class="tt-col-value hide-mobile">2.3k</div>
+                                    <div class="tt-col-value hide-mobile">5d</div>
+                                </div>
                                 <div class="tt-row-btn">
                                     <button type="button" class="btn-icon js-topiclist-showmore">
                                         <svg class="tt-icon">
@@ -1982,7 +2391,7 @@
                         id: subid,
                     },
                     success: function (data) {
-
+                       
                     },
                     error: function (xhr) {
                         //Do Something to handle error

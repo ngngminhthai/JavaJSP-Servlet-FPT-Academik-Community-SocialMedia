@@ -1,13 +1,26 @@
 function follow(elem, userid) {
+    var tagname = elem.innerText;
+    var arr = document.querySelectorAll("." + tagname);
+
     var icon = elem.querySelector("i");
     var maintagid = elem.innerText;
 
     if (icon.classList.contains("fa-plus")) {
-        icon.classList.remove("fa-plus");
-        icon.classList.add("fa-check");
+//        icon.classList.remove("fa-plus");
+//        icon.classList.add("fa-check");
+        arr.forEach((ele) => {
+            var icon2 = ele.querySelector("i");
+            icon2.classList.remove("fa-plus");
+            icon2.classList.add("fa-check");
+        })
     } else {
-        icon.classList.remove("fa-check");
-        icon.classList.add("fa-plus");
+        arr.forEach((ele) => {
+            var icon2 = ele.querySelector("i");
+            icon2.classList.remove("fa-check");
+            icon2.classList.add("fa-plus");
+        })
+//        icon.classList.remove("fa-check");
+//        icon.classList.add("fa-plus");
     }
 
     console.log(maintagid, userid);

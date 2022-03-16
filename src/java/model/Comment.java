@@ -23,6 +23,26 @@ public class Comment {
     int replyTo;
     int totalLike;
     boolean isLike; //determine the user already like the comment or not
+    String status;
+    int totalReplies;
+
+    public int getTotalReplies() {
+        return totalReplies;
+    }
+
+    public void setTotalReplies(int totalReplies) {
+        this.totalReplies = totalReplies;
+    }
+    
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+    
 
     public int getTotalLike() {
         return totalLike;

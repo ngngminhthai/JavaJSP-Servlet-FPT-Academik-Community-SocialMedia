@@ -140,6 +140,7 @@
             }
             img{
                 width: 100%;
+                height: 100%;
                 border-radius: 100%;
             }
         </style>
@@ -195,7 +196,9 @@
                             <div class="row align-items-center no-gutters">
                                 <div class="col-11">
                                     <ul class="tt-list-badge">
-                                        <li class="show-mobile"><a href="#"><span onclick="follow(this, ${sessionScope.userID})" class="tt-color<%=random.nextInt(21 - 1) + 1%> tt-badge main"><% if (elem.getMainTag() != null) {
+                                        <li class="show-mobile"><a href="#"><span onclick="follow(this, ${sessionScope.userID})" class="tt-color<%=random.nextInt(21 - 1) + 1%> tt-badge main <% if (elem.getMainTag() != null) {
+                                                out.print(elem.getMainTag().getTagid());
+                                            } %>"><% if (elem.getMainTag() != null) {
                                                 out.print(elem.getMainTag().getTagid());
                                             } %><i class="fa <% if (elem.getMainTag() != null && !elem.getMainTag().isIsLike()) {
                                                     out.print("fa-plus");
@@ -223,7 +226,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="tt-col-category"><span onclick="follow(this, ${sessionScope.userID})" class="tt-color<%=random.nextInt(21 - 1) + 1%> tt-badge main"><%if (elem.getMainTag() != null) {
+                        <div class="tt-col-category"><span onclick="follow(this, ${sessionScope.userID})" class="tt-color<%=random.nextInt(21 - 1) + 1%> tt-badge main <% if (elem.getMainTag() != null) {
+                                                out.print(elem.getMainTag().getTagid());
+                                            } %>"><%if (elem.getMainTag() != null) {
                                 out.print(elem.getMainTag().getTagid());
                             } %><i class="fa <% if (elem.getMainTag() != null && !elem.getMainTag().isIsLike()) {
                                     out.print("fa-plus");

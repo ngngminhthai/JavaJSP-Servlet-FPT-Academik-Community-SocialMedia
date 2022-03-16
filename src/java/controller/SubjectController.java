@@ -13,6 +13,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import model.Question;
 import model.Subject;
 
 /**
@@ -38,7 +39,7 @@ public class SubjectController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet SubjectController</title>");            
+            out.println("<title>Servlet SubjectController</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet SubjectController at " + request.getContextPath() + "</h1>");
@@ -76,7 +77,16 @@ public class SubjectController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+
+        String subid = request.getParameter("id");
+        int number = Integer.parseInt(request.getParameter("number"));
+        QuestionDBContext quesdb = new QuestionDBContext();
+        ArrayList<Question> ques = quesdb.loadMore(subid, number);
+        response.setContentType("text/html;charset=UTF-8");
+        String content = "";
+        PrintWriter out = response.getWriter();
+      
+
     }
 
     /**

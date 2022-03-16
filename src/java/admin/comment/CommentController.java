@@ -59,11 +59,11 @@ public class CommentController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        ArrayList<Comment> coms = new ArrayList<>();
-        CommentDBContext comdb = new CommentDBContext();
-        coms = comdb.getComment();
-        request.setAttribute("cl", coms);
-        request.getRequestDispatcher("../admin/comment/comment.jsp").forward(request, response);
+       CommentDBContext comdb = new CommentDBContext();
+       ArrayList<Comment> coms = comdb.getComment();
+       request.setAttribute("cl", coms);
+       request.getRequestDispatcher("../admin/comment/comment.jsp").forward(request, response);
+       
     }
 
     /**

@@ -34,7 +34,7 @@
             <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
             <!-- Navbar Search-->
             <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
-             
+
             </form>
             <!-- Navbar-->
             <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
@@ -115,7 +115,7 @@
                     </div>
                     <div class="sb-sidenav-footer">
                         <div class="small">Logged in as:</div>
-                         ${requestScope.username}
+                        ${requestScope.username}
                     </div>
                 </nav>
             </div>
@@ -144,10 +144,12 @@
                                     <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th>Username</th>
-                                            <th>Email</th>
-                                            <th>Cấp quyền</th>
-
+                                            <th>Question ID</th>
+                                            <th>Người đăng</th>
+                                            <th>Nội dung</th>
+                                            <th>Trạng thái</th>
+                                            <th>Thời gian</th>
+                                            
                                         </tr>
                                     </thead>
                                     <!--                                    <tfoot>
@@ -161,23 +163,32 @@
                                                                             </tr>
                                                                         </tfoot>-->
                                     <tbody>
-                                        <c:forEach items="${ul}" var = "u">
+                                        <c:forEach items="${cl}" var = "u">
                                             <tr>
-                                                <td>${u.userID}</td>
-                                                <td>${u.username}</td>
-                                                <td>${u.email}</td>
-                                                <td>${u.feature}</td>
+                                                <td>${u.commentID}</td>
+                                                <td>${u.questionID}</td>
+                                                <td>${u.getUser().username}</td>
+                                                <td>${u.content}</td>
+                                                <td>${u.status}</td>
+                                                <td>${u.createdAt}</td>
+
+
                                                 <td>
                                                     <form method="post" action="update">
-                                                        <input hidden="" name="id" value="${u.userID}">
-                                                        <input hidden="" name="username" value="${u.username}">
-                                                        <input hidden="" name="email" value="${u.email}">
-                                                        <input hidden="" name="img" value="${u.img}">
-                                                        <input hidden="" name="password" value="${u.password}">
+                                                        <input hidden="" name="comid" value="${u.commentID}">
+                                                        <input hidden="" name="quesid" value="${u.questionID}">
+                                                        <input hidden="" name="userid" value="${u.getUser().userID}">
+                                                        <input hidden="" name="content" value="${u.content}">
+                                                        <input hidden="" name="date" value="${u.createdAt}">
+
                                                         <button type="submit" style="width: 100%;" class="btn btn-primary">Sửa</button>
                                                     </form>
+
                                                 </td>
                                                 <td><a onclick="confirmDelete(${u.userID})" style="width: 100%;" class="btn btn-danger">Xóa</a></td>
+                                                <td><a style="width: 100%;" href="vote?id=${u.getUser().userID}&comid=${u.commentID}&status=${u.status}&quesid=${u.questionID}" class="btn btn-success">Bình chọn</a></td>
+
+                                                <td><a style="width: 100%;" href="flag?id=${u.getUser().userID}&comid=${u.commentID}&status=${u.status}&quesid=${u.questionID}" class="btn btn-warning"> Gắn cờ</a></td>
                                             </tr>
                                         </c:forEach>
 
