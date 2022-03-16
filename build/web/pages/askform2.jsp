@@ -13,6 +13,15 @@
         <link rel="shortcut icon" href="favicon/favicon.ico">
         <meta name="format-detection" content="telephone=no">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Merienda+One">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
         <link rel="stylesheet" href="style/style2.css">
         <style>
             @import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
@@ -538,7 +547,7 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="inputTopicTitle">Tag Chính</label>
+                                        <label for="inputTopicTitle">Môn học</label>
                                         <input class="form-control" type="text" list="datalist" onkeyup="ac(this.value)" name="maintag">
                                         <datalist id="datalist">
                                             <% for (Main_Tag elem : mains) {%>
@@ -558,7 +567,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-auto ml-md-auto">
-                                    <button type="submit" class="btn btn-secondary btn-width-lg">Đăng bài</button>
+                                    <button type="submit" class="btn btn-secondary btn-width-lg post">Đăng bài</button>
                                 </div>
                             </div>
                         </div>
@@ -993,6 +1002,19 @@
                                                 $scope.disabled = false;
                                             }
                                             ;
+
+                                            var body = document.querySelector("body");
+                                            body.innerHTML += `<div style="    position: absolute;
+    top: 600px;
+    right: 0px;" class="alert alert-primary alert-dismissible fade show" role="alert">
+    Không được để trống nội dung
+  <button style="border:none;" type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>`
+    var postBtn = document.querySelector(".post");
+    
+                                    
 
 
         </script>

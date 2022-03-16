@@ -86,6 +86,7 @@ public class UploadImage extends HttpServlet {
                 out.write(bytes, 0, read);
             }
 
+            response.sendRedirect("profile");
             writer.println("New file " + fileName + " created at " + path);
             LOGGER.log(Level.INFO, "File{0}being uploaded to {1}",
                     new Object[]{fileName, path});

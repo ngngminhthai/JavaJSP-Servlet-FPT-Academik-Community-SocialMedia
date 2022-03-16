@@ -1,6 +1,6 @@
 <%-- 
     Document   : newjsp
-    Created on : Feb 20, 2022, 10:15:20 AM
+    Created on : Mar 16, 2022, 1:10:09 PM
     Author     : Admin
 --%>
 
@@ -12,12 +12,7 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>1 World!</h1>
-        <h1>2</h1>
-        <h1>3 World!</h1>
-
-        <h1>4</h1>
-        <h1>5 World!</h1>
-        <h1>6</h1>
+        <a href="https://accounts.google.com/o/oauth2/auth?scope=email&redirect_uri=http://localhost:8080/FPTCommunity/GoogleLogin&response_type=code
+           &client_id=176793358103-1ia4akv81shj83akaruu36aamkmfk4jd.apps.googleusercontent.com&approval_prompt=force">Login Google</a>
     </body>
 </html>

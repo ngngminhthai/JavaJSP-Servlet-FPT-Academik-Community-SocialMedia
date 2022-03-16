@@ -78,6 +78,14 @@ public class LoginController extends HttpServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String remember = request.getParameter("Remember");
+        String message = "";
+
+        if (username == null || password == null) {
+            message += "Tài khoản và mật khẩu không được để trống+\n";
+            request.getSession().setAttribute("message", message);
+            response.sendRedirect("home");
+        }
+
         String userimg = "";
         HttpSession session = request.getSession();
 
@@ -85,7 +93,9 @@ public class LoginController extends HttpServlet {
         User user = accountDb.getUser(username, password);
 
         if (user == null) {
-            response.sendRedirect("login");
+            message += "Tài khoản hoặc mật khẩu không chính xác";
+            request.getSession().setAttribute("message", message);
+            response.sendRedirect("home");
         } else {
             if (remember != null) {
                 Cookie c_user = new Cookie("username", username);

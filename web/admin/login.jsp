@@ -7,68 +7,61 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>Login - SB Admin</title>
-        <link href="${pageContext.request.contextPath}/admin/css/styles.css" rel="stylesheet" />
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
+<html><head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+        <!-- MDB -->
+        <!-- Font Awesome -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&amp;display=swap" rel="stylesheet">
+        <!-- MDB -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.2/mdb.min.css" rel="stylesheet">
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.2/mdb.min.js"></script><style>INPUT:-webkit-autofill,SELECT:-webkit-autofill,TEXTAREA:-webkit-autofill{animation-name:onautofillstart}INPUT:not(:-webkit-autofill),SELECT:not(:-webkit-autofill),TEXTAREA:not(:-webkit-autofill){animation-name:onautofillcancel}@keyframes onautofillstart{}@keyframes onautofillcancel{}</style>
     </head>
-    <body class="bg-primary">
-        <div id="layoutAuthentication">
-            <div id="layoutAuthentication_content">
-                <main>
-                    <div class="container">
-                        <div class="row justify-content-center">
-                            <div class="col-lg-5">
-                                <div class="card shadow-lg border-0 rounded-lg mt-5">
-                                    <div class="card-header"><h3 class="text-center font-weight-light my-4">Admin Login</h3></div>
-                                    <div class="card-body">
-                                        <form action="login" method="post">
-                                            <div class="form-floating mb-3">
-                                                <input name="username" class="form-control" id="inputEmail" type="text" placeholder="name@example.com" />
-                                                <label for="inputEmail">username</label>
-                                            </div>
-                                            <div class="form-floating mb-3">
-                                                <input name="password" class="form-control" id="inputPassword" type="password" placeholder="Password" />
-                                                <label for="inputPassword">password</label>
-                                            </div>
-                                            <div class="form-check mb-3">
-                                                
-                                            </div>
-                                            <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
-                                                
-                                                <button class="btn btn-primary">Login</button>
-                                            </div>
-                                        </form>
+    <body>
+        <!--          
+                <form action="login" method="POST">
+                    user:<input type="text" name="username"><br>
+                    pass:<input type="text" name="password">
+                    <input type="submit" name="login">
+                </form>-->
+
+        <form action="registergoogle" method="POST">
+            <section class="vh-100" style="background-color: #508bfc;">
+                <div class="container py-5 h-100">
+                    <div class="row d-flex justify-content-center align-items-center h-100">
+                        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                            <div class="card shadow-2-strong" style="border-radius: 1rem;">
+                                <div class="card-body p-5 text-center">
+
+                                    <h3 class="mb-5">Tên người dùng</h3>
+
+                                    <div class="form-outline mb-4">
+                                        <input name="username" type="text" id="typeEmailX-2" class="form-control form-control-lg">
+                                        <label class="form-label" for="typeEmailX-2">Tên người dùng</label>
                                     </div>
-                                   
+
+                                    
+
+                                    <!-- Checkbox -->
+                                    
+
+                                    <button class="btn btn-primary btn-lg btn-block" type="submit" style="">Đăng nhập</button>
+
+                                    <hr class="my-4">
+
+                                    
+                                    
+
                                 </div>
                             </div>
                         </div>
                     </div>
-                </main>
-            </div>
-            <div id="layoutAuthentication_footer">
-                <footer class="py-4 bg-light mt-auto">
-                    <div class="container-fluid px-4">
-                        <div class="d-flex align-items-center justify-content-between small">
-                            <div class="text-muted">Copyright &copy; Your Website 2021</div>
-                            <div>
-                                <a href="#">Privacy Policy</a>
-                                &middot;
-                                <a href="#">Terms &amp; Conditions</a>
-                            </div>
-                        </div>
-                    </div>
-                </footer>
-            </div>
-        </div>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-        <script src="${pageContext.request.contextPath}/admin/js/scripts.js"></script>
-    </body>
-</html>
+                </div>
+            </section>
+        </form>
+
+    
+
+</body><div id="edge-translate-notifier-container" class="edge-translate-notifier-center"></div></html>

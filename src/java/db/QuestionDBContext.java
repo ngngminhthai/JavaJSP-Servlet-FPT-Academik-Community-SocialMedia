@@ -546,6 +546,30 @@ public class QuestionDBContext extends DBContext {
         }
         return ques;
     }
+    
+    
+        public ArrayList<Question> getQuesBySub2(String subid) {
+        ArrayList<Question> ques = new ArrayList<>();
+        TagDBContext tagDB = new TagDBContext();
+        ArrayList<Question_Tag> tags = new ArrayList<>();
+        try {
+            String sql = "SELECT TOP(5) q.totalViews,q.totalComment, lastActive,q.QuestionID,UserID,title,summary,createdAt,content,totalLike FROM dbo.Question AS q JOIN dbo.MainTag_Question AS mq ON mq.questionid = q.QuestionID WHERE mq.mtid LIKE ? ORDER BY q.createdAt";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, subid);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                tags = tagDB.getTagsByQuesID(rs.getInt("QuestionID"));
+                Question s = new Question(rs.getInt("QuestionID"), rs.getInt("UserID"), rs.getString("title"), rs.getString("summary"), rs.getString("createdAt"), rs.getString("content"), tags, rs.getInt("totalLike"));
+                s.setUser(findUser(rs.getInt("UserID")));
+                s.setTotalComment(rs.getInt("totalComment"));
+                s.setViews(rs.getInt("totalViews"));
+                ques.add(s);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(QuestionDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return ques;
+    }
 
     public void updateQues(String title, String content, int quesid, String maintag) {
         String sql2 = "update question set title = ?,  content = ? where questionid = ?";
@@ -590,7 +614,7 @@ public class QuestionDBContext extends DBContext {
         ArrayList<Question_Tag> tags = new ArrayList<>();
         try {
             String sql = "SELECT q.totalViews,q.totalComment, q.lastActive,q.QuestionID,UserID,title,summary,createdAt,content,totalLike FROM dbo.Question AS q JOIN dbo.MainTag_Question AS mq ON mq.questionid = q.QuestionID  WHERE mq.mtid LIKE ? ORDER BY q.createdAt OFFSET ? ROWS \n"
-                    + "FETCH FIRST 5 ROWS ONLY;";
+                    + "FETCH FIRST 5 ROWS ONLY";
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setString(1, subid);
             stm.setInt(2, number);

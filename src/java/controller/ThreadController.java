@@ -70,16 +70,19 @@ public class ThreadController extends HttpServlet {
             userID = (Integer) request.getSession().getAttribute("userID");
         }
 
+      
         Question clickedQuestion = quesDB.getQuestions2(questionID, userID);
         User user = quesDB.getUserByQuestionID(clickedQuestion.getQuestionID());
         ArrayList<Question_Tag> tagList = tagDB.getTagsByQuesID(clickedQuestion.getQuestionID());
         ArrayList<Comment> comLists = comDB.getCommentByQuestionID2(questionID, userID, sort);
         Main_Tag main = mainDB.getMainTagByQuesID(clickedQuestion.getQuestionID(), userID);
+        ArrayList<Question> same = quesDB.getQuesBySub2(clickedQuestion.getMainTag().getTagid());
 
         if (raw_sort == null) {
             request.setAttribute("sort", "new");
         }
         else   request.setAttribute("sort", raw_sort);
+        request.setAttribute("same", same);
         request.setAttribute(
                 "comlist", comLists);
         request.setAttribute(

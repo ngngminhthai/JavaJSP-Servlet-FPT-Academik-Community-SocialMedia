@@ -45,7 +45,7 @@ public class ConversationDBContext extends DBContext {
                 u.setOnline(rs.getBoolean("onlineStatus"));
                 ArrayList<Message> messages = getMessages(rs.getInt("c_id"), 0);
                 String name = rs.getString("username");
-                int userid = rs.getInt("user_receive");
+                int userid = rs.getInt("usertwo");
                 int cid = rs.getInt("c_id");
                 Conversation conversation = new Conversation(name, userid, messages, cid);
                 conversation.setUser(u);
@@ -56,6 +56,13 @@ public class ConversationDBContext extends DBContext {
             Logger.getLogger(ConversationDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
         return conversations;
+    }
+    public static void main(String[] args) {
+        ConversationDBContext c = new ConversationDBContext();
+        ArrayList<Conversation> cl = c.getConversation(1);
+        for (Conversation conversation : cl) {
+            System.out.println(conversation.getMessages());
+        }
     }
 
     public ArrayList<Message> getMessages(int cid, int currentNumberItems) {
@@ -168,11 +175,11 @@ public class ConversationDBContext extends DBContext {
         }
     }
 
-    public static void main(String[] args) {
-        ConversationDBContext c = new ConversationDBContext();
-        ArrayList<Conversation> cc = c.getConversation(2);
-        for (Conversation conversation : cc) {
-            System.out.println(conversation);
-        }
-    }
+//    public static void main(String[] args) {
+//        ConversationDBContext c = new ConversationDBContext();
+//        ArrayList<Conversation> cc = c.getConversation(2);
+//        for (Conversation conversation : cc) {
+//            System.out.println(conversation);
+//        }
+//    }
 }

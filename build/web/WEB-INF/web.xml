@@ -196,6 +196,22 @@
         <servlet-name>CommentFilter</servlet-name>
         <servlet-class>controller.CommentController.CommentFilter</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>RegisterGoogle</servlet-name>
+        <servlet-class>auth.RegisterGoogle</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>LoginGoogleHandler</servlet-name>
+        <servlet-class>LoginGoogleHandler</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GoogleLogin</servlet-name>
+        <servlet-class>GoogleLogin</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>LoadMoreQuestion</servlet-name>
+        <servlet-class>controller.QuestionController.LoadMoreQuestion</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>home</servlet-name>
         <url-pattern>/home</url-pattern>
@@ -371,6 +387,22 @@
     <servlet-mapping>
         <servlet-name>CommentFilter</servlet-name>
         <url-pattern>/sortcomment</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RegisterGoogle</servlet-name>
+        <url-pattern>/registergoogle</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoginGoogleHandler</servlet-name>
+        <url-pattern>/LoginGoogleHandler</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GoogleLogin</servlet-name>
+        <url-pattern>/GoogleLogin</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoadMoreQuestion</servlet-name>
+        <url-pattern>/loadques</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

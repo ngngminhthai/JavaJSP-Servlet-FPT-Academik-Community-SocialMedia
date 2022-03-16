@@ -76,15 +76,10 @@ public class UserDBContext extends DBContext {
         return "";
     }
 
-    public static void main(String[] args) {
-        UserDBContext u = new UserDBContext();
-//        ArrayList<User> ul = u.getUser();
-//        for (User user : ul) {
-//            System.out.println(user.getUsername());
-//        }
-        u.updateview("mo");
-      
-    }
+//    public static void main(String[] args) {
+//        UserDBContext u = new UserDBContext();
+//        System.out.println(u.UserByEmail("trangqlhs163158@fpt.edu.vn").getUsername());
+//    }
     public void updateview(String today) {
         try {
             String sql = "update views set " + today + " = " + today + " + 1";
@@ -179,6 +174,7 @@ public class UserDBContext extends DBContext {
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {
                 User u = new User();
+                u.setUserID(rs.getInt("UserID"));
                 u.setFirstName(rs.getString("firstName"));
                 u.setLastName(rs.getString("lastName"));
                 u.setMiddleName(rs.getString("middleName"));
@@ -304,12 +300,101 @@ public class UserDBContext extends DBContext {
             stm.setString(1, username);
             stm.setString(2, password);
             stm.setString(3, email);
-                    
+
             stm.executeUpdate();
 
         } catch (SQLException ex) {
             Logger.getLogger(UserDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public boolean checkEmailExist(String email) {
+        try {
+            String sql = "  SELECT count(*) as total FROM dbo.[User] WHERE email LIKE ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, email);
+
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                if (rs.getInt("total") == 0) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return true;
+    }
+
+    public User UserByEmail(String email) {
+        try {
+            String sql = "SELECT UserID,firstName,middleName,lastName,email,img,username FROM dbo.[User] where email like ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, email);
+
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                User u = new User();
+                u.setUserID(rs.getInt("UserID"));
+                u.setFirstName(rs.getString("firstName"));
+                u.setLastName(rs.getString("lastName"));
+                u.setMiddleName(rs.getString("middleName"));
+                u.setUsername(rs.getString("username"));
+                u.setEmail(rs.getString("email"));
+                u.setImg(rs.getString("img"));
+                return u;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public User createAccountWithGoogle(String username, String email) {
+        try {
+            int userid = -1;
+            connection.setAutoCommit(false);
+            String sql_insert_user = "INSERT INTO dbo.[User](email, registeredAt, username)\n"
+                    + "VALUES(?,GETDATE(),?)";
+
+            PreparedStatement stm_insert_user = connection.prepareStatement(sql_insert_user);
+            stm_insert_user.setString(1, email);
+            stm_insert_user.setString(2, username);
+
+            stm_insert_user.executeUpdate();
+
+            String sql_get_id = "select @@IDENTITY as userID";
+            PreparedStatement stm_get_id = connection.prepareStatement(sql_get_id);
+
+            ResultSet rs = stm_get_id.executeQuery();
+            if (rs.next()) {
+                userid = rs.getInt("userID");
+            }
+
+            String sql = "INSERT INTO dbo.User_Group(groupID, userID)\n"
+                    + "VALUES(3, \n"
+                    + "?   \n"
+                    + "    )";
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, userid);
+
+            stm.executeUpdate();
+            connection.commit();
+            connection.setAutoCommit(true);
+            return getUserInfo(userid);
+
+        } catch (SQLException ex) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(UserDBContext.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            Logger.getLogger(UserDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
 }

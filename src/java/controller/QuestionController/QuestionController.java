@@ -5,7 +5,7 @@
  */
 package controller.QuestionController;
 
-import controller.BaseAuthController;
+import auth.BaseAuthController;
 import db.MainTagDBContext;
 import db.QuestionDBContext;
 import db.TagDBContext;

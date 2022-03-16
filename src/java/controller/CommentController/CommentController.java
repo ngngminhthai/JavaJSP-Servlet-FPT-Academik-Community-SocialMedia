@@ -5,7 +5,7 @@
  */
 package controller.CommentController;
 
-import controller.BaseAuthController;
+import auth.BaseAuthController;
 import db.CommentDBContext;
 import db.NotificationDBContext;
 import java.io.IOException;

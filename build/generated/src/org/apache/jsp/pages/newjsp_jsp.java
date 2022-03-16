@@ -51,13 +51,8 @@ public final class newjsp_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("        <title>JSP Page</title>\n");
       out.write("    </head>\n");
       out.write("    <body>\n");
-      out.write("        <h1>1 World!</h1>\n");
-      out.write("        <h1>2</h1>\n");
-      out.write("        <h1>3 World!</h1>\n");
-      out.write("\n");
-      out.write("        <h1>4</h1>\n");
-      out.write("        <h1>5 World!</h1>\n");
-      out.write("        <h1>6</h1>\n");
+      out.write("        <a href=\"https://accounts.google.com/o/oauth2/auth?scope=email&redirect_uri=http://localhost:8080/FPTCommunity/GoogleLogin&response_type=code\n");
+      out.write("           &client_id=176793358103-1ia4akv81shj83akaruu36aamkmfk4jd.apps.googleusercontent.com&approval_prompt=force\">Login Google</a>\n");
       out.write("    </body>\n");
       out.write("</html>\n");
     } catch (Throwable t) {

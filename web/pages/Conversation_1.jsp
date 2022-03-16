@@ -290,6 +290,11 @@
                             max-width: 1600px !important;
                             margin-top: 3rem;
                         }*/
+            div.chatbox img{
+                height: 50px !important;
+                width: 50px !important;
+               
+            }
         </style>
         <%@include file="../components/Bootstrap.jsp" %>
 
@@ -300,7 +305,7 @@
         <%@include file="../assets/header3.jsp" %>
         <% ArrayList<Conversation> cons = (ArrayList<Conversation>) request.getAttribute("conversations");%>
 
-        <div class="container" style="margin-top: 95px;
+        <div class="container chatbox" style="margin-top: 95px;
              width: 100%;">
             <div class="row clearfix">
                 <div class="col-lg-12">

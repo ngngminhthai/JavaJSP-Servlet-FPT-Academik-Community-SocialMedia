@@ -187,7 +187,8 @@
                             <use  class="useavatar" xlink:href="#icon-ava-<%= elem.getUser().getUsername().charAt(0)%>"></use>
                             </svg>
 
-                            <%}}%>
+                            <%}
+                                }%>
                         </div>
                         <div class="tt-col-description">
                             <h6 class="tt-title"><a href="thread?questionid=<%=elem.getQuestionID()%>">
@@ -199,12 +200,12 @@
                                         <li class="show-mobile"><a href="#"><span onclick="follow(this, ${sessionScope.userID})" class="tt-color<%=random.nextInt(21 - 1) + 1%> tt-badge main <% if (elem.getMainTag() != null) {
                                                 out.print(elem.getMainTag().getTagid());
                                             } %>"><% if (elem.getMainTag() != null) {
-                                                out.print(elem.getMainTag().getTagid());
-                                            } %><i class="fa <% if (elem.getMainTag() != null && !elem.getMainTag().isIsLike()) {
-                                                    out.print("fa-plus");
-                                                } else {
-                                                    out.print("fa-check");
-                                                } %>" aria-hidden="true"></i></span></a></li>
+                                                    out.print(elem.getMainTag().getTagid());
+                                                } %><i class="fa <% if (elem.getMainTag() != null && !elem.getMainTag().isIsLike()) {
+                                                        out.print("fa-plus");
+                                                    } else {
+                                                        out.print("fa-check");
+                                                    } %>" aria-hidden="true"></i></span></a></li>
                                                     <% for (int j = 0; j < elem.getTags().size(); j++) {
                                                     %>
                                         <li><a href="#"><span class="tt-badge"><% if (elem.getTags().get(j) != null) {
@@ -227,14 +228,14 @@
                             </div>
                         </div>
                         <div class="tt-col-category"><span onclick="follow(this, ${sessionScope.userID})" class="tt-color<%=random.nextInt(21 - 1) + 1%> tt-badge main <% if (elem.getMainTag() != null) {
-                                                out.print(elem.getMainTag().getTagid());
-                                            } %>"><%if (elem.getMainTag() != null) {
                                 out.print(elem.getMainTag().getTagid());
-                            } %><i class="fa <% if (elem.getMainTag() != null && !elem.getMainTag().isIsLike()) {
-                                    out.print("fa-plus");
-                                } else {
-                                    out.print("fa-check");
-                                }%>" aria-hidden="true" style="display: block; margin-left: 3px;"></i></span></div>
+                            } %>"><%if (elem.getMainTag() != null) {
+                                    out.print(elem.getMainTag().getTagid());
+                                } %><i class="fa <% if (elem.getMainTag() != null && !elem.getMainTag().isIsLike()) {
+                                        out.print("fa-plus");
+                                    } else {
+                                        out.print("fa-check");
+                                    }%>" aria-hidden="true" style="display: block; margin-left: 3px;"></i></span></div>
                         <div class="tt-col-value  hide-mobile"><%= elem.getTotalLike()%></div>
                         <div class="tt-col-value tt-color-select  hide-mobile"><%= elem.getTotalComment()%></div>
                         <div class="tt-col-value  hide-mobile"><%= elem.getViews()%></div>
@@ -303,7 +304,7 @@
                             <button type="button" class="btn btn-primary">Đăng nhập</button>
                             <button type="button" class="btn btn-secondary">Đăng kí</button>
                             <button type="button" class="btn-icon">
-                                <svg class="tt-icon">
+                                <svg onclick="remove()" class="tt-icon">
                                 <use xlink:href="#icon-cancel"></use>
                                 </svg>
                             </button>
@@ -315,19 +316,20 @@
                     %>
                     <div class="tt-item">
                         <div class="tt-col-avatar u<%= elem.getUserID()%> <%if (elem.getUser() != null) {
-                                 out.print(elem.getUser().getUsername());
-                             }%>" onclick="displayProfile(this)">
+                                out.print(elem.getUser().getUsername());
+                            }%>" onclick="displayProfile(this)">
                             <%if (elem.getUser() != null) { %>
                             <% if (elem.getUser().getImg() != null) {%>
                             <div class="tt-icon">
                                 <img class="useavatar" src="${pageContext.request.contextPath}/img/<%=elem.getUser().getImg()%>">
                             </div>
-                            <%} else{%>
+                            <%} else {%>
                             <svg class="tt-icon"> 
                             <use  class="useavatar" xlink:href="#icon-ava-<%= elem.getUser().getUsername().charAt(0)%>"></use>
                             </svg>
 
-                            <%}}%>
+                            <%}
+                                }%>
                         </div>
                         <div class="tt-col-description">
                             <h6 class="tt-title"><a href="thread?questionid=<%=elem.getQuestionID()%>">
@@ -644,7 +646,39 @@
             </div>
         </div>
         <script>
+            var popUp = document.querySelector(".tt-item-popup");
+            function remove(){
+                popUp.remove();
+            }
+            
+            var session = '${sessionScope.userID}'
+            if (session == null || session == "") {
+                var loginbtn = document.querySelector("div.tt-col-btn .btn-primary");
+                var signinbtn = document.querySelector("div.tt-col-btn .btn-secondary");
 
+                var loginBox = document.querySelector(".dropdown-toggle");
+                var parentNode = loginBox.parentNode;
+                var Box = document.querySelector(".action-form");
+
+                console.log(loginbtn);
+                console.log(signinbtn);
+                console.log(loginBox);
+                console.log(parentNode);
+                console.log(Box);
+                
+
+                loginbtn.onclick = function () {
+                    parentNode.classList.toggle("show");
+                    loginBox.classList.toggle("true");
+                    Box.classList.toggle("show");
+                }
+
+                signinbtn.onclick = function () {
+                    parentNode.classList.toggle("show");
+                    loginBox.classList.toggle("true");
+                    Box.classList.toggle("show");
+                }
+            }
 
             var field = document.getElementById("<%= request.getAttribute("order")%>");
             var passField;
@@ -682,8 +716,8 @@
                 var parent = elem.parentNode;
                 var profilecard = parent.querySelector("div.col-lg-4");
                 var username = profilecard.querySelector('h4');
-                var img = 
-                username.innerHTML = elem.classList[2];
+                var img =
+                        username.innerHTML = elem.classList[2];
                 profilecard.style.display = 'block';
             }
 
