@@ -212,6 +212,10 @@
         <servlet-name>LoadMoreQuestion</servlet-name>
         <servlet-class>controller.QuestionController.LoadMoreQuestion</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>FindComment</servlet-name>
+        <servlet-class>controller.CommentController.FindComment</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>home</servlet-name>
         <url-pattern>/home</url-pattern>
@@ -403,6 +407,10 @@
     <servlet-mapping>
         <servlet-name>LoadMoreQuestion</servlet-name>
         <url-pattern>/loadques</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FindComment</servlet-name>
+        <url-pattern>/find</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

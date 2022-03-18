@@ -40,6 +40,14 @@ public class ThreadController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        int pagesize = 10;
+        String page = request.getParameter("page");
+        if (page == null || page.trim().length() == 0) {
+            page = "1";
+        }
+
+        int pageindex = Integer.parseInt(page);
+
         int questionID = Integer.parseInt(request.getParameter("questionid"));
         String raw_sort = request.getParameter("sort");
 
@@ -50,7 +58,7 @@ public class ThreadController extends HttpServlet {
             if (raw_sort.equals("new")) {
                 sort = "createdAt";
             } else if (raw_sort.equals("like")) {
-                sort = "q1.TotalLike";
+                sort = "q.TotalLike";
             } else if (raw_sort.equals("reply")) {
                 sort = "totalReplies";
             }
@@ -69,19 +77,24 @@ public class ThreadController extends HttpServlet {
                 != null) {
             userID = (Integer) request.getSession().getAttribute("userID");
         }
-
-      
+//,pageindex,pagesize
         Question clickedQuestion = quesDB.getQuestions2(questionID, userID);
         User user = quesDB.getUserByQuestionID(clickedQuestion.getQuestionID());
         ArrayList<Question_Tag> tagList = tagDB.getTagsByQuesID(clickedQuestion.getQuestionID());
-        ArrayList<Comment> comLists = comDB.getCommentByQuestionID2(questionID, userID, sort);
+        ArrayList<Comment> comLists = comDB.getCommentByQuestionID2(questionID, userID, sort, pageindex, pagesize);
         Main_Tag main = mainDB.getMainTagByQuesID(clickedQuestion.getQuestionID(), userID);
         ArrayList<Question> same = quesDB.getQuesBySub2(clickedQuestion.getMainTag().getTagid());
 
         if (raw_sort == null) {
             request.setAttribute("sort", "new");
+        } else {
+            request.setAttribute("sort", raw_sort);
         }
-        else   request.setAttribute("sort", raw_sort);
+        int count = comDB.count();
+        int totalpage = (count % pagesize == 0) ? (count / pagesize) : (count / pagesize) + 1;
+        request.setAttribute("totalpage", totalpage);
+        request.setAttribute("pageindex", pageindex);
+        
         request.setAttribute("same", same);
         request.setAttribute(
                 "comlist", comLists);

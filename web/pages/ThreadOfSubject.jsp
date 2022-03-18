@@ -114,8 +114,9 @@
             .tt-col-value.hide-mobile a{
                 color: black;
             }
-            img{
+            .thread-container img{
                 width: 100%;
+                height: 100%;
                 border-radius: 100%;
             }
         </style>
@@ -130,7 +131,7 @@
         %>
         <%@include file="../assets/header3.jsp" %>
 
-        <main id="tt-pageContent" class="tt-offset-small">
+        <main id="tt-pageContent" class="tt-offset-small thread-container">
             <div class="tt-wrapper-section">
                 <div class="container">
                     <div class="tt-user-header">
@@ -303,7 +304,7 @@
                                             <!--                                            <svg class="tt-icon">
                                                                                         <use xlink:href="#icon-ava-d"></use>
                                                                                         </svg>-->
-                                            <img src="${pageContext.request.contextPath}/img/${c.getUser().img}">
+                                            <img style="width: 40px; height: 40px;" src="${pageContext.request.contextPath}/img/${c.getUser().img}">
                                         </div>
                                         <div class="tt-col-description">
                                             <h6 class="tt-title"><a href="#">

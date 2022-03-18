@@ -30,6 +30,9 @@
 
         <link rel="mask-icon" type="image/x-icon" href="assets/logo.png" color="#111" />
     </head>
+    <style>
+        
+    </style>
     <body>
         <% Random random = new Random();
             int i;

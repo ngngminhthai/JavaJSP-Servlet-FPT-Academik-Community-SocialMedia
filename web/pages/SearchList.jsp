@@ -190,20 +190,21 @@
                                         elem = questionList.get(i);
                                 %>
                                 <div class="tt-item">
-                                    <div class="tt-col-avatar u<%= elem.getUserID()%> <%if (elem.getUser() != null) {
-                                                out.print(elem.getUser().getUsername());
-                                            }%>" onclick="displayProfile(this)">
+                                     <div class="tt-col-avatar u<%= elem.getUserID()%> <%if (elem.getUser() != null) {
+                                            out.print(elem.getUser().getUsername());
+                                        }%>" onclick="displayProfile(this)">
                                         <%if (elem.getUser() != null) { %>
                                         <% if (elem.getUser().getImg() != null) {%>
                                         <div class="tt-icon">
-                                            <img class="useavatar" src="${pageContext.request.contextPath}/img/<%=elem.getUser().getImg()%>">
+                                            <img style="height: 50px; width: 50px; border-radius: 100%;" class="useavatar" src="${pageContext.request.contextPath}/img/<%=elem.getUser().getImg()%>">
                                         </div>
-                                        <%}%>
+                                        <%} else {%>
                                         <svg class="tt-icon"> 
                                         <use  class="useavatar" xlink:href="#icon-ava-<%= elem.getUser().getUsername().charAt(0)%>"></use>
                                         </svg>
 
-                                        <%}%>
+                                        <%}
+                                            }%>
                                     </div>
                                     <div class="tt-col-description">
                                         <h6 class="tt-title"><a href="thread?questionid=<%=elem.getQuestionID()%>">

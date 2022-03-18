@@ -17,7 +17,7 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
-import org.jboss.weld.context.ApplicationContext;
+
 
 /**
  * Web application lifecycle listener.

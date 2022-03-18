@@ -34,6 +34,8 @@
         <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+        <script src="js/commentpaging.js"></script>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/style/Paginition.css">
         <link rel="stylesheet" href="style/style2.css">
 
 
@@ -472,6 +474,10 @@
                 /*                display: inline !important;*/
                 font-size: 13px !important;
             }
+            .topic-inner-description:hover{
+                text-decoration: underline;
+                cursor: pointer;
+            }
         </style>
     </head>
     <body>
@@ -669,7 +675,7 @@
                         } else if (good == bad && elem.getStatus().equals("Bị gắn cờ")) {
                             out.print("tt-wrapper-danger");
                         }%>">
-                        <div class="tt-single-topic">
+                        <div class="tt-single-topic comment<%= elem.getCommentID()%>">
                             <div class="tt-item-header pt-noborder">
                                 <div class="tt-item-info info-top">
                                     <div class="tt-avatar-icon">
@@ -698,7 +704,7 @@
                                             <div class="topic-inner-title"><a href="#"> <%= elem.getReplyToComment().getUser().getUsername()%></a></div>
                                         </div>
 
-                                        <div class="topic-inner-description">
+                                        <div class="topic-inner-description <%= elem.getReplyToComment().getCommentID()%>" onclick="forward(this)">
                                             <%= elem.getReplyToComment().getContent()%>
                                         </div>
                                     </div>
@@ -771,6 +777,27 @@
                             </div>
                         </div>
                     </div></c:if>
+                    <script>
+                        window.console = window.console || function (t) {};
+                    </script>
+
+
+
+                    <script>
+                        if (document.location.search.match(/type=embed/gi)) {
+                            window.parent.postMessage("resize", "*");
+                        }
+                    </script>
+                    <div id="app" style="display: flex;">  
+                        <li class="page__btn"><span class="material-icons">chevron_double_left</span></li>
+
+                        <!--                                 <li class="page__btn"><span class="material-icons">chevron_left</span></li>-->
+                        <ul style="    transform: translate(91px, -24px);" class="page">
+
+                        </ul>  
+                        <!--                                 <li class="page__btn"><span class="material-icons">chevron_right</span></li>-->
+                    </div>
+
                 <c:if test="${sessionScope.userID != null}">    <div class="tt-wrapper-inner">
                         <div class="pt-editor form-default">
                             <h6 class="pt-title first-comment">Gửi bình luận của bạn</h6>
@@ -1118,6 +1145,25 @@
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
             <script>
+                            if ('${sessionScope.cid}' == null || '${sessionScope.cid}' == "") {
+                                   
+                            } else {
+                                var comment = document.querySelector(".comment" + '${cid}');
+                                comment.scrollIntoView();
+                                window.scrollBy(0, -200);
+                                <c:remove var="cid" scope="session" />
+                            }
+                            paggerCom("page", ${pageindex},${totalpage}, 3, <%= clickedQuestion.getQuestionID()%>);
+                            function forward(elem) {
+                                var elemclass = elem.classList[1];
+                                var comment = document.querySelector(".comment" + elemclass);
+                                if (comment != null) {
+                                    comment.scrollIntoView();
+                                    window.scrollBy(0, -200);
+                                } else {
+                                    window.location.href = "find?questionid=" +<%= clickedQuestion.getQuestionID()%> + "&page=" +${pageindex} + "&cid=" + elemclass + ""
+                                }
+                            }
                             function loadData() {
                                 //loadques
                                 var subid = '${clickedQues.mainTag.tagid}'

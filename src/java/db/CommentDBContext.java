@@ -81,19 +81,49 @@ public class CommentDBContext extends DBContext {
         return comments;
     }
 
-    public ArrayList<Comment> getCommentByQuestionID2(int questionId, int userid, String type) {
+//    public static void main(String[] args) {
+//        CommentDBContext c = new CommentDBContext();
+//        ArrayList<Comment> cl = c.getCommentByQuestionID2(17, -1, "createdAt", 1, 10);
+//        for (Comment comment : cl) {
+//            System.out.println(comment.getCommentID());
+//        }
+//    }
+
+    public ArrayList<Comment> getCommentByQuestionID2(int questionId, int userid, String type, int pageindex, int pagesize) {
 
         try {
-            String sql = "(SELECT q1.CommentID,q1.QuestionID,q1.content,q1.createdAt,u.UserID,u.username,q2.CommentID AS commentid2,q2.QuestionID AS questionid2,q2.content AS content2,q2.createdAt AS createdat2, u2.UserID AS userid2, u2.username AS username2, 1 AS rs,q1.isBest,q1.totalReplies,q1.TotalLike,u.img,u2.img AS img2 FROM dbo.Question_comment AS q1 FULL OUTER JOIN dbo.[User] AS u ON u.UserID = q1.UserID FULL OUTER JOIN dbo.Question_comment AS q2 ON q2.CommentID = q1.replyTo FULL OUTER JOIN dbo.[User] AS u2 ON u2.UserID = q2.UserID WHERE q1.QuestionID = ? and q1.isBest is NULL)\n"
-                    + "UNION all\n"
-                    + "(SELECT q1.CommentID,q1.QuestionID,q1.content,q1.createdAt,u.UserID,u.username,q2.CommentID AS commentid2,q2.QuestionID AS questionid2,q2.content AS content2,q2.createdAt AS createdat2, u2.UserID AS userid2, u2.username AS username2,2 AS rs ,q1.isBest,q1.totalReplies,q1.TotalLike,u.img,u2.img AS img2 FROM dbo.Question_comment AS q1 FULL OUTER JOIN dbo.[User] AS u ON u.UserID = q1.UserID FULL OUTER JOIN dbo.Question_comment AS q2 ON q2.CommentID = q1.replyTo FULL OUTER JOIN dbo.[User] AS u2 ON u2.UserID = q2.UserID WHERE q1.QuestionID = ? and q1.isBest = 1)\n"
-                    + "UNION all\n"
-                    + "(SELECT q1.CommentID,q1.QuestionID,q1.content,q1.createdAt,u.UserID,u.username,q2.CommentID AS commentid2,q2.QuestionID AS questionid2,q2.content AS content2,q2.createdAt AS createdat2, u2.UserID AS userid2, u2.username AS username2,0 AS rs,q1.isBest,q1.totalReplies,q1.TotalLike,u.img,u2.img AS img2 FROM dbo.Question_comment AS q1 FULL OUTER JOIN dbo.[User] AS u ON u.UserID = q1.UserID FULL OUTER JOIN dbo.Question_comment AS q2 ON q2.CommentID = q1.replyTo FULL OUTER JOIN dbo.[User] AS u2 ON u2.UserID = q2.UserID WHERE q1.QuestionID = ? and q1.isBest = 0)\n"
-                    + "ORDER BY rs DESC," + type + " DESC";
+            String sql = "SELECT *\n"
+                    + "FROM(SELECT *, ROW_NUMBER() OVER (ORDER BY q.rs DESC," + type
+                    + " DESC) AS row_index\n"
+                    + "     FROM(SELECT q1.CommentID, q1.QuestionID, q1.content, q1.createdAt, u.UserID, u.username, q2.CommentID AS commentid2, q2.QuestionID AS questionid2, q2.content AS content2, q2.createdAt AS createdat2, u2.UserID AS userid2, u2.username AS username2, 1 AS rs, q1.isBest, q1.totalReplies, q1.TotalLike, u.img, u2.img AS img2\n"
+                    + "          FROM dbo.Question_comment AS q1\n"
+                    + "               FULL OUTER JOIN dbo.[User] AS u ON u.UserID=q1.UserID\n"
+                    + "               FULL OUTER JOIN dbo.Question_comment AS q2 ON q2.CommentID=q1.replyTo\n"
+                    + "               FULL OUTER JOIN dbo.[User] AS u2 ON u2.UserID=q2.UserID\n"
+                    + "          WHERE q1.QuestionID=? AND q1.isBest IS NULL\n"
+                    + "          UNION ALL\n"
+                    + "          SELECT q1.CommentID, q1.QuestionID, q1.content, q1.createdAt, u.UserID, u.username, q2.CommentID AS commentid2, q2.QuestionID AS questionid2, q2.content AS content2, q2.createdAt AS createdat2, u2.UserID AS userid2, u2.username AS username2, 2 AS rs, q1.isBest, q1.totalReplies, q1.TotalLike, u.img, u2.img AS img2\n"
+                    + "          FROM dbo.Question_comment AS q1\n"
+                    + "               FULL OUTER JOIN dbo.[User] AS u ON u.UserID=q1.UserID\n"
+                    + "               FULL OUTER JOIN dbo.Question_comment AS q2 ON q2.CommentID=q1.replyTo\n"
+                    + "               FULL OUTER JOIN dbo.[User] AS u2 ON u2.UserID=q2.UserID\n"
+                    + "          WHERE q1.QuestionID=? AND q1.isBest=1\n"
+                    + "          UNION ALL\n"
+                    + "          SELECT q1.CommentID, q1.QuestionID, q1.content, q1.createdAt, u.UserID, u.username, q2.CommentID AS commentid2, q2.QuestionID AS questionid2, q2.content AS content2, q2.createdAt AS createdat2, u2.UserID AS userid2, u2.username AS username2, 0 AS rs, q1.isBest, q1.totalReplies, q1.TotalLike, u.img, u2.img AS img2\n"
+                    + "          FROM dbo.Question_comment AS q1\n"
+                    + "               FULL OUTER JOIN dbo.[User] AS u ON u.UserID=q1.UserID\n"
+                    + "               FULL OUTER JOIN dbo.Question_comment AS q2 ON q2.CommentID=q1.replyTo\n"
+                    + "               FULL OUTER JOIN dbo.[User] AS u2 ON u2.UserID=q2.UserID\n"
+                    + "          WHERE q1.QuestionID=? AND q1.isBest=0) AS q ) tbl\n"
+                    + "WHERE row_index>=(?-1)* ?+1 AND row_index<=? * ?";
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, questionId);
             stm.setInt(2, questionId);
             stm.setInt(3, questionId);
+            stm.setInt(4, pageindex);
+            stm.setInt(5, pagesize);
+            stm.setInt(6, pageindex);
+            stm.setInt(7, pagesize);
             ResultSet rs = stm.executeQuery();
 
             User user2 = null;
@@ -481,6 +511,29 @@ public class CommentDBContext extends DBContext {
         }
         return cl;
     }
+
+    public int findComment(int cid, int qid) {
+        //        EXEC dbo.findComment @comid=73, -- int
+        //    @questionid=17 -- int
+        //        
+
+        try {
+            String sql = "           EXEC dbo.findComment @comid=?, -- int\n"
+                    + "           @questionid=? -- int\n"
+                    + "              ";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, cid);
+            stm.setInt(2, qid);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CommentDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+
 //    public static void main(String[] args) {
 //        CommentDBContext c = new CommentDBContext();
 //        ArrayList<Comment> cl = c.getCommentBySubid("prj301");
@@ -488,7 +541,6 @@ public class CommentDBContext extends DBContext {
 //            System.out.println(comment.getContent());
 //        }
 //    }
-
 //    public void updateTotalRepied(int Type) {
 //        String sql = "UPDATE dbo.Question_comment SET totalReplies = totalReplies + 1 WHERE CommentID = ?";
 //        try {
@@ -506,4 +558,18 @@ public class CommentDBContext extends DBContext {
 //            Logger.getLogger(CommentDBContext.class.getName()).log(Level.SEVERE, null, ex);
 //        }
 //    }
+
+    public int count() {
+        try {
+            String sql = "SELECT COUNT(*) as Total FROM Question_Comment";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("Total");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(QuestionDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
+    }
 }

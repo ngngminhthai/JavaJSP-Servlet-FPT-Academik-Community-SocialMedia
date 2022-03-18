@@ -216,7 +216,7 @@
                             <p class="hint-text">${(message !=null) ?message:"Đăng nhập"}
                             <c:remove var="message" scope="session" /> </p>
                             <div class="form-group social-btn clearfix">
-                                <a href="https://accounts.google.com/o/oauth2/auth?scope=email&redirect_uri=http://localhost:8080/FPTCommunity/GoogleLogin&response_type=code
+                                <a href="https://accounts.google.com/o/oauth2/auth?scope=email&redirect_uri=http://localhost:8084/FPTCommunity/GoogleLogin&response_type=code
                                    &client_id=176793358103-1ia4akv81shj83akaruu36aamkmfk4jd.apps.googleusercontent.com&approval_prompt=force" class="btn btn-secondary facebook-btn float-left"><i class="fa fa-google"></i> Google</a>
                                 <a href="#" class="btn btn-secondary twitter-btn float-right"><i class="fa fa-twitter"></i> Twitter</a>
                             </div>

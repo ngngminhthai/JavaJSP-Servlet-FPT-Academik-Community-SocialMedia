@@ -4,6 +4,7 @@
     Author     : Admin
 --%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page import="java.util.Random"%>
 <%@page import="model.Question"%>
 <%@page import="java.util.ArrayList"%>
@@ -290,26 +291,28 @@
 
 
 
-
-                    <div class="tt-item tt-item-popup">
-                        <div class="tt-col-avatar">
-                            <svg class="tt-icon">
-                            <use xlink:href="#icon-ava-f"></use>
-                            </svg>
-                        </div>
-                        <div class="tt-col-message">
-                            Bạn cần đăng nhập để đăng bài viết
-                        </div>
-                        <div class="tt-col-btn">
-                            <button type="button" class="btn btn-primary">Đăng nhập</button>
-                            <button type="button" class="btn btn-secondary">Đăng kí</button>
-                            <button type="button" class="btn-icon">
-                                <svg onclick="remove()" class="tt-icon">
-                                <use xlink:href="#icon-cancel"></use>
+                    <c:if test="${sessionScope.userID == null}">
+                        <div class="tt-item tt-item-popup">
+                            <div class="tt-col-avatar">
+                                <svg class="tt-icon">
+                                <use xlink:href="#icon-ava-f"></use>
                                 </svg>
-                            </button>
+                            </div>
+                            <div class="tt-col-message">
+                                Bạn cần đăng nhập để đăng bài viết
+                            </div>
+                            <div class="tt-col-btn">
+                                <button type="button" class="btn btn-primary">Đăng nhập</button>
+                                <button type="button" class="btn btn-secondary">Đăng kí</button>
+                                <button type="button" class="btn-icon">
+                                    <svg onclick="remove()" class="tt-icon">
+                                    <use xlink:href="#icon-cancel"></use>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
-                    </div>
+                    </c:if>
+
 
                     <% for (; i < questionList.size(); i++) {
                             elem = questionList.get(i);
@@ -646,11 +649,13 @@
             </div>
         </div>
         <script>
-            var popUp = document.querySelector(".tt-item-popup");
-            function remove(){
-                popUp.remove();
+            if (session == null || session == "") {
+                var popUp = document.querySelector(".tt-item-popup");
+                function remove() {
+                    popUp.remove();
+                }
             }
-            
+
             var session = '${sessionScope.userID}'
             if (session == null || session == "") {
                 var loginbtn = document.querySelector("div.tt-col-btn .btn-primary");
@@ -665,7 +670,7 @@
                 console.log(loginBox);
                 console.log(parentNode);
                 console.log(Box);
-                
+
 
                 loginbtn.onclick = function () {
                     parentNode.classList.toggle("show");
