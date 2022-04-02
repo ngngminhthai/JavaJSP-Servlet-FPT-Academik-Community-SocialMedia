@@ -17,7 +17,7 @@ Moderator and Admin can change status of comment, on post only have one flagged 
 # 6. Authentication and Authorization
 ![image](https://user-images.githubusercontent.com/80164976/161384416-7a8ee03f-823a-4bee-a51b-9e1bb46f7860.png)
 # 7. Database design
-![image](https://user-images.githubusercontent.com/80164976/161384593-df3cef74-a911-4ffa-b618-2fce26157e7b.png)
+![image](https://user-images.githubusercontent.com/80164976/161384644-4e558a9f-4faa-4f8b-9e50-73516698efee.png)
 ![image](https://user-images.githubusercontent.com/80164976/161384600-622a034e-65c3-4d40-929b-af248fbd8b42.png)
 
 
