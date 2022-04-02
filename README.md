@@ -5,7 +5,7 @@ My individual project for Java Web Development course of FPT University. There a
 # 2. Customized avatar for user
 ![image](https://user-images.githubusercontent.com/80164976/161384116-23b0834d-9ca9-4e0e-bc63-651291d32bc0.png)
 # 3. Message system
-Using java asynchronous for sending and ajax for load-on-scroll messages between user (Don't need to wait for receiving messages)
+Using java asynchronous,javascript,ajax for sending and load-on-scroll messages between user (Don't need to wait for receiving messages)
 ![image](https://user-images.githubusercontent.com/80164976/161384180-e1ccac87-4062-4589-b8d2-931e7961aa31.png)
 # 4. Forwarding to replied comment by clicking on replied comment 
 ![image](https://user-images.githubusercontent.com/80164976/161384267-afd8f76c-a4c3-4316-a636-824748da5001.png)
