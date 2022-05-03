@@ -8,6 +8,7 @@
 6. Jquery
 # 
 My individual project for Java Web Development course of FPT University. There are some REPRESENTATIVE COMPONENTS in my Web Application
+using Netbeans 8.2 Tomcat 8
 # 1. Home screen and login with google using google API
 ![image](https://user-images.githubusercontent.com/80164976/161383990-066f059c-35c9-40e9-93fc-2236df7778fb.png)
 # 2. Customized avatar for user
